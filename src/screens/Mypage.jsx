@@ -1,11 +1,10 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
 import styled from 'styled-components';
 
-function Home() {
+function MyPage() {
   return (
     <Container>
-      <HomeText>Home</HomeText>
+      <MyPageText>My Page</MyPageText>
     </Container>
   );
 }
@@ -14,13 +13,13 @@ const Container = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
-  background-color: #f0f0f0;
+  background-color: #e0f7fa;
 `;
 
-const HomeText = styled.Text`
+const MyPageText = styled.Text`
   font-size: 24px;
   font-weight: bold;
-  color: #333;
+  color: #00796b;
 `;
 
-export default Home;
+export default MyPage;
