@@ -1,80 +1,89 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 바디 췤~! BodyCheck - frontend
+## 👀 서비스 소개
 
-# Getting Started
+## 👥 팀원 소개
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/KimSanghyun20">
+        <img src="https://avatars.githubusercontent.com/u/127206470?v=4" width="200px;" height="200px;" alt="김상현"/>
+        <h3><b>김상현</b></h3>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/bbky323">
+        <img src="https://avatars.githubusercontent.com/u/127292182?v=4" width="200px;" height="200px;" alt="배기영"/>
+        <h3><b>배기영</b></h3>
+      </a>
+    </td>
+  </tr>
+</table>
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
-## Step 1: Start the Metro Server
+## 🛠️ Tech Stacks
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+### Cowork Tools
+![github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
+![notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white)
+![figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
 
-To start Metro, run the following command from the _root_ of your React Native project:
+### Development
+![react](https://img.shields.io/badge/ReactNative-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![js](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white)
 
-```bash
-# using npm
-npm start
+### Deploy
+![aws](https://img.shields.io/badge/Amazon_AWS_S3-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
 
-# OR using Yarn
-yarn start
+### ETC
+![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white)
+![Prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E)
+![Styled Components](https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)
+
+
+## 협업 전략
+### Issue Template
+```
+## Description for development features
+
+## Todo-lists
+
+## ETC
 ```
 
-## Step 2: Start your Application
+### PR Template
+```
+## Issue number
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+## Summary & Screenshots
 
-### For Android
+## Describe your changes (option)
 
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
+## Things to consider (option)
 ```
 
-### For iOS
+### Branch
+- Git-flow 전략을 기반으로 main, develop 브랜치와 feature 보조 브랜치 운용
+- `feature/{issue-num}-{feature-name}`
 
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+### Folder Structure
+```
+├─.github
+├─dist
+└─src
+    ├─api
+    ├─assets
+    ├─components
+    ├─context
+    ├─navigation
+    ├─pages
+    ├─store
+    ├─styles
+    └─utils
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+## 관련 문서
+[Figma](https://www.figma.com/design/UsmgQ87Ylp8ej1bi1eeCAJ/%EC%95%84%EB%9D%A0---%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=14-2&t=OE1nHotGFNeNKaDZ-0)
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+[Notion](https://www.notion.so/ATTI-b22fe268d2104c7d8543f5c51df9259b)
 
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
-# Front-End
+[Github Project](https://github.com/orgs/ATTI-UMC/projects/1)
