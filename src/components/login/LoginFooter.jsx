@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import logoKakao from '../../assets/images/logoKakao.png';
+import logoKakao from '../../assets/images/logo_kakao.png';
 import logoGoogle from '../../assets/images/logoGoogle.png';
 import {useNavigation} from '@react-navigation/native'; // React Navigation 사용
 
