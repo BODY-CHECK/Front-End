@@ -5,6 +5,7 @@ import Home from '../screens/Home';
 import MyPage from '../screens/Mypage';
 import Routine from '../screens/Routine';
 import AIpt from '../screens/AIpt';
+import HeaderMain from '../components/HeaderMain';
 
 const Tab = createBottomTabNavigator();
 
@@ -46,6 +47,7 @@ function BottomTabNavigator() {
         tabBarLabelStyle: {
           marginBottom: 8,
         },
+        headerTitle: () => <HeaderMain />,
       })}>
       <Tab.Screen name="홈" component={Home} />
       <Tab.Screen name="AI 피티" component={AIpt} />
