@@ -15,7 +15,7 @@ function LoginNavigator({isLoggedIn, setIsLoggedIn}) {
         </Stack.Screen>
       ) : (
         // 로그인되지 않은 경우 로그인 화면을 표시
-        <Stack.Screen name="Login">
+        <Stack.Screen name="Login" options={{headerShown: false}}>
           {props => <Login {...props} setIsLoggedIn={setIsLoggedIn} />}
         </Stack.Screen>
       )}

@@ -17,7 +17,8 @@ const HeaderContainer = styled.View`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
+  margin-top: 20px;
 `;
 
 const Logo = styled.Image`
