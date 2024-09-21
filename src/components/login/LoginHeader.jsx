@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import logo from '../../assets/images/logo.png';
+import logo_big from '../../assets/images/logo_big.png';
 
 const LoginHeader = () => {
   return (
     <HeaderContainer>
-      <Logo source={logo} />
+      <Logo source={logo_big} />
       <Title>BodyCheck</Title>
     </HeaderContainer>
   );
@@ -14,15 +14,15 @@ const LoginHeader = () => {
 export default LoginHeader;
 
 const HeaderContainer = styled.View`
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-bottom: 40px;
 `;
 
 const Logo = styled.Image`
-  width: 40px;
-  height: 40px;
+  width: 200px;
+  height: 180px;
 `;
 
 const Title = styled.Text`
