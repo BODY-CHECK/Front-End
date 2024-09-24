@@ -19,10 +19,6 @@ const LoginForm = ({onLogin}) => {
         onChangeText={setPassword}
         value={password}
       />
-      <CheckboxContainer>
-        <Checkbox />
-        <CheckboxLabel>로그인 상태 유지하기</CheckboxLabel>
-      </CheckboxContainer>
       <Button onPress={onLoginHandler}>
         <ButtonText>로그인</ButtonText>
       </Button>
@@ -35,7 +31,7 @@ export default LoginForm;
 const FormContainer = styled.View`
   display: flex;
   flex-direction: column;
-
+  padding: 15px;
   justify-content: center;
   width: 100%;
   margin-bottom: 10px;
@@ -51,30 +47,13 @@ const Input = styled.TextInput`
   font-size: 14px;
 `;
 
-const CheckboxContainer = styled.View`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-left: 10px;
-  margin-bottom: 20px;
-`;
-
-const Checkbox = styled.Switch.attrs(() => ({
-  trackColor: {false: '#767577', true: '#81b0ff'},
-  thumbColor: '#f4f3f4',
-}))``;
-
-const CheckboxLabel = styled.Text`
-  font-size: 14px;
-`;
-
 const Button = styled.TouchableOpacity`
   width: 100%;
   max-width: 400px;
   height: 50px;
   padding: 15px;
   margin-top: 30px;
-  background-color: #10d99b;
+  background-color: #3373eb;
   border-radius: 50px;
   align-items: center;
   justify-content: center;
