@@ -3,6 +3,7 @@ import styled from 'styled-components/native';
 import logoKakao from '../../assets/images/logo_kakao.png';
 import logoGoogle from '../../assets/images/logoGoogle.png';
 import {useNavigation} from '@react-navigation/native'; // React Navigation 사용
+import {Linking, TouchableOpacity} from 'react-native'; // Linking 모듈 가져오기
 
 const LoginFooter = () => {
   const navigation = useNavigation();
@@ -10,7 +11,7 @@ const LoginFooter = () => {
   return (
     <FooterContainer>
       <LinksContainer>
-        <LinkItem onPress={() => alert('회원가입')}>
+        <LinkItem onPress={() => navigation.navigate('SignUp')}>
           <LinkText>회원가입</LinkText>
         </LinkItem>
         <Divider />
@@ -19,7 +20,12 @@ const LoginFooter = () => {
         </LinkItem>
       </LinksContainer>
       <IconsContainer>
-        <Icon source={logoKakao} onPress={() => alert('Kakao 로그인')} />
+        <TouchableOpacity
+          onPress={() =>
+            Linking.openURL('https://kauth.kakao.com/oauth/authorize')
+          }>
+          <Icon source={logoKakao} />
+        </TouchableOpacity>
         <Icon source={logoGoogle} onPress={() => alert('Google 로그인')} />
       </IconsContainer>
     </FooterContainer>
