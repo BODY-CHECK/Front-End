@@ -10,7 +10,7 @@ const Button = ({title, onPress, disabled}) => {
 
 export default Button;
 
-const StyledButton = styled.View`
+const StyledButton = styled.TouchableOpacity`
   height: 50px;
   background-color: ${props => (props.disabled ? '#ccc' : '#3373eb')};
   border-radius: 50px;

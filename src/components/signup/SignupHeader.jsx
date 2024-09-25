@@ -1,10 +1,14 @@
 import styled from 'styled-components';
 
 const SignupHeader = ({currentStep}) => {
+  const progressImage =
+    currentStep === 1
+      ? require('../../assets/images/progressbar_1.png')
+      : require('../../assets/images/progressbar_2.png');
   return (
     <HeaderContainer>
       <Title>회원가입</Title>
-      <Progressbar source={require('../../assets/images/progressbar_1.png')} />
+      <Progressbar source={progressImage} />
     </HeaderContainer>
   );
 };

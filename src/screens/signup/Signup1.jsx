@@ -3,11 +3,18 @@ import styled from 'styled-components';
 import SignupHeader from '../../components/signup/SignupHeader';
 import InputField from '../../components/signup/InputField';
 import Button from '../../components/signup/Button';
+import {useNavigation} from '@react-navigation/native';
 
 function Signup1() {
+  const navigation = useNavigation();
+
+  const handleNext = () => {
+    navigation.navigate('SignUp2');
+  };
+
   return (
     <Container>
-      <SignupHeader />
+      <SignupHeader currentStep={1} />
       <InputField
         label="이메일"
         placeholder="email@example.com"
@@ -28,10 +35,12 @@ function Signup1() {
         withLabel
         required
       />
-      <Button title="다음" />
+      <Button title="다음" onPress={handleNext} />
     </Container>
   );
 }
+
+export default Signup1;
 
 const Container = styled.View`
   flex: 1;
@@ -39,5 +48,3 @@ const Container = styled.View`
   align-items: center;
   background-color: #fff;
 `;
-
-export default Signup1;

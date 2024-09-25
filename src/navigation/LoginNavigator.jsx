@@ -4,6 +4,7 @@ import Home from '../screens/Home';
 import Login from '../screens/Login';
 import BottomTabNavigator from './BottomTabNavigator';
 import Signup1 from '../screens/\bsignup/Signup1';
+import Signup2 from '../screens/\bsignup/Signup2';
 
 const Stack = createStackNavigator();
 
@@ -32,7 +33,12 @@ function LoginNavigator({isLoggedIn, setIsLoggedIn}) {
           <Stack.Screen
             name="SignUp"
             component={Signup1}
-            options={{title: '회원가입'}}
+            options={{title: ''}}
+          />
+          <Stack.Screen
+            name="SignUp2"
+            component={Signup2}
+            options={{title: ''}}
           />
         </>
       )}
