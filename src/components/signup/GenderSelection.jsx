@@ -76,5 +76,5 @@ const GenderButton = styled.TouchableOpacity`
 
 const ButtonText = styled.Text`
   color: ${props => (props.isSelected ? '#fff' : '#000')};
-  font-size: 16px;
+  font-size: 12px;
 `;

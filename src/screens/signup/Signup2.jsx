@@ -4,8 +4,12 @@ import InputField from '../../components/signup/InputField';
 import Button from '../../components/signup/Button';
 import GenderSelection from '../../components/signup/GenderSelection';
 import SizeInput from '../../components/signup/SizeInput';
+import AgreementCheckbox from '../../components/signup/AgreementCheckbox';
 
 const Signup2 = () => {
+  const handleCheckboxChange = isChecked => {
+    console.log('Checkbox is checked', isChecked);
+  };
   return (
     <Container>
       <SignupHeader currentStep={2} />
@@ -17,6 +21,18 @@ const Signup2 = () => {
       />
       <GenderSelection />
       <SizeInput />
+      <CheckboxContainer>
+        <AgreementCheckbox
+          label="개인정보 수집 및 이용동의"
+          required
+          onValueChange={handleCheckboxChange}
+        />
+        <AgreementCheckbox
+          label="서비스 이용약관 동의"
+          required
+          onValueChange={handleCheckboxChange}
+        />
+      </CheckboxContainer>
       <Button title="완료" />
     </Container>
   );
@@ -27,6 +43,12 @@ export default Signup2;
 const Container = styled.View`
   flex: 1;
   padding: 20px;
-  align-items: center;
   background-color: #fff;
+  align-items: center;
+`;
+
+const CheckboxContainer = styled.View`
+  width: 100%;
+  align-items: flex-start; /* 왼쪽 정렬 */
+  margin-top: 150px;
 `;
