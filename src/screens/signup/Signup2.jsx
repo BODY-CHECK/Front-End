@@ -5,11 +5,19 @@ import Button from '../../components/signup/Button';
 import GenderSelection from '../../components/signup/GenderSelection';
 import SizeInput from '../../components/signup/SizeInput';
 import AgreementCheckbox from '../../components/signup/AgreementCheckbox';
+import {useNavigation} from '@react-navigation/native';
 
 const Signup2 = () => {
+  const navigation = useNavigation();
+
   const handleCheckboxChange = isChecked => {
     console.log('Checkbox is checked', isChecked);
   };
+
+  const handleNext = () => {
+    navigation.navigate('WelcomePage');
+  };
+
   return (
     <Container>
       <SignupHeader currentStep={2} />
@@ -33,7 +41,7 @@ const Signup2 = () => {
           onValueChange={handleCheckboxChange}
         />
       </CheckboxContainer>
-      <Button title="완료" />
+      <Button title="완료" onPress={handleNext} />
     </Container>
   );
 };
