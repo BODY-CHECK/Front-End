@@ -3,6 +3,7 @@ import SignupHeader from '../../components/signup/SignupHeader';
 import InputField from '../../components/signup/InputField';
 import Button from '../../components/signup/Button';
 import GenderSelection from '../../components/signup/GenderSelection';
+import SizeInput from '../../components/signup/SizeInput';
 
 const Signup2 = () => {
   return (
@@ -15,6 +16,7 @@ const Signup2 = () => {
         required
       />
       <GenderSelection />
+      <SizeInput />
       <Button title="완료" />
     </Container>
   );

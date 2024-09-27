@@ -47,7 +47,7 @@ const LabelContainer = styled.View`
   flex-direction: row;
   align-items: center;
   align-self: flex-start;
-  margin-top: 20px;
+  margin-top: 30px;
 `;
 
 const StarTag = styled.Text`
