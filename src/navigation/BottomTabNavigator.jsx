@@ -9,7 +9,7 @@ import HeaderMain from '../components/HeaderMain';
 
 const Tab = createBottomTabNavigator();
 
-function BottomTabNavigator() {
+function BottomTabNavigator({setIsLoggedIn}) {
   return (
     <Tab.Navigator
       initialRouteName="홈"
@@ -49,7 +49,10 @@ function BottomTabNavigator() {
         },
         headerTitle: () => <HeaderMain />,
       })}>
-      <Tab.Screen name="홈" component={Home} />
+      <Tab.Screen
+        name="홈"
+        component={() => <Home setIsLoggedIn={setIsLoggedIn} />}
+      />
       <Tab.Screen name="AI 피티" component={AIpt} />
       <Tab.Screen name="운동 루틴" component={Routine} />
       <Tab.Screen name="마이페이지" component={MyPage} />

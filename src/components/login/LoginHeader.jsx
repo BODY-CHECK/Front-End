@@ -18,7 +18,7 @@ const HeaderContainer = styled.View`
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
-  margin-top: 20px;
+  margin-top: 60px;
 `;
 
 const Logo = styled.Image`
