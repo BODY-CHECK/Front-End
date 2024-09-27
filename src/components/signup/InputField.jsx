@@ -36,10 +36,6 @@ const InputField = ({
 
 export default InputField;
 
-const Wrapper = styled.View`
-  margin-bottom: 16px;
-`;
-
 const Label = styled.Text`
   font-size: 12px;
   color: black;
