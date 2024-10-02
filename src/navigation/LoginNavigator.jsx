@@ -1,9 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import Home from '../screens/Home';
 import Login from '../screens/Login';
 import BottomTabNavigator from './BottomTabNavigator';
-
 const Stack = createStackNavigator();
 
 function LoginNavigator({isLoggedIn, setIsLoggedIn}) {

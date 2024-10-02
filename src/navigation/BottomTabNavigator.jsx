@@ -4,8 +4,8 @@ import {Image} from 'react-native';
 import Home from '../screens/Home';
 import MyPage from '../screens/Mypage';
 import Routine from '../screens/Routine';
-import AIpt from '../screens/AIpt';
 import HeaderMain from '../components/HeaderMain';
+import HealthStackNavigator from './HealthStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -50,7 +50,7 @@ function BottomTabNavigator() {
         headerTitle: () => <HeaderMain />,
       })}>
       <Tab.Screen name="홈" component={Home} />
-      <Tab.Screen name="AI 피티" component={AIpt} />
+      <Tab.Screen name="AI 피티" component={HealthStackNavigator} />
       <Tab.Screen name="운동 루틴" component={Routine} />
       <Tab.Screen name="마이페이지" component={MyPage} />
     </Tab.Navigator>
