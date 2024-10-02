@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import BottomTabNavigator from './navigation/BottomTabNavigator';
 import LoginNavigator from './navigation/LoginNavigator';
 
 function App() {
