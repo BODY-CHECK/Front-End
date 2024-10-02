@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import SignupHeader from '../../components/signup/SignupHeader';
-import InputField from '../../components/signup/InputField';
-import Button from '../../components/signup/Button';
+import SignupHeader from '../components/signup/SignupHeader';
+import InputField from '../components/signup/InputField';
+import Button from '../components/signup/Button';
 import {useNavigation} from '@react-navigation/native';
 
 function Signup1() {
