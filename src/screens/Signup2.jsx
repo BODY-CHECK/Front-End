@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import SignupHeader from '../../components/signup/SignupHeader';
-import InputField from '../../components/signup/InputField';
-import Button from '../../components/signup/Button';
-import GenderSelection from '../../components/signup/GenderSelection';
-import SizeInput from '../../components/signup/SizeInput';
-import AgreementCheckbox from '../../components/signup/AgreementCheckbox';
+import SignupHeader from '../components/signup/SignupHeader';
+import InputField from '../components/signup/InputField';
+import Button from '../components/signup/Button';
+import GenderSelection from '../components/signup/GenderSelection';
+import SizeInput from '../components/signup/SizeInput';
+import AgreementCheckbox from '../components/signup/AgreementCheckbox';
 import {useNavigation} from '@react-navigation/native';
 
 const Signup2 = () => {

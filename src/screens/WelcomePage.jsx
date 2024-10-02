@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
-import logo_big from '../../assets/images/logo_big.png';
-import Button from '../../components/signup/Button';
+import logo_big from '../assets/images/logo_big.png';
+import Button from '../components/signup/Button';
 import {useNavigation} from '@react-navigation/native';
 const WelcomePage = () => {
   const navigation = useNavigation();
