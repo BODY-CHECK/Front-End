@@ -9,7 +9,11 @@ import HealthStackNavigator from './HealthStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
-function BottomTabNavigator({setIsLoggedIn}) {
+function HomeScreenWrapper({setIsLoggedIn}) {
+  return <Home setIsLoggedIn={setIsLoggedIn} />;
+}
+
+function BottomTabNavigator() {
   return (
     <Tab.Navigator
       initialRouteName="홈"
@@ -49,10 +53,7 @@ function BottomTabNavigator({setIsLoggedIn}) {
         },
         headerTitle: () => <HeaderMain />,
       })}>
-      <Tab.Screen
-        name="홈"
-        component={() => <Home setIsLoggedIn={setIsLoggedIn} />}
-      />
+      <Tab.Screen name="홈" component={HomeScreenWrapper} />
       <Tab.Screen name="AI 피티" component={HealthStackNavigator} />
       <Tab.Screen name="운동 루틴" component={Routine} />
       <Tab.Screen name="마이페이지" component={MyPage} />
