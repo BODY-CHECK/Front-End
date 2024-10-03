@@ -31,7 +31,8 @@ const Container = styled.View`
   width: 100%;
   height: 156px;
   border-radius: 15px;
-  background-color: #ececec;
+  elevation: 5;
+  background-color: #fff;
   margin-bottom: 30px;
   flex-direction: row;
   align-items: center;
@@ -47,9 +48,13 @@ const RoutineItem = styled.View`
   width: 92px;
   height: 92px;
   border-radius: 15px;
+  border-width: 1px;
+  border-color: #3373eb;
   background-color: #fff;
-  margin-bottom: 5px;
+  margin-bottom: 12px;
   align-items: center;
+  justify-content: center;
+  padding-bottom: 5px;
 `;
 
 const RoutineText = styled.Text`
@@ -59,6 +64,6 @@ const RoutineText = styled.Text`
 `;
 
 const Plus = styled.Text`
-  font-size: 64px;
+  font-size: 50px;
   color: #e5e5e5;
 `;

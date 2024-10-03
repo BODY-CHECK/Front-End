@@ -42,6 +42,6 @@ export const StyledImage = styled.Image`
   width: 105px;
   height: 105px;
   border-width: 2px;
-  border-color: #3373EB;
+  border-color: #3373eb;
   border-radius: 10px;
 `;

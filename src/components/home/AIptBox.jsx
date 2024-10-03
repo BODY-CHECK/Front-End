@@ -56,8 +56,9 @@ export default AIptBox;
 
 const Container = styled.View`
   width: 100%;
-  height: 400px;
+  height: 415px;
   border-radius: 15px;
+  elevation: 5;
   background-color: #fff;
 `;
 

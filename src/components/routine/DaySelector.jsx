@@ -26,7 +26,7 @@ const DayContainer = styled.View`
   justify-content: space-evenly;
   background-color: #ccdcfa;
   width: 100%;
-  height: 45px;
+  height: 50px;
   border-radius: 25px;
   margin-bottom: 15px;
 `;
