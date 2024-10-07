@@ -41,7 +41,8 @@ export const IconName = styled.Text`
 export const StyledImage = styled.Image`
   width: 105px;
   height: 105px;
-  border-width: 2px;
+  border-width: 1px;
   border-color: #3373eb;
-  border-radius: 10px;
+  border-radius: 15px;
+  padding: 2px;
 `;

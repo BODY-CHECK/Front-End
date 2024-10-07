@@ -1,23 +1,29 @@
 import styled from 'styled-components/native';
 
-const RoutineBox = () => {
+const RoutineBox = ({onPlusClick}) => {
   return (
     <Container>
       <ItemWrapper>
         <RoutineItem>
-          <Plus>+</Plus>
+          <PlusButton onPress={onPlusClick}>
+            <Plus>+</Plus>
+          </PlusButton>
         </RoutineItem>
         <RoutineText>미설정</RoutineText>
       </ItemWrapper>
       <ItemWrapper>
         <RoutineItem>
-          <Plus>+</Plus>
+          <PlusButton onPress={onPlusClick}>
+            <Plus>+</Plus>
+          </PlusButton>
         </RoutineItem>
         <RoutineText>미설정</RoutineText>
       </ItemWrapper>
       <ItemWrapper>
         <RoutineItem>
-          <Plus>+</Plus>
+          <PlusButton onPress={onPlusClick}>
+            <Plus>+</Plus>
+          </PlusButton>
         </RoutineItem>
         <RoutineText>미설정</RoutineText>
       </ItemWrapper>
@@ -61,6 +67,13 @@ const RoutineText = styled.Text`
   font-size: 12px;
   font-weight: bold;
   color: black;
+`;
+
+const PlusButton = styled.TouchableOpacity`
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Plus = styled.Text`

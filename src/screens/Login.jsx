@@ -9,7 +9,6 @@ function Login({setIsLoggedIn}) {
     // 간단한 로그인 로직
     if (id === 'user' && password === 'password') {
       setIsLoggedIn(true); // 로그인 성공 시 상태 업데이트
-      Alert.alert('로그인 성공');
     } else {
       Alert.alert('로그인 실패', '아이디 또는 비밀번호가 잘못되었습니다.');
     }
