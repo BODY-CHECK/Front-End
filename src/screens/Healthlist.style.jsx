@@ -34,6 +34,7 @@ export const IconName = styled.Text`
   text-justify: center;
   font-size: 14px;
   font-weight: bold;
+  color: black;
   width: 100%;
   height: 20px;
 `;
