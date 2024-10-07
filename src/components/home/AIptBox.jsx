@@ -7,25 +7,25 @@ const exercises = [
     id: '1',
     name: '푸쉬업',
     reps: 'x 12',
-    image: require('../../assets/images/logo.png'),
+    image: require('../../assets/images/Health/push-up.png'),
   },
   {
     id: '2',
     name: '스쿼트',
     reps: 'x 12',
-    image: require('../../assets/images/logo.png'),
+    image: require('../../assets/images/Health/squat.png'),
   },
   {
     id: '3',
     name: '풀업',
     reps: 'x 12',
-    image: require('../../assets/images/logo.png'),
+    image: require('../../assets/images/Health/pull-up.png'),
   },
   {
     id: '4',
     name: '윗몸 일으키기',
     reps: 'x 12',
-    image: require('../../assets/images/logo.png'),
+    image: require('../../assets/images/Health/sit-ups.png'),
   },
 ];
 
@@ -56,9 +56,11 @@ export default AIptBox;
 
 const Container = styled.View`
   width: 100%;
-  height: 400px;
+  height: 415px;
   border-radius: 15px;
+  elevation: 5;
   background-color: #fff;
+  padding-right: 15px;
 `;
 
 const ExerciseItem = styled.View`
@@ -72,7 +74,10 @@ const ExerciseItem = styled.View`
 const ExerciseImage = styled.Image`
   width: 80px;
   height: 80px;
-  margin-right: 15px;
+  border-radius: 15px;
+  border-width: 1px;
+  border-color: #3373eb;
+  margin-right: 10px;
 `;
 
 const ExerciseDetails = styled.View`
@@ -89,9 +94,11 @@ const ExerciseName = styled.Text`
   margin-top: 16px;
   font-weight: bold;
   color: #333;
+  margin-left: 5px;
 `;
 
 const ExerciseReps = styled.Text`
   font-size: 14px;
   color: #777;
+  margin-left: 5px;
 `;

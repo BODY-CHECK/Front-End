@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 
-const HomeHeader = ({title, buttonText, onPress}) => {
+const TitlewithBtn = ({title, buttonText, onPress}) => {
   return (
     <HeaderWrapper>
       <Title>{title}</Title>
@@ -11,13 +11,13 @@ const HomeHeader = ({title, buttonText, onPress}) => {
   );
 };
 
-export default HomeHeader;
+export default TitlewithBtn;
 
 const HeaderWrapper = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding-left: 3px;
+  padding-left: 6px;
   padding-right: 4px;
   width: 100%;
   margin-bottom: 10px;
@@ -33,5 +33,6 @@ const NavigateButton = styled.TouchableOpacity``;
 
 const ButtonText = styled.Text`
   font-size: 16px;
+  padding-top: 8px;
   color: #3373eb;
 `;

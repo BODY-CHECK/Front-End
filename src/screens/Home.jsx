@@ -1,7 +1,6 @@
 import React from 'react';
-import {Button} from 'react-native';
 import styled from 'styled-components';
-import HomeHeader from '../components/home/HomeHeader';
+import TitlewithBtn from '../components/TitlewithBtn';
 import RoutineBox from '../components/home/RoutineBox';
 import AIptBox from '../components/home/AIptBox';
 import {useNavigation} from '@react-navigation/native';
@@ -19,13 +18,13 @@ function Home() {
 
   return (
     <Container>
-      <HomeHeader
+      <TitlewithBtn
         title="MY 루틴"
         buttonText="설정하기>"
         onPress={handleClickRoutine}
       />
       <RoutineBox />
-      <HomeHeader
+      <TitlewithBtn
         title="AI 피티"
         buttonText="전체보기>"
         onPress={handleClickAI}
@@ -35,12 +34,11 @@ function Home() {
   );
 }
 
+export default Home;
+
 const Container = styled.View`
   flex: 1;
-
   align-items: center;
   background-color: #fff;
   padding: 20px;
 `;
-
-export default Home;
