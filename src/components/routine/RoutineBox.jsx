@@ -80,8 +80,8 @@ const Plus = styled.Text`
 `;
 
 const ExerciseImage = styled.Image`
-  width: 92px;
-  height: 92px;
+  width: 80px;
+  height: 80px;
 `;
 
 const DeleteButton = styled.TouchableOpacity`
