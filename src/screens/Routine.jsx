@@ -4,6 +4,7 @@ import TitlewithBtn from '../components/TitlewithBtn';
 import DaySelector from '../components/routine/DaySelector';
 import RoutineBox from '../components/routine/RoutineBox';
 import ExerciseListBottomSheet from '../components/routine/ExerciseListBottomSheet';
+import ExerciseCard from '../components/routine/ExerciseCard';
 
 function Routine() {
   const [selectedDay, setSelectedDay] = useState('월'); // 선택된 요일을 관리하는 state
@@ -11,7 +12,7 @@ function Routine() {
 
   const handlePlusClick = () => {
     if (sheetRef.current) {
-      sheetRef.current.snapTo(0); // BottomSheet를 열도록 설정
+      sheetRef.current.expand(); // BottomSheet를 여는 함수
     } else {
       console.log('BottomSheet reference is null');
     }
@@ -22,6 +23,7 @@ function Routine() {
       <TitlewithBtn title="MY 루틴" buttonText="설정하기>" />
       <DaySelector selectedDay={selectedDay} onDayChange={setSelectedDay} />
       <RoutineBox onPlusClick={handlePlusClick} />
+      <ExerciseCard />
       <ExerciseListBottomSheet sheetRef={sheetRef} />
     </Container>
   );
