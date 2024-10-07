@@ -1,32 +1,30 @@
+import React from 'react';
 import styled from 'styled-components/native';
 
-const RoutineBox = ({onPlusClick}) => {
+const RoutineBox = ({routines, onPlusClick, isEditing, onDelete}) => {
   return (
     <Container>
-      <ItemWrapper>
-        <RoutineItem>
-          <PlusButton onPress={onPlusClick}>
-            <Plus>+</Plus>
-          </PlusButton>
-        </RoutineItem>
-        <RoutineText>미설정</RoutineText>
-      </ItemWrapper>
-      <ItemWrapper>
-        <RoutineItem>
-          <PlusButton onPress={onPlusClick}>
-            <Plus>+</Plus>
-          </PlusButton>
-        </RoutineItem>
-        <RoutineText>미설정</RoutineText>
-      </ItemWrapper>
-      <ItemWrapper>
-        <RoutineItem>
-          <PlusButton onPress={onPlusClick}>
-            <Plus>+</Plus>
-          </PlusButton>
-        </RoutineItem>
-        <RoutineText>미설정</RoutineText>
-      </ItemWrapper>
+      {routines.map((exercise, index) => (
+        <ItemWrapper key={index}>
+          <RoutineItem>
+            {exercise ? (
+              <>
+                <ExerciseImage source={exercise.image} />
+                {isEditing && (
+                  <DeleteButton onPress={() => onDelete(index)}>
+                    <DeleteText>X</DeleteText>
+                  </DeleteButton>
+                )}
+              </>
+            ) : (
+              <PlusButton onPress={() => isEditing && onPlusClick(index)}>
+                <Plus>+</Plus>
+              </PlusButton>
+            )}
+          </RoutineItem>
+          <RoutineText>{exercise ? exercise.name : '미설정'}</RoutineText>
+        </ItemWrapper>
+      ))}
     </Container>
   );
 };
@@ -79,4 +77,26 @@ const PlusButton = styled.TouchableOpacity`
 const Plus = styled.Text`
   font-size: 50px;
   color: #e5e5e5;
+`;
+
+const ExerciseImage = styled.Image`
+  width: 92px;
+  height: 92px;
+`;
+
+const DeleteButton = styled.TouchableOpacity`
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  border-radius: 50px;
+  width: 20px;
+  height: 20px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const DeleteText = styled.Text`
+  color: white;
+  font-size: 12px;
 `;

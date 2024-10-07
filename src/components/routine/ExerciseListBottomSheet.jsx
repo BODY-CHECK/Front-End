@@ -69,7 +69,7 @@ const exercises = [
   },
 ];
 
-const ExerciseListBottomSheet = ({sheetRef}) => {
+const ExerciseListBottomSheet = ({sheetRef, onSelect}) => {
   // snap points 설정
   const snapPoints = useMemo(() => ['75%'], []);
 
@@ -89,6 +89,10 @@ const ExerciseListBottomSheet = ({sheetRef}) => {
     ),
     [],
   );
+
+  const handleExercisePress = exercise => {
+    onSelect(exercise);
+  };
 
   return (
     <BottomSheet
@@ -111,7 +115,9 @@ const ExerciseListBottomSheet = ({sheetRef}) => {
         <BottomSheetScrollView>
           <ExerciseGrid>
             {exercises.map(exercise => (
-              <ExerciseItem key={exercise.id}>
+              <ExerciseItem
+                key={exercise.id}
+                onPress={() => handleExercisePress(exercise)}>
                 <ExerciseImage source={exercise.image} />
                 <ExerciseText>{exercise.name}</ExerciseText>
               </ExerciseItem>
@@ -153,7 +159,7 @@ const ExerciseGrid = styled.View`
   justify-content: space-between;
 `;
 
-const ExerciseItem = styled.View`
+const ExerciseItem = styled.TouchableOpacity`
   width: 30%;
   margin-bottom: 20px;
   align-items: center;
