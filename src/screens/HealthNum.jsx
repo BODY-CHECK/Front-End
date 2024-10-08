@@ -58,7 +58,7 @@ export default function HealthNum() {
             </SelectNumText>
     </NumContainer>
       </ContentContainer>
-      <Button onPress={() => navigation.navigate('Health')}>
+      <Button onPress={() => navigation.navigate('Health', {title, gifSource})}>
         <ButtonText>운동 하기</ButtonText>
       </Button>
     </Container>
