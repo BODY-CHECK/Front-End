@@ -2,12 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import MypageHeader from '../components/mypage/MypageHeader';
 import MyCalendar from '../components/mypage/MyCalendar';
+import BMIGraph from '../components/mypage/BMIGraph';
 
 function MyPage() {
   return (
     <Container>
       <MypageHeader />
       <MyCalendar />
+      <BMIGraph />
     </Container>
   );
 }
