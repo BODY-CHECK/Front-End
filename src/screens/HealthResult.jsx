@@ -1,23 +1,53 @@
-import React, { useState } from 'react';
-import { Button1, Button2, ButtonContainer, ButtonText1, ButtonText2, Container, ContentContainer, ContentText, GIFContainer, GraphContainer, ModalButton1, ModalButton2, ModalButtonContainer, ModalButtonText1, ModalButtonText2, ModalContainer, ModalContent, ModalContentText1, ModalContentText2, StyledGIF, TextContainer } from './HealtResult.style';
-import { CommonActions, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
-import { BarChart } from 'react-native-chart-kit';
-import { Alert, Modal } from 'react-native';
+import React, {useState} from 'react';
+import {
+  Button1,
+  Button2,
+  ButtonContainer,
+  ButtonText1,
+  ButtonText2,
+  Container,
+  ContentContainer,
+  ContentText,
+  GIFContainer,
+  GraphContainer,
+  ModalButton1,
+  ModalButton2,
+  ModalButtonContainer,
+  ModalButtonText1,
+  ModalButtonText2,
+  ModalContainer,
+  ModalContent,
+  ModalContentText1,
+  ModalContentText2,
+  StyledGIF,
+  TextContainer,
+} from './HealtResult.style';
+import {
+  CommonActions,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import {BarChart} from 'react-native-chart-kit';
+import {Alert, Modal} from 'react-native';
+import exerciseData from '../components/Health/HealthInfoData';
 
 export default function HealthResult() {
   const route = useRoute();
-  const { title, gifSource} = route.params;
+  const {id} = route.params;
+  const exercise = exerciseData.find(ex => ex.id === id);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
 
   useFocusEffect(() => {
     navigation.getParent()?.setOptions({
-      tabBarStyle: { display: 'none' },
+      tabBarStyle: {display: 'none'},
     });
 
-    return () => navigation.getParent()?.setOptions({
-      tabBarStyle: undefined,
-    });
+    return () =>
+      navigation.getParent()?.setOptions({
+        tabBarStyle: undefined,
+      });
   });
 
   const data = {
@@ -64,8 +94,8 @@ export default function HealthResult() {
     navigation.dispatch(
       CommonActions.reset({
         index: 0, // 첫 번째 스크린을 보여줌
-        routes: [{ name: '홈' }], // Home 화면을 스택의 유일한 화면으로 설정
-      })
+        routes: [{name: '홈'}], // Home 화면을 스택의 유일한 화면으로 설정
+      }),
     );
     // 저장 로직을 추가하세요
   };
@@ -79,7 +109,7 @@ export default function HealthResult() {
     <Container>
       <ContentContainer>
         <GIFContainer>
-          <StyledGIF source={gifSource}/>
+          <StyledGIF source={exercise.gifSource} />
         </GIFContainer>
         <GraphContainer>
           <BarChart
@@ -95,11 +125,15 @@ export default function HealthResult() {
           />
         </GraphContainer>
         <TextContainer>
-          <ContentText>이완 수축을 더 해주세요. 수축을 제대로 하지 않으면 운동효과를 기대하기 어렵습니다.</ContentText>
+          <ContentText>
+            이완 수축을 더 해주세요. 수축을 제대로 하지 않으면 운동효과를
+            기대하기 어렵습니다.
+          </ContentText>
         </TextContainer>
       </ContentContainer>
       <ButtonContainer>
-        <Button1 onPress={() => navigation.navigate('HealthNum', {title, gifSource})}>
+        <Button1
+          onPress={() => navigation.navigate('HealthInfo', {id, repCount: 12})}>
           <ButtonText1>다시하기</ButtonText1>
         </Button1>
         <Button2 onPress={handleExit}>
@@ -110,13 +144,13 @@ export default function HealthResult() {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
+        onRequestClose={() => setModalVisible(false)}>
         <ModalContainer>
           <ModalContent>
             <ModalContentText1>저장하시겠습니까?</ModalContentText1>
             <ModalContentText2>
-              피드백을 저장하면 마이페이지에서 다시 확인할 수 있습니다. 저장하시겠습니까?
+              피드백을 저장하면 마이페이지에서 다시 확인할 수 있습니다.
+              저장하시겠습니까?
             </ModalContentText2>
             <ModalButtonContainer>
               <ModalButton1 onPress={handleSave}>

@@ -79,7 +79,7 @@ export const Button2 = styled.TouchableOpacity`
   width: 45%;
   height: 50px;
   padding: 15px;
-  background-color: #3C3B40;
+  background-color: #3c3b40;
   border-radius: 10px;
   align-items: center;
   justify-content: center;
@@ -121,7 +121,7 @@ export const ModalContentText1 = styled.Text`
 `;
 
 export const ModalContentText2 = styled.Text`
-  color: #7C86A2;
+  color: #7c86a2;
   margin-bottom: 15px;
   text-align: center;
   font-size: 15px;
@@ -150,7 +150,7 @@ export const ModalButton2 = styled.TouchableOpacity`
   width: 45%;
   height: 50px;
   padding: 15px;
-  background-color: #3C3B40;
+  background-color: #3c3b40;
   border-radius: 10px;
   align-items: center;
   justify-content: center;

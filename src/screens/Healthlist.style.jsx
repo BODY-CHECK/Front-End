@@ -70,12 +70,12 @@ export const IconName = styled.Text`
 export const AreaText = styled.Text`
   font-size: 12px;
   color: white;
-  background-color: #3373EB;
+  background-color: #3373eb;
   height: 20px;
   margin-top: 20px;
   padding: 2px;
   border-radius: 5px;
-  margin-left: ${(props) => (props.isFirst ? '20px' : '5px')};
+  margin-left: ${props => (props.isFirst ? '20px' : '5px')};
 `;
 
 export const StyledImage = styled.Image`
@@ -88,7 +88,7 @@ export const StyledImage = styled.Image`
 export const TypeButton = styled.TouchableOpacity`
   width: 25%;
   height: 40px;
-  background-color: ${({ isActive }) => (isActive ? 'black' : 'white')};
+  background-color: ${({isActive}) => (isActive ? 'black' : 'white')};
   border-radius: 15px;
   align-items: center;
   justify-content: center;
@@ -98,7 +98,7 @@ export const TypeButton = styled.TouchableOpacity`
 `;
 
 export const TypeButtonText = styled.Text`
-  color: ${({ isActive }) => (isActive ? 'white' : 'black')};
+  color: ${({isActive}) => (isActive ? 'white' : 'black')};
   font-size: 14px;
   font-weight: bold;
 `;
