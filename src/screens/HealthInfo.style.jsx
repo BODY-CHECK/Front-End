@@ -42,6 +42,9 @@ export const StyledGIF = styled.Image`
 export const TextContainer = styled.View`
   padding: 10px;
   background-color: white;
+  border: 1px solid #999999;
+  border-radius: 5px;
+  margin-top: 10px;
 `;
 
 export const Button = styled.TouchableOpacity`
@@ -66,8 +69,58 @@ export const TitleText = styled.Text`
   font-size: 18px;
   font-weight: bold;
   color: black;
+  margin-bottom: 10px;
 `;
 
 export const ContentText = styled.Text`
   color: black;
+`;
+
+export const InfoContainer = styled.View`
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-top: 10px;
+`;
+
+
+// 난이도에 따른 색상 설정 함수
+const getDifficultyColor = (difficulty) => {
+  switch (difficulty) {
+    case '초급':
+      return '#4AD926'; // 초록색
+    case '중급':
+      return '#F1930A'; // 주황색
+    case '상급':
+      return '#D32028'; // 빨간색
+    default:
+      return '#6C757D'; // 기본 회색
+  }
+};
+
+// 기본 텍스트 스타일
+export const BaseText = styled.Text`
+  font-size: 12px;
+  color: white;
+  height: 20px;
+  padding: 2px;
+  border-radius: 10px;
+  margin-right: 5px;
+`;
+
+// 난이도 텍스트 스타일
+export const DifficultyText = styled(BaseText)`
+  background-color: ${(props) => getDifficultyColor(props.difficulty)};
+`;
+
+// 타겟 머슬, 주운동 부위, 부운동 부위 텍스트 스타일
+export const TargetMuscleText = styled(BaseText)`
+  background-color: #3373EB;
+`;
+
+export const MainMuscleText = styled(BaseText)`
+  background-color: #6293EF;
+`;
+
+export const SecondaryMuscleText = styled(BaseText)`
+  background-color: ${({secondaryMuscle}) => secondaryMuscle ? '#9FB9EA' : 'transparent'};
 `;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
-import { Button, ButtonText, Container, ContentContainer, ContentText, GIFContainer, HeaderContainer, HealthType, StyledGIF, TextContainer, TitleText } from './HealthInfo.style';
+import { Button, ButtonText, Container, ContentContainer, ContentText, DifficultyText, GIFContainer, HeaderContainer, HealthType, InfoContainer, MainMuscleText, SecondaryMuscleText, StyledGIF, TargetMuscleText, TextContainer, TitleText } from './HealthInfo.style';
 
 export default function HealthInfo() {
   const route = useRoute();
@@ -23,13 +23,12 @@ export default function HealthInfo() {
         <GIFContainer>
           <StyledGIF source={gifSource}/>
         </GIFContainer>
-          <TextContainer>
-            <TitleText>운동 정보</TitleText>
-            <ContentText>난이도: {difficulty}</ContentText>
-            <ContentText>운동 부위: {targetMuscle}</ContentText>
-            <ContentText>주운동 근육 부위: {mainMuscle}</ContentText>
-            <ContentText>부운동 근육 부위: {secondaryMuscle}</ContentText>
-          </TextContainer>
+          <InfoContainer>
+            <DifficultyText difficulty={difficulty}>  {difficulty}  </DifficultyText>
+            <TargetMuscleText>  {targetMuscle}  </TargetMuscleText>
+            <MainMuscleText>  {mainMuscle}  </MainMuscleText>
+            <SecondaryMuscleText>  {secondaryMuscle}  </SecondaryMuscleText>
+          </InfoContainer>
           <TextContainer>
             <TitleText>운동 순서</TitleText>
             {exerciseOrder.map((step, index) => (
