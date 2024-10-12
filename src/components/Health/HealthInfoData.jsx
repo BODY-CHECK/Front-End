@@ -3,10 +3,12 @@ const exerciseData = [
     {
       id: 'push-up',
       title: '푸쉬업',
+      type: '상체',
       difficulty: '중급',
       targetMuscle: '가슴',
-      mainMuscle: '대흉근 (pectoralis major)',
-      secondaryMuscle: '상완삼두근 (triceps), 삼각근 (deltoid)',
+      mainMuscle: '대흉근',
+      secondaryMuscle: '상완삼두근, 삼각근',
+      imageSource: require('../../assets/images/Health/push-up.png'),
       gifSource: require('../../assets/images/Health/push-up.gif'),
       exerciseOrder: [
         '1. 엎드린 자세에서 어깨너비 두 배 정도로 두 손을 바닥에 짚고, 발뒤꿈치를 든 상태에서 팔과 무릎을 곧게 편다.',
@@ -20,10 +22,12 @@ const exerciseData = [
     {
       id: 'knee-push-up',
       title: '푸쉬업(무릎)',
+      type: '상체',
       difficulty: '초급',
       targetMuscle: '가슴',
-      mainMuscle: '대흉근 (pectoralis major)',
-      secondaryMuscle: '상완삼두근 (triceps), 삼각근 (deltoid)',
+      mainMuscle: '대흉근',
+      secondaryMuscle: '상완삼두근, 삼각근',
+      imageSource: require('../../assets/images/Health/kneeing-push-up.png'),
       gifSource: require('../../assets/images/Health/kneeing-push-up.gif'),
       exerciseOrder: [
         '1. 무릎을 대고 엎드린 자세에서 양손을 어깨너비 두 배로 벌리고 발을 꼬아준다.',
@@ -37,10 +41,12 @@ const exerciseData = [
     {
       id: 'pull-up',
       title: '풀업',
+      type: '상체',
       difficulty: '중급',
       targetMuscle: '등',
-      mainMuscle: '광배근 (latissimus dorsi)',
-      secondaryMuscle: '상완이두근 (biceps)',
+      mainMuscle: '광배근',
+      secondaryMuscle: '상완이두근',
+      imageSource: require('../../assets/images/Health/pull-up.png'),
       gifSource: require('../../assets/images/Health/pull-up.gif'),
       exerciseOrder: [
         '1. 머신 앞에 서서 어깨너비보다 넓게 손잡이를 두 손으로 잡는다.',
@@ -55,10 +61,12 @@ const exerciseData = [
     {
       id: 'band-pull-up',
       title: '풀업(밴드)',
+      type: '상체',
       difficulty: '초급',
       targetMuscle: '등',
-      mainMuscle: '광배근 (latissimus dorsi)',
-      secondaryMuscle: '상완이두근 (biceps)',
+      mainMuscle: '광배근',
+      secondaryMuscle: '상완이두근',
+      imageSource: require('../../assets/images/Health/banding-pull-up.png'),
       gifSource: require('../../assets/images/Health/banding-pull-up.gif'),
       exerciseOrder: [
         '1. 머신 앞에 서서 어깨너비보다 넓게 손잡이를 두 손으로 잡는다.',
@@ -74,9 +82,11 @@ const exerciseData = [
     {
       id: 'sit-ups',
       title: '윗몸일으키기',
+      type: '상체',
       difficulty: '중급',
       targetMuscle: '복부',
-      mainMuscle: '복직근 (rectus abdominis)',
+      mainMuscle: '복직근',
+      imageSource: require('../../assets/images/Health/sit-ups.png'),
       gifSource: require('../../assets/images/Health/sit-ups.gif'),
       exerciseOrder: [
         '1. 바닥에 누워 무릎을 구부리고 발이 바닥과 떨어지지 않도록 한다.',
@@ -91,9 +101,11 @@ const exerciseData = [
     {
       id: 'leg-raise',
       title: '레그레이즈',
+      type: '상체',
       difficulty: '초급',
       targetMuscle: '복부',
-      mainMuscle: '복직근 하부 (lower rectus abdominis)',
+      mainMuscle: '복직근 하부',
+      imageSource: require('../../assets/images/Health/leg-raise.png'),
       gifSource: require('../../assets/images/Health/leg-raise.gif'),
       exerciseOrder: [
         '1. 벤치에 누워 벤치 윗부분을 두 손으로 잡는다.',
@@ -107,10 +119,12 @@ const exerciseData = [
     {
       id: 'hanging-leg-raise',
       title: '레그레이즈(행잉)',
+      type: '상체',
       difficulty: '상급',
       targetMuscle: '복부',
-      mainMuscle: '복직근 하부 (lower rectus abdominis)',
-      secondaryMuscle: '힙 굴곡근 (hip flexors)',
+      mainMuscle: '복직근 하부',
+      secondaryMuscle: '힙 굴곡근',
+      imageSource: require('../../assets/images/Health/hanging-leg-raise.png'),
       gifSource: require('../../assets/images/Health/hanging-leg-raise.gif'),
       exerciseOrder: [
         '1. 철봉에 매달려 몸을 펴고 무릎을 약간 구부린다.',
@@ -125,10 +139,12 @@ const exerciseData = [
     {
       id: 'squat',
       title: '스쿼트',
+      type: '하체',
       difficulty: '중급',
       targetMuscle: '허벅지 앞',
-      mainMuscle: '대퇴사두근 (quadriceps)',
-      secondaryMuscle: '대둔근 (gluteus maximus), 슬굴곡근 (hamstrings)',
+      mainMuscle: '대퇴사두근',
+      secondaryMuscle: '대둔근, 슬굴곡근',
+      imageSource: require('../../assets/images/Health/squat.png'),
       gifSource: require('../../assets/images/Health/squat.gif'),
       exerciseOrder: [
         '1. 선 자세에서 양손을 앞으로 모은다.',
@@ -143,10 +159,12 @@ const exerciseData = [
     {
       id: 'one-leg-squat',
       title: '한 발 스쿼트',
+      type: '하체',
       difficulty: '중급',
       targetMuscle: '하체',
-      mainMuscle: '대퇴사두근 (quadriceps)',
-      secondaryMuscle: '햄스트링 (hamstrings), 엉덩이 근육 (glutes)',
+      mainMuscle: '대퇴사두근',
+      secondaryMuscle: '햄스트링, 엉덩이 근육',
+      imageSource: require('../../assets/images/Health/one-leg-squat.png'),
       gifSource: require('../../assets/images/Health/one-leg-squat.gif'),
       exerciseOrder: [
         '1. 벤치나 의자 앞에 발을 골반 너비로 벌리고 선다.',
@@ -162,10 +180,12 @@ const exerciseData = [
     {
       id: 'lunge',
       title: '런지',
+      type: '하체',
       difficulty: '중급',
       targetMuscle: '허벅지 앞',
-      mainMuscle: '대퇴사두근 (quadriceps)',
-      secondaryMuscle: '대둔근 (gluteus maximus), 슬굴곡근 (hamstrings)',
+      mainMuscle: '대퇴사두근',
+      secondaryMuscle: '대둔근, 슬굴곡근',
+      imageSource: require('../../assets/images/Health/lunge.png'),
       gifSource: require('../../assets/images/Health/lunge.gif'),
       exerciseOrder: [
         '1. 두 발을 골반 너비로 벌리고 선다.',
@@ -181,10 +201,12 @@ const exerciseData = [
     {
       id: 'calf-raise',
       title: '카프레이즈',
+      type: '하체',
       difficulty: '초급',
       targetMuscle: '종아리',
-      mainMuscle: '비복근 (gastrocnemius)',
-      secondaryMuscle: '가자미근 (soleus)',
+      mainMuscle: '비복근',
+      secondaryMuscle: '가자미근',
+      imageSource: require('../../assets/images/Health/calf-raise.png'),
       gifSource: require('../../assets/images/Health/calf-raise.gif'),
       exerciseOrder: [
         '1. 스텝박스 위에 발끝 1/3 정도 딛고 올라선다.',
@@ -198,10 +220,12 @@ const exerciseData = [
     {
       id: 'hip-thrust',
       title: '힙 쓰러스트',
+      type: '하체',
       difficulty: '중급',
       targetMuscle: '엉덩이, 고관절',
-      mainMuscle: '엉덩이 근육 (glutes)',
-      secondaryMuscle: '햄스트링 (hamstrings), 대퇴사두근 (quadriceps), 척추 기립근 (erector spinae), 복근 (abdominals)',
+      mainMuscle: '엉덩이 근육',
+      secondaryMuscle: '햄스트링, 대퇴사두근, 척추 기립근, 복근',
+      imageSource: require('../../assets/images/Health/hip-thrust.png'),
       gifSource: require('../../assets/images/Health/hip-thrust.gif'),
       exerciseOrder: [
       '1. 바닥에 앉아 등을 벤치나 스텝에 기대고 시작한다.',

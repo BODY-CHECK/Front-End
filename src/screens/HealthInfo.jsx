@@ -1,44 +1,170 @@
-import React from 'react';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { Button, ButtonText, Container, ContentContainer, ContentText, GIFContainer, HeaderContainer, HealthType, StyledGIF, TextContainer, TitleText } from './HealthInfo.style';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import {
+  Button,
+  ButtonText,
+  Container,
+  ContentContainer,
+  ContentText,
+  DifficultyText,
+  GIFContainer,
+  InfoContainer,
+  ItemContainer,
+  ItemText,
+  MainMuscleText,
+  ModalButton,
+  ModalButtonContainer,
+  ModalButtonText,
+  ModalContainer,
+  ModalContent,
+  ModalContentText,
+  ModalExitButton,
+  ModalExitButtonText,
+  NumContainer,
+  SecondaryMuscleText,
+  StyledGIF,
+  TargetMuscleText,
+  TextContainer,
+  TitleText,
+} from './HealthInfo.style';
+import {Modal} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
+import exerciseData from '../components/Health/HealthInfoData';
 
 export default function HealthInfo() {
   const route = useRoute();
   const navigation = useNavigation();
-  const { title, difficulty, targetMuscle, mainMuscle, secondaryMuscle, gifSource, exerciseOrder, caution } = route.params;
+  const {id, repCount: initialRepCount} = route.params;
+  const exercise = exerciseData.find(ex => ex.id === id);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [repCount, setRepCount] = useState(initialRepCount || 12); // 운동 개수 저장
+  const [contentWidth, setContentWidth] = useState(0);
+  const itemWidth = 50;
+  const numbers = [...Array(20).keys()].map(i => (i + 1).toString());
+  const scrollViewRef = useRef(null);
+
+  useFocusEffect(() => {
+    navigation.getParent()?.setOptions({
+      tabBarStyle: {display: 'none'},
+    });
+
+    return () =>
+      navigation.getParent()?.setOptions({
+        tabBarStyle: undefined,
+      });
+  });
+
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      const initialScrollPosition = (repCount - 1) * itemWidth;
+      scrollViewRef.current.scrollTo({
+        x: initialScrollPosition,
+        animated: false,
+      });
+    }
+  }, [contentWidth]);
+
+  const handleScroll = event => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const index = Math.round(offsetX / itemWidth);
+    setRepCount(index + 1); // Index starts from 0, so adding 1
+  };
+
+  const handleExcercise = () => {
+    setModalVisible(true);
+  };
+
+  const handleSelect = () => {
+    setModalVisible(false);
+    navigation.navigate('Health', {id});
+  };
+
+  const handleCancel = () => {
+    setModalVisible(false);
+  };
 
   return (
     <Container>
-      <HeaderContainer>
-        <HealthType>{title}</HealthType>
-      </HeaderContainer>
-      <ContentContainer >
+      <ContentContainer>
         <GIFContainer>
-          <StyledGIF source={gifSource}/>
+          <StyledGIF source={exercise.gifSource} />
         </GIFContainer>
-          <TextContainer>
-            <TitleText>운동 정보</TitleText>
-            <ContentText>난이도: {difficulty}</ContentText>
-            <ContentText>운동 부위: {targetMuscle}</ContentText>
-            <ContentText>주운동 근육 부위: {mainMuscle}</ContentText>
-            <ContentText>부운동 근육 부위: {secondaryMuscle}</ContentText>
-          </TextContainer>
-          <TextContainer>
-            <TitleText>운동 순서</TitleText>
-            {exerciseOrder.map((step, index) => (
-              <ContentText key={index}>{step}</ContentText>
-            ))}
-          </TextContainer>
-          <TextContainer>
-            <TitleText>주의 사항</TitleText>
-            {caution.map((cautionItem, index) => (
-              <ContentText key={index}>{cautionItem}</ContentText>
-            ))}
-          </TextContainer>
+        <InfoContainer>
+          <DifficultyText difficulty={exercise.difficulty}>
+            {' '}
+            {exercise.difficulty}{' '}
+          </DifficultyText>
+          <TargetMuscleText> {exercise.targetMuscle} </TargetMuscleText>
+          <MainMuscleText> {exercise.mainMuscle} </MainMuscleText>
+          <SecondaryMuscleText>
+            {' '}
+            {exercise.secondaryMuscle}{' '}
+          </SecondaryMuscleText>
+        </InfoContainer>
+        <TextContainer>
+          <TitleText>운동 순서</TitleText>
+          {exercise.exerciseOrder.map((step, index) => (
+            <ContentText key={index}>{step}</ContentText>
+          ))}
+        </TextContainer>
+        <TextContainer>
+          <TitleText>주의 사항</TitleText>
+          {exercise.caution.map((cautionItem, index) => (
+            <ContentText key={index}>{cautionItem}</ContentText>
+          ))}
+        </TextContainer>
       </ContentContainer>
-      <Button onPress={() => navigation.navigate('HealthNum', { title, gifSource })}>
+      <Button onPress={handleExcercise}>
         <ButtonText>AI와 함께 운동해보세요!</ButtonText>
       </Button>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}>
+        <ModalContainer
+          onLayout={e => setContentWidth(e.nativeEvent.layout.width)}>
+          <ModalContent>
+            <ModalContentText>{exercise.title}</ModalContentText>
+            <ModalExitButton onPress={handleCancel}>
+              <ModalExitButtonText>X</ModalExitButtonText>
+            </ModalExitButton>
+            <NumContainer>
+              <ScrollView
+                horizontal
+                ref={scrollViewRef}
+                snapToInterval={itemWidth} // Snaps to the next item
+                decelerationRate="fast"
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  paddingHorizontal: (contentWidth - itemWidth - 103) / 2,
+                }}
+                onScroll={handleScroll}
+                scrollEventThrottle={16}>
+                {numbers.map((item, index) => (
+                  <ItemContainer
+                    key={index}
+                    width={itemWidth}
+                    selected={repCount === parseInt(item, 10)}>
+                    <ItemText selected={repCount === parseInt(item, 10)}>
+                      {item}
+                    </ItemText>
+                  </ItemContainer>
+                ))}
+              </ScrollView>
+            </NumContainer>
+            <ModalButtonContainer>
+              <ModalButton onPress={handleSelect}>
+                <ModalButtonText>선택</ModalButtonText>
+              </ModalButton>
+            </ModalButtonContainer>
+          </ModalContent>
+        </ModalContainer>
+      </Modal>
     </Container>
   );
 }
