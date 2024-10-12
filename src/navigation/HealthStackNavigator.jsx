@@ -5,17 +5,18 @@ import HealthInfo from '../screens/HealthInfo';
 import HealthNum from '../screens/HealthNum';
 import Health from '../screens/Health';
 import HealthResult from '../screens/HealthResult';
+import HeaderMain from '../components/HeaderMain';
 
 const Stack = createStackNavigator();
-
+const CustomHeader = () => <HeaderMain />;
 
 export default function HealthStackNavigator(){
     return(
         <Stack.Navigator >
-            <Stack.Screen name="Healthlist" component={Healthlist} options={{ headerShown: false }}/>
+            <Stack.Screen name="Healthlist" component={Healthlist} options={{ headerTitle: CustomHeader }}/>
             <Stack.Screen name="HealthInfo" component={HealthInfo} options={({ route }) => ({
     headerShown: true,
-    title: route.params?.title || '운동 정보',
+    title: route.params?.title,
     headerTitleAlign: 'center',
     headerTitleStyle: {
       fontWeight: 'bold',

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button1, Button2, ButtonContainer, ButtonText1, ButtonText2, Container, ContentContainer, ContentText, GIFContainer, GraphContainer, HeaderContainer, HealthType, ModalButton1, ModalButton2, ModalButtonContainer, ModalButtonText1, ModalButtonText2, ModalContainer, ModalContent, ModalContentText1, ModalContentText2, StyledGIF, TextContainer } from './HealtResult.style';
+import { Button1, Button2, ButtonContainer, ButtonText1, ButtonText2, Container, ContentContainer, ContentText, GIFContainer, GraphContainer, ModalButton1, ModalButton2, ModalButtonContainer, ModalButtonText1, ModalButtonText2, ModalContainer, ModalContent, ModalContentText1, ModalContentText2, StyledGIF, TextContainer } from './HealtResult.style';
 import { CommonActions, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { BarChart } from 'react-native-chart-kit';
 import { Alert, Modal } from 'react-native';
@@ -77,9 +77,6 @@ export default function HealthResult() {
 
   return (
     <Container>
-      <HeaderContainer>
-        <HealthType>운동 결과: {title}</HealthType>
-      </HeaderContainer>
       <ContentContainer>
         <GIFContainer>
           <StyledGIF source={gifSource}/>
