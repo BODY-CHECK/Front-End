@@ -42,18 +42,17 @@ export const StyledGIF = styled.Image`
 export const GraphContainer = styled.View`
   padding: 10px;
   background-color: white;
-  elevation: 5;
 `;
 
 export const TextContainer = styled.View`
   padding: 10px;
   min-height: 130px;
-  background-color: #98B8F4;
   border-radius: 10px;
+  border: 1px solid black;
 `;
 
 export const ContentText = styled.Text`
-  color: white;
+  color: #000;
   font-weight: bold;
 `;
 
@@ -70,7 +69,7 @@ export const Button1 = styled.TouchableOpacity`
   height: 50px;
   padding: 15px;
   background-color: #3373eb;
-  border-radius: 50px;
+  border-radius: 10px;
   align-items: center;
   justify-content: center;
   margin: 0 10px;
@@ -80,8 +79,8 @@ export const Button2 = styled.TouchableOpacity`
   width: 45%;
   height: 50px;
   padding: 15px;
-  background-color: #E5E5E5;
-  border-radius: 50px;
+  background-color: #3C3B40;
+  border-radius: 10px;
   align-items: center;
   justify-content: center;
   margin: 0 10px;
@@ -94,7 +93,7 @@ export const ButtonText1 = styled.Text`
 `;
 
 export const ButtonText2 = styled.Text`
-  color: #000;
+  color: #fff;
   font-size: 16px;
   font-weight: bold;
 `;
@@ -122,8 +121,10 @@ export const ModalContentText1 = styled.Text`
 `;
 
 export const ModalContentText2 = styled.Text`
-  color: black;
+  color: #7C86A2;
   margin-bottom: 15px;
+  text-align: center;
+  font-size: 15px;
 `;
 
 export const ModalButtonContainer = styled.View`
@@ -139,7 +140,7 @@ export const ModalButton1 = styled.TouchableOpacity`
   height: 50px;
   padding: 15px;
   background-color: #3373eb;
-  border-radius: 50px;
+  border-radius: 10px;
   align-items: center;
   justify-content: center;
   margin: 0 10px;
@@ -149,8 +150,8 @@ export const ModalButton2 = styled.TouchableOpacity`
   width: 45%;
   height: 50px;
   padding: 15px;
-  background-color: #E5E5E5;
-  border-radius: 50px;
+  background-color: #3C3B40;
+  border-radius: 10px;
   align-items: center;
   justify-content: center;
   margin: 0 10px;
@@ -163,7 +164,7 @@ export const ModalButtonText1 = styled.Text`
 `;
 
 export const ModalButtonText2 = styled.Text`
-  color: #000;
+  color: #fff;
   font-size: 16px;
   font-weight: bold;
 `;

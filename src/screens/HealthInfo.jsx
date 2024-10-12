@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { Button, ButtonText, Container, ContentContainer, ContentText, GIFContainer, HeaderContainer, HealthType, StyledGIF, TextContainer, TitleText } from './HealthInfo.style';
 
 export default function HealthInfo() {
@@ -7,11 +7,18 @@ export default function HealthInfo() {
   const navigation = useNavigation();
   const { title, difficulty, targetMuscle, mainMuscle, secondaryMuscle, gifSource, exerciseOrder, caution } = route.params;
 
+  useFocusEffect(() => {
+    navigation.getParent()?.setOptions({
+      tabBarStyle: { display: 'none' },
+    });
+
+    return () => navigation.getParent()?.setOptions({
+      tabBarStyle: undefined,
+    });
+  });
+
   return (
     <Container>
-      <HeaderContainer>
-        <HealthType>{title}</HealthType>
-      </HeaderContainer>
       <ContentContainer >
         <GIFContainer>
           <StyledGIF source={gifSource}/>

@@ -54,7 +54,7 @@ function BottomTabNavigator() {
         headerTitle: () => <HeaderMain />,
       })}>
       <Tab.Screen name="홈" component={HomeScreenWrapper} />
-      <Tab.Screen name="AI 피티" component={HealthStackNavigator} />
+      <Tab.Screen name="AI 피티" component={HealthStackNavigator} options={{ headerShown: false }} />
       <Tab.Screen name="운동 루틴" component={Routine} />
       <Tab.Screen name="마이페이지" component={MyPage} />
     </Tab.Navigator>
