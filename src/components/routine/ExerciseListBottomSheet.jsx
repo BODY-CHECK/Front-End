@@ -1,4 +1,4 @@
-import React, {useMemo, useCallback} from 'react';
+import React, {useMemo, useCallback, useState} from 'react';
 import {Text} from 'react-native';
 import BottomSheet, {
   BottomSheetBackdrop,
@@ -10,6 +10,8 @@ import exerciseData from '../Health/HealthInfoData';
 const ExerciseListBottomSheet = ({sheetRef, onSelect}) => {
   // snap points 설정
   const snapPoints = useMemo(() => ['75%'], []);
+
+  const [filter, setFilter] = useState('전체'); // 필터 상태 추가
 
   // 시트 상태가 변경될 때 호출되는 함수
   const handleSheetChanges = useCallback(index => {
@@ -31,6 +33,12 @@ const ExerciseListBottomSheet = ({sheetRef, onSelect}) => {
   const handleExercisePress = exercise => {
     onSelect(exercise);
   };
+
+  // 필터에 따른 운동 데이터 필터링
+  const filteredExercises = exerciseData.filter(exercise => {
+    if (filter === '전체') return true;
+    return exercise.type === filter;
+  });
 
   const renderItem = ({item}) => (
     <ExerciseItem onPress={() => handleExercisePress(item)}>
@@ -62,8 +70,27 @@ const ExerciseListBottomSheet = ({sheetRef, onSelect}) => {
           </CloseButton>
         </SheetHeader>
 
+        {/* 필터 버튼들 */}
+        <FilterWrapper>
+          <FilterButton
+            isActive={filter === '전체'}
+            onPress={() => setFilter('전체')}>
+            <FilterText isActive={filter === '전체'}>전체</FilterText>
+          </FilterButton>
+          <FilterButton
+            isActive={filter === '상체'}
+            onPress={() => setFilter('상체')}>
+            <FilterText isActive={filter === '상체'}>상체 운동</FilterText>
+          </FilterButton>
+          <FilterButton
+            isActive={filter === '하체'}
+            onPress={() => setFilter('하체')}>
+            <FilterText isActive={filter === '하체'}>하체 운동</FilterText>
+          </FilterButton>
+        </FilterWrapper>
+
         <BottomSheetScrollView>
-          {exerciseData.map(exercise => renderItem({item: exercise}))}
+          {filteredExercises.map(exercise => renderItem({item: exercise}))}
         </BottomSheetScrollView>
       </ModalContent>
     </BottomSheet>
@@ -139,5 +166,29 @@ const MuscleWrapper = styled.View`
 const MainMuscle = styled.Text`
   font-size: 9px;
   color: #fff;
+  font-weight: bold;
+`;
+
+const FilterWrapper = styled.View`
+  flex-direction: row;
+  gap: 5px;
+  margin-bottom: 15px;
+`;
+
+const FilterButton = styled.TouchableOpacity`
+  background-color: ${({isActive}) => (isActive ? '#000' : '#fff')};
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 2px;
+  width: 68px;
+  height: 26px;
+  border-radius: 13px;
+  border-width: 1px;
+  border-color: #000;
+`;
+
+const FilterText = styled.Text`
+  color: ${({isActive}) => (isActive ? '#fff' : '#000')};
+  font-size: 10px;
   font-weight: bold;
 `;
