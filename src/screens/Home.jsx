@@ -20,13 +20,13 @@ function Home() {
     <Container>
       <TitlewithBtn
         title="MY 루틴"
-        buttonText="설정하기>"
+        buttonText="설정하기 >"
         onPress={handleClickRoutine}
       />
       <RoutineBox />
       <TitlewithBtn
-        title="AI 피티"
-        buttonText="전체보기>"
+        title="AI 추천 운동"
+        buttonText="전체보기 >"
         onPress={handleClickAI}
       />
       <AIptBox />
