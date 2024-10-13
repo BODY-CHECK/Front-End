@@ -41,7 +41,7 @@ const ExerciseListBottomSheet = ({sheetRef, onSelect}) => {
   });
 
   const renderItem = ({item}) => (
-    <ExerciseItem onPress={() => handleExercisePress(item)}>
+    <ExerciseItem key={item.id} onPress={() => handleExercisePress(item)}>
       <ExerciseImage source={item.imageSource} />
       <ExerciseDetails>
         <ExerciseName>{item.title}</ExerciseName>
