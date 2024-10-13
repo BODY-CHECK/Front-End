@@ -18,13 +18,13 @@ export default ExerciseCard;
 
 const CardContainer = styled.View`
   flex-direction: row;
-  justify-content: space-between;
-  margin-top: 20px;
+  justify-content: space-evenly;
+  width: 100%;
 `;
 
 const Card = styled.TouchableOpacity`
-  width: 50%;
-  height: 190px;
+  width: 160px;
+  height: 160px;
   border-radius: 10px;
   background-color: #fff;
   align-items: center;
@@ -33,10 +33,4 @@ const Card = styled.TouchableOpacity`
 const CardImage = styled.Image`
   width: 100%;
   height: 100%;
-`;
-
-const CardText = styled.Text`
-  margin-top: 10px;
-  font-size: 14px;
-  color: #000;
 `;

@@ -9,7 +9,7 @@ const RoutineBox = ({routines, onPlusClick, isEditing, onDelete}) => {
           <RoutineItem>
             {exercise ? (
               <>
-                <ExerciseImage source={exercise.image} />
+                <ExerciseImage source={exercise.imageSource} />
                 {isEditing && (
                   <DeleteButton onPress={() => onDelete(index)}>
                     <DeleteText>X</DeleteText>
@@ -22,7 +22,7 @@ const RoutineBox = ({routines, onPlusClick, isEditing, onDelete}) => {
               </PlusButton>
             )}
           </RoutineItem>
-          <RoutineText>{exercise ? exercise.name : '미설정'}</RoutineText>
+          <RoutineText>{exercise ? exercise.title : '미설정'}</RoutineText>
         </ItemWrapper>
       ))}
     </Container>
@@ -34,8 +34,9 @@ export default RoutineBox;
 const Container = styled.View`
   width: 100%;
   height: 156px;
-  border-radius: 15px;
-  elevation: 5;
+  border-radius: 10px;
+  border-width: 0.5px;
+  border-color: #999999;
   background-color: #fff;
   margin-bottom: 30px;
   flex-direction: row;
@@ -51,9 +52,6 @@ const ItemWrapper = styled.View`
 const RoutineItem = styled.View`
   width: 92px;
   height: 92px;
-  border-radius: 15px;
-  border-width: 1px;
-  border-color: #3373eb;
   background-color: #fff;
   margin-bottom: 12px;
   align-items: center;
@@ -87,16 +85,18 @@ const ExerciseImage = styled.Image`
 const DeleteButton = styled.TouchableOpacity`
   position: absolute;
   top: -5px;
-  right: -5px;
-  background-color: red;
+  right: -10px;
+  background-color: black;
   border-radius: 50px;
   width: 20px;
   height: 20px;
   justify-content: center;
   align-items: center;
+  text-align: center;
 `;
 
 const DeleteText = styled.Text`
   color: white;
-  font-size: 12px;
+  font-size: 10px;
+  font-weight: bold;
 `;
