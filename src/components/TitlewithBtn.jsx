@@ -20,7 +20,7 @@ const HeaderWrapper = styled.View`
   padding-left: 6px;
   padding-right: 4px;
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 `;
 
 const Title = styled.Text`
@@ -32,7 +32,7 @@ const Title = styled.Text`
 const NavigateButton = styled.TouchableOpacity``;
 
 const ButtonText = styled.Text`
-  font-size: 16px;
+  font-size: 12px;
   padding-top: 8px;
   color: #3373eb;
 `;

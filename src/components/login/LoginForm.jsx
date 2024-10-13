@@ -34,7 +34,7 @@ const FormContainer = styled.View`
   padding: 15px;
   justify-content: center;
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
 `;
 
 const Input = styled.TextInput`
@@ -52,7 +52,7 @@ const Button = styled.TouchableOpacity`
   max-width: 400px;
   height: 50px;
   padding: 15px;
-  margin-top: 30px;
+  margin-top: 45px;
   background-color: #3373eb;
   border-radius: 50px;
   align-items: center;

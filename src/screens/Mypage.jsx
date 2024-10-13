@@ -3,14 +3,18 @@ import styled from 'styled-components';
 import MypageHeader from '../components/mypage/MypageHeader';
 import MyCalendar from '../components/mypage/MyCalendar';
 import BMIGraph from '../components/mypage/BMIGraph';
+import ToSolutionButton from '../components/mypage/ToSoulutionButton';
 
 function MyPage() {
   return (
-    <Container>
-      <MypageHeader />
-      <MyCalendar />
-      <BMIGraph />
-    </Container>
+    <>
+      <Container>
+        <MypageHeader />
+        <MyCalendar />
+        <BMIGraph />
+      </Container>
+      <ToSolutionButton />
+    </>
   );
 }
 

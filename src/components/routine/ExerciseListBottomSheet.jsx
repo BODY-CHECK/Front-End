@@ -1,77 +1,17 @@
-import React, {useMemo, useCallback} from 'react';
+import React, {useMemo, useCallback, useState} from 'react';
 import {Text} from 'react-native';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 import styled from 'styled-components/native';
-
-const exercises = [
-  {
-    id: '1',
-    name: '푸쉬업',
-    image: require('../../assets/images/Health/push-up.png'),
-  },
-  {
-    id: '2',
-    name: '푸쉬업(무릎)',
-    image: require('../../assets/images/Health/kneeing-push-up.png'),
-  },
-  {
-    id: '3',
-    name: '풀업',
-    image: require('../../assets/images/Health/pull-up.png'),
-  },
-  {
-    id: '4',
-    name: '풀업(밴드)',
-    image: require('../../assets/images/Health/banding-pull-up.png'),
-  },
-  {
-    id: '5',
-    name: '윗몸일으키기',
-    image: require('../../assets/images/Health/sit-ups.png'),
-  },
-  {
-    id: '6',
-    name: '레그레이즈',
-    image: require('../../assets/images/Health/leg-raise.png'),
-  },
-  {
-    id: '7',
-    name: '레그레이즈(행잉)',
-    image: require('../../assets/images/Health/hanging-leg-raise.png'),
-  },
-  {
-    id: '8',
-    name: '스쿼트',
-    image: require('../../assets/images/Health/squat.png'),
-  },
-  {
-    id: '9',
-    name: '한 발 스쿼트',
-    image: require('../../assets/images/Health/one-leg-squat.png'),
-  },
-  {
-    id: '10',
-    name: '런지',
-    image: require('../../assets/images/Health/lunge.png'),
-  },
-  {
-    id: '11',
-    name: '카프레이즈',
-    image: require('../../assets/images/Health/calf-raise.png'),
-  },
-  {
-    id: '12',
-    name: '힙 쓰러스트',
-    image: require('../../assets/images/Health/hip-thrust.png'),
-  },
-];
+import exerciseData from '../Health/HealthInfoData';
 
 const ExerciseListBottomSheet = ({sheetRef, onSelect}) => {
   // snap points 설정
   const snapPoints = useMemo(() => ['75%'], []);
+
+  const [filter, setFilter] = useState('전체'); // 필터 상태 추가
 
   // 시트 상태가 변경될 때 호출되는 함수
   const handleSheetChanges = useCallback(index => {
@@ -94,6 +34,24 @@ const ExerciseListBottomSheet = ({sheetRef, onSelect}) => {
     onSelect(exercise);
   };
 
+  // 필터에 따른 운동 데이터 필터링
+  const filteredExercises = exerciseData.filter(exercise => {
+    if (filter === '전체') return true;
+    return exercise.type === filter;
+  });
+
+  const renderItem = ({item}) => (
+    <ExerciseItem key={item.id} onPress={() => handleExercisePress(item)}>
+      <ExerciseImage source={item.imageSource} />
+      <ExerciseDetails>
+        <ExerciseName>{item.title}</ExerciseName>
+        <MuscleWrapper>
+          <MainMuscle>{item.mainMuscle}</MainMuscle>
+        </MuscleWrapper>
+      </ExerciseDetails>
+    </ExerciseItem>
+  );
+
   return (
     <BottomSheet
       ref={sheetRef}
@@ -101,7 +59,7 @@ const ExerciseListBottomSheet = ({sheetRef, onSelect}) => {
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
       backdropComponent={renderBackdrop} // backdrop 적용
-      enablePanDownToClose={true} // 슬라이드로 닫기
+      enablePanDownToClose={false} // 슬라이드로 닫기
       enableBackdropDismiss={true} // 배경 터치로 닫기
     >
       <ModalContent>
@@ -112,17 +70,27 @@ const ExerciseListBottomSheet = ({sheetRef, onSelect}) => {
           </CloseButton>
         </SheetHeader>
 
+        {/* 필터 버튼들 */}
+        <FilterWrapper>
+          <FilterButton
+            isActive={filter === '전체'}
+            onPress={() => setFilter('전체')}>
+            <FilterText isActive={filter === '전체'}>전체</FilterText>
+          </FilterButton>
+          <FilterButton
+            isActive={filter === '상체'}
+            onPress={() => setFilter('상체')}>
+            <FilterText isActive={filter === '상체'}>상체 운동</FilterText>
+          </FilterButton>
+          <FilterButton
+            isActive={filter === '하체'}
+            onPress={() => setFilter('하체')}>
+            <FilterText isActive={filter === '하체'}>하체 운동</FilterText>
+          </FilterButton>
+        </FilterWrapper>
+
         <BottomSheetScrollView>
-          <ExerciseGrid>
-            {exercises.map(exercise => (
-              <ExerciseItem
-                key={exercise.id}
-                onPress={() => handleExercisePress(exercise)}>
-                <ExerciseImage source={exercise.image} />
-                <ExerciseText>{exercise.name}</ExerciseText>
-              </ExerciseItem>
-            ))}
-          </ExerciseGrid>
+          {filteredExercises.map(exercise => renderItem({item: exercise}))}
         </BottomSheetScrollView>
       </ModalContent>
     </BottomSheet>
@@ -153,28 +121,74 @@ const SheetTitle = styled.Text`
 
 const CloseButton = styled.TouchableOpacity``;
 
-const ExerciseGrid = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-`;
-
 const ExerciseItem = styled.TouchableOpacity`
-  width: 30%;
-  margin-bottom: 20px;
+  flex-direction: row;
   align-items: center;
+  border-radius: 10px;
+  border-width: 0.5px;
+  border-color: #999999;
+  margin-bottom: 8px;
+  padding: 10px 8px;
 `;
 
 const ExerciseImage = styled.Image`
-  width: 92px;
-  height: 92px;
-  border-radius: 15px;
-  border-width: 1px;
-  border-color: #3373eb;
-  margin-bottom: 10px;
+  width: 80px;
+  height: 80px;
+  margin-right: 10px;
 `;
 
-const ExerciseText = styled.Text`
-  font-size: 14px;
+const ExerciseDetails = styled.View`
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  gap: 5px;
+`;
+
+const ExerciseName = styled.Text`
+  font-size: 15px;
+  margin-top: 16px;
+  font-weight: bold;
   color: #333;
+  margin-left: 5px;
+  margin-bottom: 5px;
+`;
+
+const MuscleWrapper = styled.View`
+  align-self: flex-start;
+  text-align: center;
+  justify-content: center;
+  background-color: #3373eb;
+  border-radius: 5px;
+  margin-left: 4px;
+  padding: 3px 16px 5px 16px;
+`;
+
+const MainMuscle = styled.Text`
+  font-size: 9px;
+  color: #fff;
+  font-weight: bold;
+`;
+
+const FilterWrapper = styled.View`
+  flex-direction: row;
+  gap: 5px;
+  margin-bottom: 15px;
+`;
+
+const FilterButton = styled.TouchableOpacity`
+  background-color: ${({isActive}) => (isActive ? '#000' : '#fff')};
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 2px;
+  width: 68px;
+  height: 26px;
+  border-radius: 13px;
+  border-width: 1px;
+  border-color: #000;
+`;
+
+const FilterText = styled.Text`
+  color: ${({isActive}) => (isActive ? '#fff' : '#000')};
+  font-size: 10px;
+  font-weight: bold;
 `;

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {View, TextInput, Button} from 'react-native';
-import Svg, {Rect, Text as SvgText, G, Circle, Polygon} from 'react-native-svg';
+import {Button} from 'react-native';
+import Svg, {Circle, G, Polygon, Rect, Text as SvgText} from 'react-native-svg';
 import styled from 'styled-components/native';
 
 const graphWidth = 360; // 그래프 너비 고정

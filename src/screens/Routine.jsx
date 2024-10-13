@@ -60,7 +60,7 @@ function Routine() {
     <Container>
       <TitlewithBtn
         title="MY 루틴"
-        buttonText={isEditing ? '저장하기>' : '설정하기>'}
+        buttonText={isEditing ? '저장하기 >' : '설정하기 >'}
         onPress={toggleEditing}
       />
       <DaySelector selectedDay={selectedDay} onDayChange={setSelectedDay} />
