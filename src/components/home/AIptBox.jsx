@@ -41,6 +41,7 @@ const AIptBox = () => {
 export default AIptBox;
 
 const Container = styled.View`
+  flex: 1;
   width: 100%;
   background-color: #fff;
   justify-content: space-evenly;
