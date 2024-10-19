@@ -166,7 +166,7 @@ export const ModalButton = styled.TouchableOpacity`
 `;
 
 export const ModalExitButton = styled.TouchableOpacity`
-  borderradius: 20px;
+  border-radius: 20px;
   padding: 10px;
   position: absolute;
   top: 10px;
