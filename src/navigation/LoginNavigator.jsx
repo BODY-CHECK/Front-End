@@ -13,11 +13,6 @@ function LoginNavigator({isLoggedIn, setIsLoggedIn}) {
     <Stack.Navigator>
       {isLoggedIn ? (
         // 로그인 된 상태에서는 바텀 네비게이터 표시
-        // <Stack.Screen
-        //   name="Main"
-        //   component={BottomTabNavigator}
-        //   options={{headerShown: false}}
-        // />
         <Stack.Screen name="Main" options={{headerShown: false}}>
           {props => (
             <BottomTabNavigator {...props} setIsLoggedIn={setIsLoggedIn} />
