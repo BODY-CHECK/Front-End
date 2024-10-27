@@ -1,9 +1,19 @@
 import {useState} from 'react';
 import styled from 'styled-components/native';
 
-const SizeInput = () => {
+const SizeInput = ({onHeightChange, onWeightChange}) => {
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
+
+  const handleHeightChange = value => {
+    setHeight(value);
+    onHeightChange(value); // 키 변경 시 부모 컴포넌트로 전달
+  };
+
+  const handleWeightChange = value => {
+    setWeight(value);
+    onWeightChange(value); // 몸무게 변경 시 부모 컴포넌트로 전달
+  };
 
   return (
     <Container>
@@ -12,7 +22,7 @@ const SizeInput = () => {
           <SLabel>키</SLabel>
           <SInput
             value={height}
-            onChangeText={setHeight}
+            onChangeText={handleHeightChange}
             keyboardType="numeric"
           />
           <UnitText>cm</UnitText>
@@ -21,7 +31,7 @@ const SizeInput = () => {
           <SLabel>몸무게</SLabel>
           <SInput
             value={weight}
-            onChangeText={setWeight}
+            onChangeText={handleWeightChange}
             keyboardType="numeric"
           />
           <UnitText>kg</UnitText>

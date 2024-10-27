@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import TitlewithBtn from '../components/TitlewithBtn';
 import RoutineBox from '../components/home/RoutineBox';
 import AIptBox from '../components/home/AIptBox';

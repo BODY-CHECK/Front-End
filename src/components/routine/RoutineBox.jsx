@@ -22,7 +22,7 @@ const RoutineBox = ({routines, onPlusClick, isEditing, onDelete}) => {
               </PlusButton>
             )}
           </RoutineItem>
-          <RoutineText>{exercise ? exercise.title : '미설정'}</RoutineText>
+          <RoutineText>{exercise ? exercise.title : ''}</RoutineText>
         </ItemWrapper>
       ))}
     </Container>
@@ -73,6 +73,7 @@ const PlusButton = styled.TouchableOpacity`
 `;
 
 const Plus = styled.Text`
+  margin-top: 20px;
   font-size: 50px;
   color: #e5e5e5;
 `;

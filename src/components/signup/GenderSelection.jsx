@@ -1,11 +1,9 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
 
-const GenderSelection = () => {
-  const [selectedGender, setSelectedGender] = useState(null);
-
+const GenderSelection = ({value, onChange}) => {
   const handleGenderClick = gender => {
-    setSelectedGender(gender);
+    onChange(gender); // 부모 컴포넌트로 선택한 성별 전달
   };
 
   return (
@@ -16,14 +14,14 @@ const GenderSelection = () => {
       </LabelContainer>
       <GButtonWrapper>
         <GenderButton
-          isSelected={selectedGender === 'male'}
-          onPress={() => handleGenderClick('male')}>
-          <ButtonText isSelected={selectedGender === 'male'}>남성</ButtonText>
+          isSelected={value === 'MALE'}
+          onPress={() => handleGenderClick('MALE')}>
+          <ButtonText isSelected={value === 'MALE'}>남성</ButtonText>
         </GenderButton>
         <GenderButton
-          isSelected={selectedGender === 'female'}
-          onPress={() => handleGenderClick('female')}>
-          <ButtonText isSelected={selectedGender === 'female'}>여성</ButtonText>
+          isSelected={value === 'FEMALE'}
+          onPress={() => handleGenderClick('FEMALE')}>
+          <ButtonText isSelected={value === 'FEMALE'}>여성</ButtonText>
         </GenderButton>
       </GButtonWrapper>
     </Container>
