@@ -4,6 +4,9 @@ import SignupHeader from '../components/signup/SignupHeader';
 import InputField from '../components/signup/InputField';
 import Button from '../components/signup/Button';
 import {useNavigation} from '@react-navigation/native';
+import axios from 'axios';
+
+const baseURL = 'https://dev.bodycheck.store';
 
 function Signup1() {
   const navigation = useNavigation();
@@ -12,6 +15,8 @@ function Signup1() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const [isAuthVerified, setAuthVerified] = useState(false); // 인증 성공 여부
+  const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
 
   const validateEmail = email => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -19,12 +24,10 @@ function Signup1() {
       setErrors(prev => ({...prev, email: '이메일 형식으로 입력해주세요'}));
       return false;
     }
-    // 이메일 중복 확인 로직 추가 필요
     setErrors(prev => ({...prev, email: ''}));
     return true;
   };
 
-  // 비밀번호 유효성 검사
   const validatePassword = password => {
     if (password.length < 8 || password.length > 16) {
       setErrors(prev => ({...prev, password: '8~16자로 구성해주세요'}));
@@ -45,7 +48,6 @@ function Signup1() {
     }
   };
 
-  // 비밀번호 확인 유효성 검사
   const validateConfirmPassword = (newConfirmPassword, newPassword) => {
     if (newPassword !== newConfirmPassword) {
       setErrors(prev => ({
@@ -73,16 +75,58 @@ function Signup1() {
     validateConfirmPassword(text, password); // 실시간으로 비밀번호 확인 유효성 검사
   };
 
-  const handleNext = () => {
-    const isEmailValid = validateEmail(email);
-    const isPasswordValid = validatePassword(password);
-    const isConfirmPasswordValid = validateConfirmPassword(
-      confirmPassword,
-      password,
-    );
+  // "다음" 버튼 활성화 조건을 useEffect로 관리
+  useEffect(() => {
+    if (
+      isAuthVerified &&
+      validatePassword(password) &&
+      validateConfirmPassword(confirmPassword, password)
+    ) {
+      setIsNextButtonEnabled(true);
+    } else {
+      setIsNextButtonEnabled(false);
+    }
+  }, [isAuthVerified, password, confirmPassword]); // 종속성 배열에 필요한 상태를 넣음
 
-    if (isEmailValid && isPasswordValid && isConfirmPasswordValid) {
-      navigation.navigate('SignUp2');
+  const handleNext = () => {
+    if (isNextButtonEnabled) {
+      navigation.navigate('SignUp2', {email, password});
+    }
+  };
+
+  const handleAuthButtonClick = async () => {
+    try {
+      const response = await axios.post(
+        `${baseURL}/members/emails/send-verification-code`,
+        {
+          email: email,
+        },
+      );
+      if (response.data.success) {
+        alert('인증번호가 이메일로 전송되었습니다.');
+      } else {
+        alert('인증번호 전송에 실패했습니다. 다시 시도해주세요.');
+      }
+    } catch (error) {
+      alert('서버와의 통신 중 문제가 발생했습니다. 나중에 다시 시도해주세요.');
+    }
+  };
+
+  const handleAuthCodeVerification = async () => {
+    try {
+      const response = await axios.post(
+        `${baseURL}/members/emails/verify-code`,
+        {email: email, code: authCode},
+      );
+      if (response.data.success) {
+        alert('인증이 완료되었습니다.');
+        setAuthVerified(true);
+      } else {
+        alert('인증번호가 올바르지 않습니다. 다시 시도해주세요.');
+        setAuthVerified(false);
+      }
+    } catch (error) {
+      alert('서버와의 통신 중 문제가 발생했습니다. 나중에 다시 시도해주세요.');
     }
   };
 
@@ -98,8 +142,15 @@ function Signup1() {
         onChangeText={handleEmailChange}
         errorMessage={errors.email}
         withAuthButton
+        onPressBtn={handleAuthButtonClick}
       />
-      <InputField placeholder="인증번호 입력" withCheckButton />
+      <InputField
+        placeholder="인증번호 입력"
+        value={authCode}
+        onChangeText={setAuthCode}
+        withCheckButton
+        onPressBtn={handleAuthCodeVerification}
+      />
       <InputField
         label="비밀번호"
         placeholder="비밀번호 입력 (영문, 숫자, 특수문자 포함 8~16자)"
@@ -120,7 +171,11 @@ function Signup1() {
         errorMessage={errors.confirmPassword}
         secureTextEntry={true}
       />
-      <Button title="다음" onPress={handleNext} />
+      <Button
+        title="다음"
+        onPress={handleNext}
+        disabled={!isNextButtonEnabled}
+      />
     </Container>
   );
 }

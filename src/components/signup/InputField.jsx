@@ -17,6 +17,7 @@ const InputField = ({
   errorMessage,
   isPasswordField,
   secureTextEntry,
+  onPressBtn,
 }) => {
   const [isPasswordVisible, setPasswordVisible] = useState(false); // 비밀번호 보이기 상태
 
@@ -39,7 +40,9 @@ const InputField = ({
           placeholder={placeholder}
           value={value}
           onChangeText={onChangeText}
-          secureTextEntry={!isPasswordVisible} // 비밀번호 필드일 때만 가리기 기능 적용
+          secureTextEntry={
+            isPasswordField ? !isPasswordVisible : secureTextEntry
+          } // 비밀번호 필드일 때만 가리기 기능 적용
         />
         {isPasswordField && (
           <IconWrapper>
@@ -51,12 +54,12 @@ const InputField = ({
           </IconWrapper>
         )}
         {withAuthButton && (
-          <AuthButton>
+          <AuthButton onPress={onPressBtn}>
             <Text style={{color: '#fff'}}>인증 요청</Text>
           </AuthButton>
         )}
         {withCheckButton && (
-          <AuthButton>
+          <AuthButton onPress={onPressBtn}>
             <Text style={{color: '#fff'}}>확인</Text>
           </AuthButton>
         )}
@@ -106,6 +109,7 @@ const AuthButton = styled.TouchableOpacity`
   border-radius: 5px;
   color: white;
   margin-left: 10px;
+  z-index: 1;
 `;
 
 const InputContainer = styled.View`
