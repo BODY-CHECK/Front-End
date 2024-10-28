@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button} from 'react-native';
 import Svg, {Circle, G, Polygon, Rect, Text as SvgText} from 'react-native-svg';
 import styled from 'styled-components/native';
-import instance from '../../\baxiosInstance';
+import instance from '../../axiosInstance';
 
 const graphWidth = 360; // 그래프 너비 고정
 const underweightWidth = (3.5 / 10) * graphWidth; // 133px

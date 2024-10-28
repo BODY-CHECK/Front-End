@@ -4,7 +4,7 @@ import MypageHeader from '../components/mypage/MypageHeader';
 import MyCalendar from '../components/mypage/MyCalendar';
 import BMIGraph from '../components/mypage/BMIGraph';
 import ToSolutionButton from '../components/mypage/ToSoulutionButton';
-import instance from '../\baxiosInstance';
+import instance from '../axiosInstance';
 import {Alert, Button} from 'react-native';
 import {useAuth} from '../AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
