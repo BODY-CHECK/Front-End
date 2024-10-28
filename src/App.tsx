@@ -1,7 +1,7 @@
-import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import LoginNavigator from './navigation/LoginNavigator';
+import React from 'react';
 import {AuthProvider} from './AuthContext';
+import LoginNavigator from './navigation/LoginNavigator';
 
 function App() {
   return (

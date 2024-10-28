@@ -5,10 +5,13 @@ import LoginFooter from '../components/login/LoginFooter';
 import LoginForm from '../components/login/LoginForm';
 import LoginHeader from '../components/login/LoginHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAuth} from '../AuthContext';
 
 const baseURL = 'https://dev.bodycheck.store'; // 서버 주소
 
-function Login({setIsLoggedIn}) {
+function Login() {
+  const {setIsLoggedIn} = useAuth();
+
   const handleLogin = async (email, password) => {
     try {
       const response = await axios.post(`${baseURL}/members/email/sign-in`, {
