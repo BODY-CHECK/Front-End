@@ -1,14 +1,15 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import LoginNavigator from './navigation/LoginNavigator';
+import {AuthProvider} from './AuthContext';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   return (
-    <NavigationContainer>
-      <LoginNavigator isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <LoginNavigator />
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
 
