@@ -59,7 +59,7 @@ const ExerciseListBottomSheet = ({sheetRef, onSelect}) => {
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
       backdropComponent={renderBackdrop} // backdrop 적용
-      enablePanDownToClose={false} // 슬라이드로 닫기
+      enablePanDownToClose={true} // 슬라이드로 닫기
       enableBackdropDismiss={true} // 배경 터치로 닫기
     >
       <ModalContent>
