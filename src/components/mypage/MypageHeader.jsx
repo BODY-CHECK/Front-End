@@ -1,10 +1,10 @@
 import styled from 'styled-components/native';
 
-const MypageHeader = () => {
+const MypageHeader = ({nickname}) => {
   return (
     <Wrapper>
       <TitleWrapper>
-        <Nickname>닉네임 </Nickname>
+        <Nickname>{nickname} </Nickname>
         <Title>님의 프로필!</Title>
       </TitleWrapper>
       <NavBtn>&gt;</NavBtn>

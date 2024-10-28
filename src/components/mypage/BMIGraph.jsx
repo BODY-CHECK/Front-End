@@ -1,18 +1,38 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button} from 'react-native';
 import Svg, {Circle, G, Polygon, Rect, Text as SvgText} from 'react-native-svg';
 import styled from 'styled-components/native';
+import instance from '../../\baxiosInstance';
 
 const graphWidth = 360; // 그래프 너비 고정
 const underweightWidth = (3.5 / 10) * graphWidth; // 133px
 const normalWeightWidth = (1.5 / 10) * graphWidth; // 57px
 const overweightWidth = (1.5 / 10) * graphWidth; // 57px
 const obesityWidth = (3.5 / 10) * graphWidth; // 133px
+const baseURL = 'https://dev.bodycheck.store';
 
 const BMIGraph = () => {
-  const [height, setHeight] = useState(''); // cm로 입력받기 (초기값: 170cm)
-  const [weight, setWeight] = useState(''); // kg로 입력받기 (초기값: 70kg)
+  const [height, setHeight] = useState(''); // cm로 입력받기
+  const [weight, setWeight] = useState(''); // kg로 입력받기
   const [bmi, setBmi] = useState(null);
+
+  // 초기 데이터 로드 (키, 몸무게)
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await instance.get(`${baseURL}/members/my-page`); // 실제 API 엔드포인트로 변경
+        if (response.data.isSuccess) {
+          const {height, weight} = response.data.result;
+          setHeight(height.toString());
+          setWeight(weight.toString());
+          calculateBMI(height, weight); // BMI 자동 계산
+        }
+      } catch (error) {
+        console.error('사용자 데이터 불러오기 실패:', error);
+      }
+    };
+    fetchUserData();
+  }, []);
 
   // BMI 계산 함수 (cm를 m로 변환)
   const calculateBMI = () => {
