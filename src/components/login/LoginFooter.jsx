@@ -4,9 +4,47 @@ import logoKakao from '../../assets/images/logo_kakao.png';
 import logoGoogle from '../../assets/images/logoGoogle.png';
 import {useNavigation} from '@react-navigation/native'; // React Navigation 사용
 import {Linking, TouchableOpacity} from 'react-native'; // Linking 모듈 가져오기
+import axios from 'axios';
+
+const baseURL = 'https://dev.bodycheck.store';
 
 const LoginFooter = () => {
   const navigation = useNavigation();
+
+  // 소셜 로그인 URL을 가져오는 함수
+  const fetchSocialLoginUrls = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/login/oauth2`);
+      if (response.data.isSuccess) {
+        return {
+          kakaoUrl: response.data.result.locationKakao,
+          googleUrl: response.data.result.locationGoogle,
+        };
+      }
+    } catch (error) {
+      console.error('Error fetching social login URLs:', error);
+    }
+    return {};
+  };
+
+  // 각 버튼 클릭 시 해당 URL로 이동
+  const handleKakaoLogin = async () => {
+    const {kakaoUrl} = await fetchSocialLoginUrls();
+    if (kakaoUrl) {
+      Linking.openURL(kakaoUrl);
+    } else {
+      alert('카카오 로그인 URL을 가져오는 데 실패했습니다.');
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    const {googleUrl} = await fetchSocialLoginUrls();
+    if (googleUrl) {
+      Linking.openURL(googleUrl);
+    } else {
+      alert('구글 로그인 URL을 가져오는 데 실패했습니다.');
+    }
+  };
 
   return (
     <FooterContainer>
@@ -20,18 +58,10 @@ const LoginFooter = () => {
         </LinkItem>
       </LinksContainer>
       <IconsContainer>
-        <TouchableOpacity
-          onPress={() =>
-            Linking.openURL('https://kauth.kakao.com/oauth/authorize')
-          }>
+        <TouchableOpacity onPress={handleKakaoLogin}>
           <Icon source={logoKakao} />
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            Linking.openURL(
-              'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=700912738985-popejm8k41ejrfd0bgvsvf51jj1nvt8s.apps.googleusercontent.com&redirect_uri=http://localhost:8080/login/oauth2/code/google&scope=email profile',
-            )
-          }>
+        <TouchableOpacity onPress={handleGoogleLogin}>
           <Icon source={logoGoogle} />
         </TouchableOpacity>
       </IconsContainer>
