@@ -26,7 +26,14 @@ const LoginFooter = () => {
           }>
           <Icon source={logoKakao} />
         </TouchableOpacity>
-        <Icon source={logoGoogle} onPress={() => alert('Google 로그인')} />
+        <TouchableOpacity
+          onPress={() =>
+            Linking.openURL(
+              'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=700912738985-popejm8k41ejrfd0bgvsvf51jj1nvt8s.apps.googleusercontent.com&redirect_uri=http://localhost:8080/login/oauth2/code/google&scope=email profile',
+            )
+          }>
+          <Icon source={logoGoogle} />
+        </TouchableOpacity>
       </IconsContainer>
     </FooterContainer>
   );
