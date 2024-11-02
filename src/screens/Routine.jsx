@@ -109,16 +109,15 @@ function Routine() {
 
     Object.keys(routines).forEach(day => {
       routines[day].forEach((exercise, index) => {
-        if (exercise) {
-          routinesData.push({
-            weekId: dayMapping[day],
-            routineIdx: index + 1,
-            exerciseId: exercise ? exercise.exerciseId : null,
-            isUpdated: true,
-          });
-        }
+        routinesData.push({
+          weekId: dayMapping[day],
+          routineIdx: index + 1,
+          exerciseId: exercise ? exercise.exerciseId : null, // 운동이 없으면 null로 설정
+          isUpdated: true,
+        });
       });
     });
+
     return {routines: routinesData};
   };
 
