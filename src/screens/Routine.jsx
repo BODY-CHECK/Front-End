@@ -13,7 +13,19 @@ import exerciseData from '../components/Health/HealthInfoData';
 const baseURL = 'https://dev.bodycheck.store';
 
 function Routine() {
-  const [selectedDay, setSelectedDay] = useState('월'); // 선택된 요일을 관리하는 state
+  // 요일별 weekId 매핑
+  const dayMapping = {일: 1, 월: 2, 화: 3, 수: 4, 목: 5, 금: 6, 토: 7};
+  const reverseDayMapping = {
+    0: '일',
+    1: '월',
+    2: '화',
+    3: '수',
+    4: '목',
+    5: '금',
+    6: '토',
+  };
+  const currentDay = new Date().getDay(); // 오늘 요일을 숫자로 가져옴 (0 = 일요일, 1 = 월요일, ..., 6 = 토요일)
+  const [selectedDay, setSelectedDay] = useState(reverseDayMapping[currentDay]); // 선택된 요일을 관리하는 state
   const [routines, setRoutines] = useState({
     월: [null, null, null],
     화: [null, null, null],
@@ -27,9 +39,6 @@ function Routine() {
   const [selectedIndex, setSelectedIndex] = useState(null); // 어떤 인덱스의 플러스 버튼이 눌렸는지 기억
   const sheetRef = useRef(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  // 요일별 weekId 매핑
-  const dayMapping = {월: 1, 화: 2, 수: 3, 목: 4, 금: 5, 토: 6, 일: 7};
 
   useEffect(() => {
     const checkFirstVisit = async () => {
@@ -82,7 +91,7 @@ function Routine() {
       if (response.data.isSuccess) {
         const routinesData = response.data.result.reduce(
           (acc, item) => {
-            const day = ['월', '화', '수', '목', '금', '토', '일'][
+            const day = ['일', '월', '화', '수', '목', '금', '토'][
               item.weekId - 1
             ];
             acc[day][item.routineIdx - 1] = item.exercise;
@@ -104,7 +113,7 @@ function Routine() {
 
   // 요일별 루틴 데이터를 API 요청 형식으로 변환하는 함수
   const prepareRoutineData = () => {
-    const dayMapping = {월: 1, 화: 2, 수: 3, 목: 4, 금: 5, 토: 6, 일: 7};
+    const dayMapping = {일: 1, 월: 2, 화: 3, 수: 4, 목: 5, 금: 6, 토: 7};
     let routinesData = [];
 
     Object.keys(routines).forEach(day => {

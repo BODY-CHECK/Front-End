@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-const days = ['월', '화', '수', '목', '금', '토', '일'];
+const days = ['일', '월', '화', '수', '목', '금', '토'];
 
 const DaySelector = ({selectedDay, onDayChange}) => {
   return (
