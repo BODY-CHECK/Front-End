@@ -8,6 +8,7 @@ import DaySelector from '../components/routine/DaySelector';
 import ExerciseCard from '../components/routine/ExerciseCard';
 import ExerciseListBottomSheet from '../components/routine/ExerciseListBottomSheet';
 import RoutineBox from '../components/routine/RoutineBox';
+import exerciseData from '../components/Health/HealthInfoData';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -27,6 +28,9 @@ function Routine() {
   const sheetRef = useRef(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  // 요일별 weekId 매핑
+  const dayMapping = {월: 1, 화: 2, 수: 3, 목: 4, 금: 5, 토: 6, 일: 7};
+
   useEffect(() => {
     const checkFirstVisit = async () => {
       const hasVisited = await AsyncStorage.getItem('hasVisitedRoutinePage');
@@ -36,6 +40,40 @@ function Routine() {
     };
     checkFirstVisit();
   }, []);
+
+  useEffect(() => {
+    // 선택된 요일 변경 시 루틴 데이터 가져오기
+    fetchRoutineData(selectedDay);
+  }, [selectedDay]);
+
+  // 루틴 데이터 가져오는 함수
+  const fetchRoutineData = async day => {
+    const weekId = dayMapping[day];
+    try {
+      const response = await instance.get(
+        `${baseURL}/api/routine/list/${weekId}`,
+      );
+      if (response.data.isSuccess) {
+        const fetchedRoutines = response.data.result.map(item => {
+          // exerciseData에서 운동 객체 찾기
+          const exercise = exerciseData.find(
+            ex => ex.title === item.exercise, // API 응답의 item.exercise와 exerciseData의 title이 일치하는지 확인
+          );
+          return exercise || null; // 운동이 없을 경우 null 반환
+        });
+
+        // 응답 데이터를 현재 요일의 루틴에 반영
+        setRoutines(prev => ({
+          ...prev,
+          [day]: fetchedRoutines, // null 포함한 배열 반영
+        }));
+      } else {
+        console.error('루틴 불러오기 실패:', response.data.message);
+      }
+    } catch (error) {
+      console.error('루틴 데이터 API 호출 오류:', error);
+    }
+  };
 
   // 루틴 생성 함수 (최초 접속 시 실행)
   const handleCreateRoutine = async () => {
