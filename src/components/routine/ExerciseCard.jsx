@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
-import {Modal, Text, View, TouchableOpacity} from 'react-native';
+import {Modal, Text} from 'react-native';
 
 const ExerciseCard = () => {
   const [modalVisible, setModalVisible] = useState(false);
