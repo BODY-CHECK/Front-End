@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -34,10 +35,22 @@ const KakaoLoginRedirect = () => {
       );
 
       if (response.data.isSuccess) {
-        // 로그인 성공 시 홈 화면으로 이동
-        console.log('로그인 성공:', response.data);
-        navigation.navigate('Home');
+        const {user, email, accessToken, refreshToken} = response.data.result;
+
+        if (user) {
+          // 로그인 성공 시 홈 화면으로 이동
+          console.log('로그인 성공:', response.data);
+          // 예시로 accessToken을 AsyncStorage에 저장 (토큰 관리)
+          await AsyncStorage.setItem('accessToken', accessToken);
+          await AsyncStorage.setItem('refreshToken', refreshToken);
+          navigation.navigate('Home');
+        } else {
+          // user가 false인 경우: 회원가입 필요, 이메일을 회원가입 화면에 전달
+          console.log('회원가입이 필요한 계정:', email);
+          navigation.navigate('SignupSocial', {email});
+        }
       } else {
+        console.log('로그인 실패:', response.data);
         // 로그인 실패 시 경고 메시지 표시
         Alert.alert(
           '로그인 실패',

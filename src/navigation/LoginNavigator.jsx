@@ -9,6 +9,7 @@ import WelcomePage from '../screens/WelcomePage';
 import {useAuth} from '../AuthContext';
 import KakaoLoginWebview from '../components/login/KakaoLoginWebview';
 import KakaoLoginRedirect from '../components/login/KakaoLoginRedirect';
+import SignupSocial from '../screens/SignupSocial';
 
 const Stack = createStackNavigator();
 
@@ -51,6 +52,11 @@ function LoginNavigator() {
             name="KakaoLoginRedirect"
             component={KakaoLoginRedirect}
             options={{title: '로그인 처리 중'}}
+          />
+          <Stack.Screen
+            name="SignupSocial"
+            component={SignupSocial}
+            options={{title: ''}}
           />
         </>
       )}
