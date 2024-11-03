@@ -80,7 +80,7 @@ export default function HealthInfo() {
 
   const handleSelect = () => {
     setModalVisible(false);
-    navigation.navigate('Health', {id});
+    navigation.navigate('Health', {id, repCount});
   };
 
   const handleCancel = () => {
