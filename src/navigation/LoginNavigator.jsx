@@ -10,6 +10,8 @@ import {useAuth} from '../AuthContext';
 import KakaoLoginWebview from '../components/login/KakaoLoginWebview';
 import KakaoLoginRedirect from '../components/login/KakaoLoginRedirect';
 import SignupSocial from '../screens/SignupSocial';
+import GoogleLoginWebview from '../components/login/GoogleLoginWebview';
+import GoogleLoginRedirect from '../components/login/GoogleLoginRedirect';
 
 const Stack = createStackNavigator();
 
@@ -53,6 +55,15 @@ function LoginNavigator() {
             component={KakaoLoginRedirect}
             options={{title: '로그인 처리 중'}}
           />
+          <Stack.Screen
+            name="GoogleLoginWebview"
+            component={GoogleLoginWebview}
+          />
+          <Stack.Screen
+            name="GoogleLoginRedirect"
+            component={GoogleLoginRedirect}
+          />
+
           <Stack.Screen
             name="SignupSocial"
             component={SignupSocial}

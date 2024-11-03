@@ -83,7 +83,7 @@ function Routine() {
         routinesData.push({
           weekId: dayMapping[day],
           routineIdx: index + 1,
-          exerciseId: exercise ? exercise.exerciseId : null, // 운동이 없으면 null로 설정
+          exerciseId: exercise ? exercise.id : null, // 운동이 없으면 null로 설정
           isUpdated: true,
         });
       });
