@@ -2146,6 +2146,11 @@ babel-preset-jest@^29.6.3:
 balanced-match@^1.0.0:
   version "1.0.2"
 
+base-64@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.npmjs.org/base-64/-/base-64-0.1.0.tgz"
+  integrity sha512-Y5gU45svrR5tI2Vt/X9GPd3L0HNIKzGu202EjxrXMpuc2V2CiKgemAbUUsqYmZJvPtCXoUKjNZwBJzsNScUbXA==
+
 base64-js@^1.3.1, base64-js@^1.5.1:
   version "1.5.1"
 
@@ -4785,6 +4790,14 @@ react-native-dynamically-selected-picker@^3.3.0:
   dependencies:
     react-native-linear-gradient "^2.8.3"
 
+react-native-fs@^2.20.0:
+  version "2.20.0"
+  resolved "https://registry.npmjs.org/react-native-fs/-/react-native-fs-2.20.0.tgz"
+  integrity sha512-VkTBzs7fIDUiy/XajOSNk0XazFE9l+QlMAce7lGuebZcag5CnjszB+u4BdqzwaQOdcYb5wsJIsqq4kxInIRpJQ==
+  dependencies:
+    base-64 "^0.1.0"
+    utf8 "^3.0.0"
+
 react-native-gesture-handler@*, react-native-gesture-handler@^2.19.0, "react-native-gesture-handler@>= 1.0.0", react-native-gesture-handler@>=1.10.1:
   version "2.20.0"
   resolved "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-2.20.0.tgz"
@@ -4830,6 +4843,11 @@ react-native-screens@^3.34.0, "react-native-screens@>= 3.0.0":
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+react-native-sound@^0.11.2:
+  version "0.11.2"
+  resolved "https://registry.npmjs.org/react-native-sound/-/react-native-sound-0.11.2.tgz"
+  integrity sha512-LmGc8lgOK3qecYMVQpyHvww/C+wgT6sWeMpVbOe4NCRGC2yKd4fo4U0KBUo9PO7AqKESO3I/2GZg1/C0+bwiiA==
+
 react-native-svg@^15.7.1, "react-native-svg@> 6.4.1":
   version "15.7.1"
   resolved "https://registry.npmjs.org/react-native-svg/-/react-native-svg-15.7.1.tgz"
@@ -4865,7 +4883,7 @@ react-native-webview@^13.12.3:
     escape-string-regexp "^4.0.0"
     invariant "2.2.4"
 
-react-native@*, "react-native@^0.0.0-0 || >=0.65 <1.0", "react-native@>= 0.30.0", "react-native@>= 0.50.0", "react-native@>= 0.60.2", react-native@>=0.57, react-native@0.75.2:
+react-native@*, "react-native@^0.0.0-0 || >=0.65 <1.0", "react-native@>= 0.30.0", "react-native@>= 0.50.0", "react-native@>= 0.60.2", react-native@>=0.57, react-native@>=0.8.0, react-native@0.75.2:
   version "0.75.2"
   dependencies:
     "@jest/create-cache-key-function" "^29.6.3"
@@ -5630,6 +5648,11 @@ use-latest-callback@^0.2.1:
   version "0.2.1"
   resolved "https://registry.npmjs.org/use-latest-callback/-/use-latest-callback-0.2.1.tgz"
   integrity sha512-QWlq8Is8BGWBf883QOEQP5HWYX/kMI+JTbJ5rdtvJLmXTIh9XoHIO3PQcmQl8BU44VKxow1kbQUHa6mQSMALDQ==
+
+utf8@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/utf8/-/utf8-3.0.0.tgz"
+  integrity sha512-E8VjFIQ/TyQgp+TZfS6l8yp/xWppSAHzidGiRrqe4bK4XP9pTRyKFgGJpO3SN7zdX4DeomTrwaseCHovfpFcqQ==
 
 util-deprecate@^1.0.1, util-deprecate@~1.0.1:
   version "1.0.2"

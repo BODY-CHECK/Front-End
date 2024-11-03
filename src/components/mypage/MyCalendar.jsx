@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet} from 'react-native';
 import {Calendar, LocaleConfig} from 'react-native-calendars';
+import instance from '../../axiosInstance';
 
-// LocaleConfig에서 요일만 설정
 LocaleConfig.locales['ko'] = {
   monthNames: [
     'January',
-    'Feburary',
+    'February',
     'March',
     'April',
     'May',
@@ -19,18 +19,18 @@ LocaleConfig.locales['ko'] = {
     'December',
   ],
   monthNamesShort: [
-    'January',
-    'Feburary',
-    'March',
-    'April',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
     'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ],
   dayNames: [
     '일요일',
@@ -45,28 +45,60 @@ LocaleConfig.locales['ko'] = {
   today: '오늘',
 };
 
-LocaleConfig.defaultLocale = 'ko'; // 'ko'로 기본 로케일 설정
+LocaleConfig.defaultLocale = 'ko';
+
+const baseURL = 'https://dev.bodycheck.store';
 
 const MyCalendar = () => {
-  const [selectedDate, setSelectedDate] = useState('');
+  const [markedDates, setMarkedDates] = useState({});
+
+  const fetchAttendanceDates = async yearMonth => {
+    try {
+      const response = await instance.get(
+        `${baseURL}/api/attendances/list?yearMonth=${yearMonth}`,
+      );
+
+      if (response.data.isSuccess) {
+        const dates = response.data.result.reduce((acc, attendance) => {
+          acc[attendance.date] = {
+            selected: true,
+            selectedColor: '#3373eb',
+            selectedTextColor: '#ffffff',
+          };
+          return acc;
+        }, {});
+        setMarkedDates(dates);
+      } else {
+        console.error(
+          '출석 데이터를 가져오지 못했습니다:',
+          response.data.message,
+        );
+      }
+    } catch (error) {
+      console.error('출석 데이터 API 호출 오류:', error);
+    }
+  };
+
+  // 현재 월의 출석 데이터를 가져오기
+  useEffect(() => {
+    const date = new Date();
+    const yearMonth = `${date.getFullYear()}.${String(
+      date.getMonth() + 1,
+    ).padStart(2, '0')}`;
+    fetchAttendanceDates(yearMonth);
+  }, []);
 
   return (
     <View style={styles.container}>
       <Calendar
-        // 날짜 선택 처리 및 마킹
-        onDayPress={day => setSelectedDate(day.dateString)}
-        markedDates={
-          selectedDate
-            ? {
-                [selectedDate]: {
-                  selected: true,
-                  selectedColor: '#3373eb', // 선택된 날짜 배경색
-                  selectedTextColor: '#ffffff', // 선택된 날짜 텍스트 색상
-                },
-              }
-            : {}
-        }
-        // 기본 스타일링
+        markedDates={markedDates}
+        onMonthChange={month => {
+          const yearMonth = `${month.year}.${String(month.month).padStart(
+            2,
+            '0',
+          )}`;
+          fetchAttendanceDates(yearMonth);
+        }}
         style={{
           width: 380,
         }}
@@ -80,12 +112,6 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#fff',
     borderRadius: 10,
-  },
-  selectedDateText: {
-    marginTop: 10,
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
   },
 });
 

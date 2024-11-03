@@ -1,8 +1,7 @@
 // 운동 데이터 파일
 const exerciseData = [
   {
-    id: 'push-up',
-    exerciseId: 1,
+    id: 1,
     title: '푸쉬업',
     type: '상체',
     difficulty: '중급',
@@ -19,8 +18,7 @@ const exerciseData = [
     caution: ['1. 손목이 많이 꺾이지 않도록 한다.'],
   },
   {
-    id: 'knee-push-up',
-    exerciseId: 2,
+    id: 2,
     title: '푸쉬업(무릎)',
     type: '상체',
     difficulty: '초급',
@@ -39,8 +37,7 @@ const exerciseData = [
     ],
   },
   {
-    id: 'pull-up',
-    exerciseId: 3,
+    id: 3,
     title: '풀업',
     type: '상체',
     difficulty: '중급',
@@ -60,8 +57,7 @@ const exerciseData = [
     ],
   },
   {
-    id: 'band-pull-up',
-    exerciseId: 4,
+    id: 4,
     title: '풀업(밴드)',
     type: '상체',
     difficulty: '초급',
@@ -82,8 +78,7 @@ const exerciseData = [
     ],
   },
   {
-    id: 'sit-ups',
-    exerciseId: 5,
+    id: 5,
     title: '윗몸일으키기',
     type: '상체',
     difficulty: '중급',
@@ -100,8 +95,7 @@ const exerciseData = [
     caution: ['1. 복근의 힘이 충분하지 못하면 허리에 통증을 유발할 수 있다.'],
   },
   {
-    id: 'leg-raise',
-    exerciseId: 6,
+    id: 6,
     title: '레그레이즈',
     type: '상체',
     difficulty: '초급',
@@ -117,8 +111,7 @@ const exerciseData = [
     caution: ['1. 다리를 내리는 동작에서 허리가 뜨지 않도록 주의한다.'],
   },
   {
-    id: 'hanging-leg-raise',
-    exerciseId: 7,
+    id: 7,
     title: '레그레이즈(행잉)',
     type: '상체',
     difficulty: '상급',
@@ -138,8 +131,7 @@ const exerciseData = [
     ],
   },
   {
-    id: 'squat',
-    exerciseId: 8,
+    id: 8,
     title: '스쿼트',
     type: '하체',
     difficulty: '중급',
@@ -159,8 +151,7 @@ const exerciseData = [
     ],
   },
   {
-    id: 'one-leg-squat',
-    exerciseId: 9,
+    id: 9,
     title: '한 발 스쿼트',
     type: '하체',
     difficulty: '중급',
@@ -181,8 +172,7 @@ const exerciseData = [
     ],
   },
   {
-    id: 'lunge',
-    exerciseId: 10,
+    id: 10,
     title: '런지',
     type: '하체',
     difficulty: '중급',
@@ -203,8 +193,7 @@ const exerciseData = [
     ],
   },
   {
-    id: 'calf-raise',
-    exerciseId: 11,
+    id: 11,
     title: '카프레이즈',
     type: '하체',
     difficulty: '초급',
@@ -221,8 +210,7 @@ const exerciseData = [
     caution: ['1. 운동 중 무릎이 굽혀지지 않도록 한다.'],
   },
   {
-    id: 'hip-thrust',
-    exerciseId: 12,
+    id: 12,
     title: '힙 쓰러스트',
     type: '하체',
     difficulty: '중급',

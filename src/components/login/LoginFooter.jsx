@@ -41,7 +41,7 @@ const LoginFooter = () => {
   const handleGoogleLogin = async () => {
     const {googleUrl} = await fetchSocialLoginUrls();
     if (googleUrl) {
-      Linking.openURL(googleUrl);
+      navigation.navigate('GoogleLoginWebview', {googleUrl});
     } else {
       alert('구글 로그인 URL을 가져오는 데 실패했습니다.');
     }
