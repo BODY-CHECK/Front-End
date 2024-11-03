@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Button1,
   Button2,
@@ -31,6 +31,8 @@ import {
 import {BarChart} from 'react-native-chart-kit';
 import {Alert, Modal} from 'react-native';
 import exerciseData from '../components/Health/HealthInfoData';
+import { postExerciseCriteria, postExerciseSolution } from '../api/SolutionApi'; // API 호출 함수 import
+import { dummyCriteriaData } from '../DummyData'; // 더미 데이터 import
 
 export default function HealthResult() {
   const route = useRoute();
@@ -38,6 +40,9 @@ export default function HealthResult() {
   const exercise = exerciseData.find(ex => ex.id === id);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
+  const [apiResponse, setApiResponse] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useFocusEffect(() => {
     navigation.getParent()?.setOptions({
@@ -50,11 +55,28 @@ export default function HealthResult() {
       });
   });
 
+  useEffect(() => {
+    const fetchApiResponse = async () => {
+      try {
+        const response = await postExerciseCriteria(id, dummyCriteriaData);
+        setApiResponse(response);
+      } catch (err) {
+        console.error('Error during API call:', err.request);
+        setError('데이터를 불러오는 데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApiResponse();
+  }, [id]);
+
+
   const data = {
-    labels: ['이완', '수축', '바디', '체크', '짱', '최고'],
+    labels: ['팔 각도', '자세 장렬', '무릎 각도'],
     datasets: [
       {
-        data: [50, 45, 28, 80, 99, 43],
+        data: [60, 100, 20],
       },
     ],
   };
@@ -72,6 +94,9 @@ export default function HealthResult() {
     fillShadowGradientFromOpacity: 1, // 막대의 시작 부분 투명도
     fillShadowGradientTo: '#3373EB', // 막대 하단의 색상 (흰색으로 그라데이션)
     fillShadowGradientToOpacity: 1, // 막대 하단 투명도
+    propsForHorizontalLabels: {
+      dx: -18, // x축 위치 조정
+      dy: 0},
     propsForBackgroundLines: {
       strokeDasharray: '', // 배경 선을 없앰
     },
@@ -79,7 +104,6 @@ export default function HealthResult() {
 
   const graphStyle = {
     borderRadius: 16,
-    paddingRight: 20,
   };
 
   // 나가기 버튼을 눌렀을 때 모달 표시
@@ -87,17 +111,31 @@ export default function HealthResult() {
     setModalVisible(true);
   };
 
-  // 모달에서 예를 눌렀을 때 처리
-  const handleSave = () => {
-    setModalVisible(false);
-    Alert.alert('피드백이 저장되었습니다!');
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0, // 첫 번째 스크린을 보여줌
-        routes: [{name: '홈'}], // Home 화면을 스택의 유일한 화면으로 설정
-      }),
-    );
-    // 저장 로직을 추가하세요
+  const handleSave = async () => {
+    try {
+      const exerciseId = id;
+      const criteria = {
+        criteria: dummyCriteriaData,
+      };
+      const content = apiResponse;
+      const video = null;
+
+      // postExerciseSolution 함수 호출
+      const result = await postExerciseSolution(exerciseId, video, criteria, content);
+      console.log('API Response:', result);
+
+      Alert.alert('피드백이 저장되었습니다!');
+      setModalVisible(false);
+
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0, // 첫 번째 스크린을 보여줌
+          routes: [{ name: '홈' }], // Home 화면으로 이동
+        })
+      );
+    } catch (error) {
+      Alert.alert('데이터 전송에 실패했습니다.');
+    }
   };
 
   // 모달에서 아니오를 눌렀을 때 처리
@@ -120,14 +158,13 @@ export default function HealthResult() {
             chartConfig={chartConfig}
             fromZero={true}
             verticalLabelRotation={0}
-            withInnerLines={false}
-            withHorizontalLabels={false}
+            withInnerLines={true}
+            withHorizontalLabels={true}
           />
         </GraphContainer>
         <TextContainer>
           <ContentText>
-            이완 수축을 더 해주세요. 수축을 제대로 하지 않으면 운동효과를
-            기대하기 어렵습니다.
+            {apiResponse || '로딩 중...'}
           </ContentText>
         </TextContainer>
       </ContentContainer>
