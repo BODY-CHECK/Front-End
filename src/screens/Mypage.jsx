@@ -5,13 +5,19 @@ import MyCalendar from '../components/mypage/MyCalendar';
 import BMIGraph from '../components/mypage/BMIGraph';
 import ToSolutionButton from '../components/mypage/ToSoulutionButton';
 import instance from '../axiosInstance';
-import {Alert, Button} from 'react-native';
+import {Alert, Button, Linking} from 'react-native';
 import {useAuth} from '../AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Link} from '@react-navigation/native';
 
 const baseURL = 'https://dev.bodycheck.store';
 
 function MyPage() {
+  const handleOpenUrl = () => {
+    const tempUrl =
+      'https://online-payment.kakaopay.com/mockup/bridge/mobile-app/pg/subscription/payment-issue/457a734531443315ba72deb81d9c7a8fc0d941cbe9a6cbca082d1f67bc4332ed'; // 임시 URL 설정
+    Linking.openURL(tempUrl);
+  };
   const [nickname, setNickname] = useState('');
   const {setIsLoggedIn} = useAuth();
 
@@ -46,6 +52,9 @@ function MyPage() {
   return (
     <>
       <Container>
+        <Button title="버튼" onPress={handleOpenUrl}>
+          버튼
+        </Button>
         <Button title="로그아웃" onPress={handleLogout}>
           로그아웃
         </Button>

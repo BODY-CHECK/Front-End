@@ -26,9 +26,9 @@ export const HealthIcon = styled.TouchableOpacity`
   width: 98%;
   flex-direction: row;
   margin: 5px;
-  border: 1px solid #999999;
-  border-radius: 5px;
-  padding: 5px;
+  border: 0.5px solid #999999;
+  border-radius: 10px;
+  padding: 10px 8px;
 `;
 
 export const LabelContainer = styled.View`
@@ -59,7 +59,7 @@ export const AreaContainer = styled.View`
 `;
 
 export const IconName = styled.Text`
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
   color: black;
   height: 20px;
@@ -68,12 +68,13 @@ export const IconName = styled.Text`
 `;
 
 export const AreaText = styled.Text`
-  font-size: 12px;
+  font-size: 9px;
+  font-weight: bold;
   color: white;
   background-color: #3373eb;
-  height: 20px;
+  height: 22px;
   margin-top: 20px;
-  padding: 2px;
+  padding: 4px 12px 4px 12px;
   border-radius: 5px;
   margin-left: ${props => (props.isFirst ? '20px' : '5px')};
 `;
@@ -86,10 +87,10 @@ export const StyledImage = styled.Image`
 `;
 
 export const TypeButton = styled.TouchableOpacity`
-  width: 25%;
-  height: 40px;
+  width: 68px;
+  height: 30px;
   background-color: ${({isActive}) => (isActive ? 'black' : 'white')};
-  border-radius: 15px;
+  border-radius: 25px;
   align-items: center;
   justify-content: center;
   margin-right: 10px;
@@ -99,6 +100,6 @@ export const TypeButton = styled.TouchableOpacity`
 
 export const TypeButtonText = styled.Text`
   color: ${({isActive}) => (isActive ? 'white' : 'black')};
-  font-size: 14px;
+  font-size: 10px;
   font-weight: bold;
 `;
