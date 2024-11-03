@@ -1,7 +1,7 @@
 // 운동 데이터 파일
 const exerciseData = [
     {
-      id: 'push-up',
+      id: '1',
       title: '푸쉬업',
       type: '상체',
       difficulty: '중급',
@@ -20,7 +20,7 @@ const exerciseData = [
       ],
     },
     {
-      id: 'knee-push-up',
+      id: '2',
       title: '푸쉬업(무릎)',
       type: '상체',
       difficulty: '초급',
@@ -39,7 +39,7 @@ const exerciseData = [
       ],
     },
     {
-      id: 'pull-up',
+      id: '3',
       title: '풀업',
       type: '상체',
       difficulty: '중급',
@@ -59,7 +59,7 @@ const exerciseData = [
       ],
     },
     {
-      id: 'band-pull-up',
+      id: '4',
       title: '풀업(밴드)',
       type: '상체',
       difficulty: '초급',
@@ -80,7 +80,7 @@ const exerciseData = [
       ],
     },
     {
-      id: 'sit-ups',
+      id: '5',
       title: '윗몸일으키기',
       type: '상체',
       difficulty: '중급',
@@ -99,7 +99,7 @@ const exerciseData = [
       ],
     },
     {
-      id: 'leg-raise',
+      id: '6',
       title: '레그레이즈',
       type: '상체',
       difficulty: '초급',
@@ -117,7 +117,7 @@ const exerciseData = [
       ],
     },
     {
-      id: 'hanging-leg-raise',
+      id: '7',
       title: '레그레이즈(행잉)',
       type: '상체',
       difficulty: '상급',
@@ -137,7 +137,7 @@ const exerciseData = [
       ],
     },
     {
-      id: 'squat',
+      id: '8',
       title: '스쿼트',
       type: '하체',
       difficulty: '중급',
@@ -157,7 +157,7 @@ const exerciseData = [
       ],
     },
     {
-      id: 'one-leg-squat',
+      id: '9',
       title: '한 발 스쿼트',
       type: '하체',
       difficulty: '중급',
@@ -178,7 +178,7 @@ const exerciseData = [
       ],
     },
     {
-      id: 'lunge',
+      id: '10',
       title: '런지',
       type: '하체',
       difficulty: '중급',
@@ -199,7 +199,7 @@ const exerciseData = [
       ],
     },
     {
-      id: 'calf-raise',
+      id: '11',
       title: '카프레이즈',
       type: '하체',
       difficulty: '초급',
@@ -218,7 +218,7 @@ const exerciseData = [
       ],
     },
     {
-      id: 'hip-thrust',
+      id: '12',
       title: '힙 쓰러스트',
       type: '하체',
       difficulty: '중급',

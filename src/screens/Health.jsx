@@ -15,7 +15,7 @@ export default function Health() {
   const backCamera = devices?.find(device => device.position === 'back');
   // 전면 카메라 하나 선택 (첫 번째 전면 카메라)
   const frontCamera = devices?.find(device => device.position === 'front');
-  console.log(devices);
+
 
   useFocusEffect(() => {
     navigation.getParent()?.setOptions({

@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 const baseURL = 'https://dev.bodycheck.store'; // 서버 주소
 const instance = axios.create({
