@@ -4,11 +4,14 @@ const SignupHeader = ({currentStep}) => {
   const progressImage =
     currentStep === 1
       ? require('../../assets/images/progressbar_1.png')
-      : require('../../assets/images/progressbar_2.png');
+      : currentStep === 2
+      ? require('../../assets/images/progressbar_2.png')
+      : null;
+
   return (
     <HeaderContainer>
       <Title>회원가입</Title>
-      <Progressbar source={progressImage} />
+      {progressImage ? <Progressbar source={progressImage} /> : null}
     </HeaderContainer>
   );
 };
@@ -29,6 +32,7 @@ const Title = styled.Text`
   font-weight: bold;
   color: black;
 `;
+
 const Progressbar = styled.Image`
   width: 70px;
   height: 30px;

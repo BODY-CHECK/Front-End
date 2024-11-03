@@ -40,7 +40,7 @@ export const StyledGIF = styled.Image`
 `;
 
 export const TextContainer = styled.View`
-  padding: 10px;
+  padding: 14px;
   background-color: white;
   border: 1px solid #999999;
   border-radius: 5px;
@@ -74,6 +74,7 @@ export const TitleText = styled.Text`
 
 export const ContentText = styled.Text`
   color: black;
+  margin-bottom: 5px;
 `;
 
 export const InfoContainer = styled.View`
@@ -98,11 +99,11 @@ const getDifficultyColor = difficulty => {
 
 // 기본 텍스트 스타일
 export const BaseText = styled.Text`
-  font-size: 12px;
+  font-size: 10px;
   color: white;
-  height: 20px;
-  padding: 2px;
-  border-radius: 10px;
+  height: 25px;
+  padding: 5px 10px 4px 10px;
+  border-radius: 25px;
   margin-right: 5px;
 `;
 
