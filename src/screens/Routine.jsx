@@ -1,14 +1,13 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useRef, useState} from 'react';
-import {Alert, Button, Modal} from 'react-native';
+import {Alert} from 'react-native';
 import styled from 'styled-components/native';
 import instance from '../axiosInstance';
+import exerciseData from '../components/Health/HealthInfoData';
 import TitlewithBtn from '../components/TitlewithBtn';
 import DaySelector from '../components/routine/DaySelector';
 import ExerciseCard from '../components/routine/ExerciseCard';
 import ExerciseListBottomSheet from '../components/routine/ExerciseListBottomSheet';
 import RoutineBox from '../components/routine/RoutineBox';
-import exerciseData from '../components/Health/HealthInfoData';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -41,16 +40,6 @@ function Routine() {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
-    const checkFirstVisit = async () => {
-      const hasVisited = await AsyncStorage.getItem('hasVisitedRoutinePage');
-      if (!hasVisited) {
-        setIsModalVisible(true); // 최초 접속 시 모달 표시
-      }
-    };
-    checkFirstVisit();
-  }, []);
-
-  useEffect(() => {
     // 선택된 요일 변경 시 루틴 데이터 가져오기
     fetchRoutineData(selectedDay);
   }, [selectedDay]);
@@ -81,33 +70,6 @@ function Routine() {
       }
     } catch (error) {
       console.error('루틴 데이터 API 호출 오류:', error);
-    }
-  };
-
-  // 루틴 생성 함수 (최초 접속 시 실행)
-  const handleCreateRoutine = async () => {
-    try {
-      const response = await instance.post(`${baseURL}/api/routine/setting`);
-      if (response.data.isSuccess) {
-        const routinesData = response.data.result.reduce(
-          (acc, item) => {
-            const day = ['일', '월', '화', '수', '목', '금', '토'][
-              item.weekId - 1
-            ];
-            acc[day][item.routineIdx - 1] = item.exercise;
-            return acc;
-          },
-          {...routines},
-        );
-        setRoutines(routinesData);
-
-        await AsyncStorage.setItem('hasVisitedRoutinePage', 'true'); // 최초 방문 기록 저장
-        setIsModalVisible(false); // 모달 닫기
-      } else {
-        console.error('루틴 생성 실패:', response.data.message);
-      }
-    } catch (error) {
-      console.error('루틴 생성 API 호출 오류:', error);
     }
   };
 
@@ -203,19 +165,6 @@ function Routine() {
         sheetRef={sheetRef}
         onSelect={handleExerciseSelect}
       />
-      {/* 최초 접속 안내 모달 */}
-      <Modal
-        visible={isModalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setIsModalVisible(false)}>
-        <ModalContainer>
-          <ModalContent>
-            <ModalText>루틴을 생성하시겠습니까?</ModalText>
-            <Button title="확인" onPress={handleCreateRoutine} />
-          </ModalContent>
-        </ModalContainer>
-      </Modal>
     </Container>
   );
 }
@@ -226,25 +175,4 @@ const Container = styled.View`
   background-color: #fff;
   padding: 20px;
 `;
-
-const ModalContainer = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-`;
-
-const ModalContent = styled.View`
-  width: 80%;
-  padding: 20px;
-  background-color: white;
-  border-radius: 10px;
-  align-items: center;
-`;
-
-const ModalText = styled.Text`
-  margin-bottom: 20px;
-  font-size: 16px;
-`;
-
 export default Routine;

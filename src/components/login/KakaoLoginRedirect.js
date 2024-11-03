@@ -10,12 +10,14 @@ import {
 import axios from 'axios';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAuth} from '../../AuthContext';
 
 const baseURL = 'https://dev.bodycheck.store';
 
 const KakaoLoginRedirect = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const {setIsLoggedIn} = useAuth(); // setIsLoggedIn 가져오기
   const code = route.params?.token;
 
   useEffect(() => {
@@ -43,7 +45,7 @@ const KakaoLoginRedirect = () => {
           // 예시로 accessToken을 AsyncStorage에 저장 (토큰 관리)
           await AsyncStorage.setItem('accessToken', accessToken);
           await AsyncStorage.setItem('refreshToken', refreshToken);
-          navigation.navigate('Home');
+          setIsLoggedIn(true); // 로그인 상태 업데이트
         } else {
           // user가 false인 경우: 회원가입 필요, 이메일을 회원가입 화면에 전달
           console.log('회원가입이 필요한 계정:', email);
