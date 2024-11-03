@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, Dimensions, Linking } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Linking, Alert } from 'react-native';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { Camera as VisionCamera, useCameraDevices, useFrameProcessor } from 'react-native-vision-camera';
 import Svg, { Circle, Line } from 'react-native-svg';
@@ -7,6 +7,9 @@ import { Button, ButtonText, CameraIcon, CameraImage, Container, NumContainer, N
 import { detectPose } from './detectPose';
 import { Worklets } from 'react-native-worklets-core';
 import { calculateAngle, detectOutlier, updateStateAndFeedback } from './calculate_feedback';
+import { audioBytesList } from '../mockAudioData';
+import RNFS from 'react-native-fs';
+import Sound from 'react-native-sound';
 
 export default function Health() {
     const route = useRoute();
@@ -36,6 +39,76 @@ export default function Health() {
     const convertBooleansObjectToArray = (booleans) => {
         return Object.values(booleans);
     };
+    // 각 음성 파일을 지정된 이름으로 저장할 경로 설정
+const audioPaths = audioBytesList.map(
+    (_, index) => `${RNFS.DocumentDirectoryPath}/audio${index + 1}.wav`,
+  );
+  
+  const setupAudioFiles = async () => {
+    // 각 파일이 존재하는지 확인하고 없으면 생성
+    await Promise.all(
+      audioBytesList.map(async (audioBytes, index) => {
+        const path = audioPaths[index];
+        const fileExists = await RNFS.exists(path);
+        if (!fileExists) {
+          await RNFS.writeFile(path, audioBytes, 'base64');
+        }
+      }),
+    );
+  };
+
+  
+
+  const playAudio = audioPath => {
+    return new Promise(resolve => {
+      const sound = new Sound(audioPath, '', error => {
+        if (error) {
+          console.error('오디오 파일 로드 오류:', error);
+          resolve();
+          return;
+        }
+        sound.play(success => {
+          if (success) {
+            console.log('성공적으로 재생되었습니다.');
+          } else {
+            console.error('재생 오류');
+          }
+          sound.release();
+          resolve(); // 다음 파일로 이동
+        });
+      });
+    });
+  };
+
+  const playAudioWithDelay = (audioPath, delay = 1000) => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            const sound = new Sound(audioPath, '', error => {
+                if (error) {
+                    console.error('오디오 파일 로드 오류:', error);
+                    resolve();
+                    return;
+                }
+                sound.play(success => {
+                    if (success) {
+                        console.log('성공적으로 재생되었습니다.');
+                    } else {
+                        console.error('재생 오류');
+                    }
+                    sound.release();
+                    resolve(); // 다음 파일로 이동
+                });
+            });
+        }, delay);
+    });
+};
+
+  useEffect(() => {
+    // 컴포넌트가 마운트될 때 한 번만 음성 파일을 설정
+    setupAudioFiles()
+      .then(() => Alert.alert('오디오 파일 준비 완료'))
+      .catch(error => console.error('오디오 파일 설정 오류:', error));
+  }, []);
 
     // 불리언 배열 상태
     const [booleansElbowArray, setBooleansElbowArray] = useState<number[]>([]);
@@ -134,15 +207,44 @@ export default function Health() {
                         setBooleansKneeArray(prev => [...prev, booleans.knee ? 1 : 0]);
 
                         const booleansArray = convertBooleansObjectToArray(booleans);
-                        console.log(booleansArray)
-                        /*if (booleansArray === [false, false, false])
-                        else if (booleansArray === [true, false, false])
-                        else if (booleansArray === [false, true, false])
-                        else if (booleansArray === [false, false, true])
-                        else if (booleansArray === [true, true, false])
-                        else if (booleansArray === [true, false, true])
-                        else if (booleansArray === [false, true, true])
-                        else*/
+                        console.log(booleansArray);
+
+                        playAudio(audioPaths[7 + repCount]);
+                        setTimeout(()=>{},1000);
+                        if (booleansArray.every((value, index) => value === [false, false, false][index])) {
+                            playAudioWithDelay(audioPaths[0]);
+                            // 모든 값이 [false, false, false]와 동일할 때
+                            console.log('Good')
+                        } else if (booleansArray.every((value, index) => value === [true, false, false][index])) {
+                            // 모든 값이 [true, false, false]와 동일할 때
+                            playAudioWithDelay(audioPaths[1]);
+                            console.log('Elbow')
+                        } else if (booleansArray.every((value, index) => value === [false, true, false][index])) {
+                            // 모든 값이 [false, true, false]와 동일할 때
+                            playAudioWithDelay(audioPaths[2]);
+                            console.log('Hip')
+                        } else if (booleansArray.every((value, index) => value === [false, false, true][index])) {
+                            // 모든 값이 [false, false, true]와 동일할 때
+                            playAudioWithDelay(audioPaths[3]);
+                            console.log('Knee')
+                        } else if (booleansArray.every((value, index) => value === [true, true, false][index])) {
+                            // 모든 값이 [true, true, false]와 동일할 때
+                            playAudioWithDelay(audioPaths[4]);
+                            console.log('Elbow & Hip')
+                        } else if (booleansArray.every((value, index) => value === [true, false, true][index])) {
+                            // 모든 값이 [true, false, true]와 동일할 때
+                            playAudioWithDelay(audioPaths[5]);
+                            console.log('Elbow & Knee')
+                        } else if (booleansArray.every((value, index) => value === [false, true, true][index])) {
+                            // 모든 값이 [false, true, true]와 동일할 때
+                            playAudioWithDelay(audioPaths[6]);
+                            console.log('Hip & Knee')
+                        }
+                        else {
+                            // 모든 값이 [true, true, true]와 동일할 때
+                            playAudioWithDelay(audioPaths[7]);
+                            console.log('Elbow & Hip & Knee')
+                        }
                         // 상태 초기화
                         setState(null);
                         setBooleans({ elbow: true, hip: false, knee: false });

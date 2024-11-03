@@ -5,7 +5,6 @@ import BMIGraph from '../components/mypage/BMIGraph';
 import MyCalendar from '../components/mypage/MyCalendar';
 import MypageHeader from '../components/mypage/MypageHeader';
 import ToSolutionButton from '../components/mypage/ToSoulutionButton';
-import PlayAudio from '../playAudio';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -32,7 +31,6 @@ function MyPage() {
   return (
     <>
       <Container>
-        <PlayAudio />
         <MypageHeader nickname={nickname} />
         <MyCalendar />
         <BMIGraph />
