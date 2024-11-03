@@ -1,9 +1,10 @@
+// LoginFooter.js
 import React from 'react';
 import styled from 'styled-components/native';
 import logoKakao from '../../assets/images/logo_kakao.png';
 import logoGoogle from '../../assets/images/logoGoogle.png';
-import {useNavigation} from '@react-navigation/native'; // React Navigation 사용
-import {Linking, TouchableOpacity} from 'react-native'; // Linking 모듈 가져오기
+import {useNavigation} from '@react-navigation/native';
+import {Linking, TouchableOpacity} from 'react-native';
 import axios from 'axios';
 
 const baseURL = 'https://dev.bodycheck.store';
@@ -27,11 +28,11 @@ const LoginFooter = () => {
     return {};
   };
 
-  // 각 버튼 클릭 시 해당 URL로 이동
+  // 카카오 로그인 버튼 클릭 시 웹뷰 화면으로 이동
   const handleKakaoLogin = async () => {
     const {kakaoUrl} = await fetchSocialLoginUrls();
     if (kakaoUrl) {
-      Linking.openURL(kakaoUrl);
+      navigation.navigate('KakaoLoginWebview', {kakaoUrl}); // 웹뷰 화면으로 카카오 로그인 URL 전달
     } else {
       alert('카카오 로그인 URL을 가져오는 데 실패했습니다.');
     }
@@ -71,6 +72,7 @@ const LoginFooter = () => {
 
 export default LoginFooter;
 
+// Styled Components
 const FooterContainer = styled.View`
   display: flex;
   flex-direction: column;
