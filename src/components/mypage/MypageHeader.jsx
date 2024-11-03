@@ -1,8 +1,10 @@
+import {useNavigation} from '@react-navigation/native';
 import styled from 'styled-components/native';
 
 const MypageHeader = ({nickname}) => {
+  const navigation = useNavigation();
   return (
-    <Wrapper>
+    <Wrapper onPress={() => navigation.navigate('SettingScreen')}>
       <TitleWrapper>
         <Nickname>{nickname} </Nickname>
         <Title>님의 프로필!</Title>
