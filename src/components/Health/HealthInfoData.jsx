@@ -237,7 +237,7 @@ const exerciseData = [
       '1. 허리를 과도하게 젖히지 않도록 주의한다.',
       '2. 고관절을 제대로 움직이도록 주의한다.',
     ],
-    },
-  ];
+  },
+];
 
 export default exerciseData;
