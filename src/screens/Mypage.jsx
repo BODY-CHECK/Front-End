@@ -1,30 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
-import MypageHeader from '../components/mypage/MypageHeader';
-import MyCalendar from '../components/mypage/MyCalendar';
-import BMIGraph from '../components/mypage/BMIGraph';
-import ToSolutionButton from '../components/mypage/ToSoulutionButton';
 import instance from '../axiosInstance';
-import {Alert, Button} from 'react-native';
-import {useAuth} from '../AuthContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import BMIGraph from '../components/mypage/BMIGraph';
+import MyCalendar from '../components/mypage/MyCalendar';
+import MypageHeader from '../components/mypage/MypageHeader';
+import ToSolutionButton from '../components/mypage/ToSoulutionButton';
 
 const baseURL = 'https://dev.bodycheck.store';
 
 function MyPage() {
   const [nickname, setNickname] = useState('');
-  const {setIsLoggedIn} = useAuth();
-
-  const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem('accessToken');
-      await AsyncStorage.removeItem('refreshToken');
-      setIsLoggedIn(false); // 로그아웃 상태로 전환
-      Alert.alert('로그아웃 되었습니다.');
-    } catch (error) {
-      console.error('로그아웃 오류:', error);
-    }
-  };
 
   useEffect(() => {
     const fetchNickname = async () => {
@@ -46,9 +31,6 @@ function MyPage() {
   return (
     <>
       <Container>
-        <Button title="로그아웃" onPress={handleLogout}>
-          로그아웃
-        </Button>
         <MypageHeader nickname={nickname} />
         <MyCalendar />
         <BMIGraph />
