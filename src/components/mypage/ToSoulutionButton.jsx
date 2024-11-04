@@ -5,7 +5,7 @@ const ToSolutionButton = () => {
   const navigation = useNavigation();
 
   return (
-    <NavBtn>
+    <NavBtn onPress={() => navigation.navigate('ResultList')}>
       <BtnText>과거의 솔루션들을 확인해보세요!</BtnText>
     </NavBtn>
   );

@@ -32,17 +32,34 @@ import {BarChart} from 'react-native-chart-kit';
 import {Alert, Modal} from 'react-native';
 import exerciseData from '../components/Health/HealthInfoData';
 import { postExerciseCriteria, postExerciseSolution } from '../api/SolutionApi'; // API 호출 함수 import
-import { dummyCriteriaData } from '../DummyData'; // 더미 데이터 import
 
 export default function HealthResult() {
   const route = useRoute();
-  const {id} = route.params;
+  const {id, resultArray} = route.params;
   const exercise = exerciseData.find(ex => ex.id === id);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
   const [apiResponse, setApiResponse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const CriteriaData = [
+    {
+      criteriaIdx: 1,
+      criteriaName: '팔의 구부림 각도가 정확한가',
+      score: resultArray[0],
+    },
+    {
+      criteriaIdx: 2,
+      criteriaName: '자세가 일직선으로 정렬되어 있는가',
+      score: resultArray[1],
+    },
+    {
+      criteriaIdx: 3,
+      criteriaName: '무릎의 구부림 각도가 정확한가',
+      score: resultArray[2],
+    },
+  ];
+  console.log(CriteriaData);
 
   useFocusEffect(() => {
     navigation.getParent()?.setOptions({
@@ -58,7 +75,7 @@ export default function HealthResult() {
   useEffect(() => {
     const fetchApiResponse = async () => {
       try {
-        const response = await postExerciseCriteria(id, dummyCriteriaData);
+        const response = await postExerciseCriteria(id, CriteriaData);
         setApiResponse(response);
       } catch (err) {
         console.error('Error during API call:', err.request);
@@ -76,7 +93,7 @@ export default function HealthResult() {
     labels: ['팔 각도', '자세 장렬', '무릎 각도'],
     datasets: [
       {
-        data: [60, 100, 20],
+        data: resultArray || [0, 0, 0],
       },
     ],
   };
@@ -115,7 +132,7 @@ export default function HealthResult() {
     try {
       const exerciseId = id;
       const criteria = {
-        criteria: dummyCriteriaData,
+        criteria: CriteriaData,
       };
       const content = apiResponse;
       const video = null;

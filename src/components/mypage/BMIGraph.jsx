@@ -219,7 +219,7 @@ const BMIGraph = () => {
         />
       </InputContainer>
 
-      <Button title="계산" onPress={calculateBMI} />
+      <Button title="계산" onPress={calculateBMI} color="#3373eb" />
     </Container>
   );
 };

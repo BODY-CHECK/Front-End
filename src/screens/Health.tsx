@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, Dimensions, Linking, Alert } from 'react-native';
-import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { Camera as VisionCamera, useCameraDevices, useFrameProcessor } from 'react-native-vision-camera';
 import Svg, { Circle, Line } from 'react-native-svg';
 import { Button, ButtonText, CameraIcon, CameraImage, Container, NumContainer, NumText } from './Health.style';
@@ -12,9 +12,15 @@ import RNFS from 'react-native-fs';
 import Sound from 'react-native-sound';
 
 export default function Health() {
-    const route = useRoute();
+    type RouteParams = {
+        id: number;
+        repCount: number;
+    };
+    const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
+    const { repCount: initialRepCount } = route.params; // 'repCount'를 'initialRepCount'로 변경
+
     const navigation = useNavigation();
-    const targetRepCount = 5; // 목표 repCount
+    const targetRepCount = initialRepCount; // 목표 repCount
     const [hasPermission, setHasPermission] = useState(false);
     const [useFrontCamera, setUseFrontCamera] = useState(false);
     const [pose, setPose] = useState(null);
@@ -36,53 +42,34 @@ export default function Health() {
         knee: false,
     });
 
+    const [isTargetReached, setIsTargetReached] = useState(false);
+
     const convertBooleansObjectToArray = (booleans) => {
         return Object.values(booleans);
     };
+
     // 각 음성 파일을 지정된 이름으로 저장할 경로 설정
-const audioPaths = audioBytesList.map(
-    (_, index) => `${RNFS.DocumentDirectoryPath}/audio${index + 1}.wav`,
-  );
-  
-  const setupAudioFiles = async () => {
-    // 각 파일이 존재하는지 확인하고 없으면 생성
-    await Promise.all(
-      audioBytesList.map(async (audioBytes, index) => {
-        const path = audioPaths[index];
-        const fileExists = await RNFS.exists(path);
-        if (!fileExists) {
-          await RNFS.writeFile(path, audioBytes, 'base64');
-        }
-      }),
+    const audioPaths = audioBytesList.map(
+        (_, index) => `${RNFS.DocumentDirectoryPath}/audio${index + 1}.wav`,
     );
-  };
+  
+    const setupAudioFiles = async () => {
+        // 각 파일이 존재하는지 확인하고 없으면 생성
+        await Promise.all(
+            audioBytesList.map(async (audioBytes, index) => {
+                const path = audioPaths[index];
+                const fileExists = await RNFS.exists(path);
+                if (!fileExists) {
+                    await RNFS.writeFile(path, audioBytes, 'base64');
+                }
+            }),
+        );
+    };
 
   
 
-  const playAudio = audioPath => {
-    return new Promise(resolve => {
-      const sound = new Sound(audioPath, '', error => {
-        if (error) {
-          console.error('오디오 파일 로드 오류:', error);
-          resolve();
-          return;
-        }
-        sound.play(success => {
-          if (success) {
-            console.log('성공적으로 재생되었습니다.');
-          } else {
-            console.error('재생 오류');
-          }
-          sound.release();
-          resolve(); // 다음 파일로 이동
-        });
-      });
-    });
-  };
-
-  const playAudioWithDelay = (audioPath, delay = 1000) => {
-    return new Promise(resolve => {
-        setTimeout(() => {
+    const playAudio = audioPath => {
+        return new Promise(resolve => {
             const sound = new Sound(audioPath, '', error => {
                 if (error) {
                     console.error('오디오 파일 로드 오류:', error);
@@ -99,16 +86,43 @@ const audioPaths = audioBytesList.map(
                     resolve(); // 다음 파일로 이동
                 });
             });
-        }, delay);
-    });
-};
+        });
+    };
 
-  useEffect(() => {
-    // 컴포넌트가 마운트될 때 한 번만 음성 파일을 설정
-    setupAudioFiles()
-      .then(() => Alert.alert('오디오 파일 준비 완료'))
-      .catch(error => console.error('오디오 파일 설정 오류:', error));
-  }, []);
+    const playAudioWithDelay = (audioPath, delay = 1000) => {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                const sound = new Sound(audioPath, '', error => {
+                    if (error) {
+                        console.error('오디오 파일 로드 오류:', error);
+                        resolve();
+                        return;
+                    }
+                    sound.play(success => {
+                        if (success) {
+                            console.log('성공적으로 재생되었습니다.');
+                        } else {
+                            console.error('재생 오류');
+                        }
+                        sound.release();
+                        resolve(); // 다음 파일로 이동
+                    });
+                });
+            }, delay);
+        });
+    };
+    const calculateFalsePercentage = (array) => {
+        const falseCount = array.filter(value => value === 0).length;
+        console.log('calculateFalseCount:',falseCount)
+        return Math.floor(100 * falseCount / array.length);
+    };
+
+    useEffect(() => {
+        // 컴포넌트가 마운트될 때 한 번만 음성 파일을 설정
+        setupAudioFiles()
+        .then(() => Alert.alert('오디오 파일 준비 완료'))
+        .catch(error => console.error('오디오 파일 설정 오류:', error));
+    }, []);
 
     // 불리언 배열 상태
     const [booleansElbowArray, setBooleansElbowArray] = useState<number[]>([]);
@@ -161,27 +175,7 @@ const audioPaths = audioBytesList.map(
     }, []);
 
     useEffect(() => {
-        if (repCount >= targetRepCount) {
-            console.log('목표 횟수에 도달했습니다.');
-
-            const calculateFalsePercentage = (array) => {
-                const falseCount = array.filter(value => value === false).length;
-                return Math.floor(100 * falseCount / array.length);
-            };
-
-            const resultArray = [
-                calculateFalsePercentage(booleansElbowArray),
-                calculateFalsePercentage(booleansHipArray),
-                calculateFalsePercentage(booleansKneeArray)
-            ];
-
-            console.log('Result Array:', resultArray);
-
-            navigation.navigate('HealthResult', { id: route.params?.id, resultArray });
-            return;
-        }
-
-        if (pose) {
+        if (!isTargetReached && pose) {
             const rightWrist = pose.pose.rightWristPosition;
             const rightElbow = pose.pose.rightElbowPosition;
             const rightShoulder = pose.pose.rightShoulderPosition;
@@ -201,16 +195,24 @@ const audioPaths = audioBytesList.map(
                 ) {
                     updateStateAndFeedback(elbowAngle, hipAngle, kneeAngle, state, setState, setRepCount, booleans, setBooleans);
 
-                    if (state === 'finished') {
-                        setBooleansElbowArray(prev => [...prev, booleans.elbow ? 1 : 0]);
-                        setBooleansHipArray(prev => [...prev, booleans.hip ? 1 : 0]);
-                        setBooleansKneeArray(prev => [...prev, booleans.knee ? 1 : 0]);
-
-                        const booleansArray = convertBooleansObjectToArray(booleans);
-                        console.log(booleansArray);
+                    if ((state === 'finished') && !isTargetReached) {
+                        setBooleansElbowArray(prev => {const updatedArray = [...prev, booleans.elbow ? 1 : 0];
+                            console.log('UpdatedBooleansElbowArray:', updatedArray);
+                            return updatedArray;
+                        });
+                        setBooleansHipArray(prev => {const updatedArray = [...prev, booleans.hip ? 1 : 0];
+                            console.log('UpdatedBooleansHipArray:', updatedArray);
+                            return updatedArray;
+                        });
+                        setBooleansKneeArray(prev => {const updatedArray = [...prev, booleans.knee ? 1 : 0];
+                            console.log('UpdatedBooleansKneeArray:', updatedArray);
+                            return updatedArray;
+                        });
+                        
 
                         playAudio(audioPaths[7 + repCount]);
                         setTimeout(()=>{},1000);
+                        const booleansArray = convertBooleansObjectToArray(booleans);
                         if (booleansArray.every((value, index) => value === [false, false, false][index])) {
                             playAudioWithDelay(audioPaths[0]);
                             // 모든 값이 [false, false, false]와 동일할 때
@@ -246,7 +248,7 @@ const audioPaths = audioBytesList.map(
                             console.log('Elbow & Hip & Knee')
                         }
                         // 상태 초기화
-                        setState(null);
+                        setState('initial');
                         setBooleans({ elbow: true, hip: false, knee: false });
                     }
                 }
@@ -254,7 +256,35 @@ const audioPaths = audioBytesList.map(
                 previousAngles.current = { elbowAngle, hipAngle, kneeAngle };
             }
         }
-    }, [pose, booleans, state, repCount, targetRepCount, booleansElbowArray, booleansHipArray, booleansKneeArray]);
+    }, [pose, booleans, state, repCount]);
+
+    useEffect(() => {
+        if ((repCount >= targetRepCount) && !isTargetReached) {
+            console.log('목표 횟수에 도달했습니다.');
+            console.log('아래 배열 잘 들어가있는지 확인')
+            console.log('booleansElbowArray:',booleansElbowArray)
+            console.log('booleansHipArray:',booleansHipArray)
+            console.log('booleansKneeArray:',booleansKneeArray)
+            console.log('위 값이 잘 들어있다면, 계산이 문제일 확률 높음 => false로 인식하지 않고, 0으로 인식한다던가')
+            console.log('지금 resultArray계산은 false의 개수를 세는 것인데, false로 인식하지 않으면 개수가 0개일 것')
+
+            const resultArray = [
+                calculateFalsePercentage(booleansElbowArray),
+                calculateFalsePercentage(booleansHipArray),
+                calculateFalsePercentage(booleansKneeArray)
+            ];
+
+            console.log('최종 resultArray 잘 들어가있는지 확인')
+
+            console.log('Result Array:', resultArray);
+
+            // 페이지 이동 전에 isTargetReached 상태 업데이트
+            setIsTargetReached(true);
+            setTimeout(() => {
+                navigation.navigate('HealthResult', { id: route.params?.id, resultArray });
+            }, 2000);
+        }
+    }, [booleansElbowArray, booleansHipArray, booleansKneeArray, repCount]);
 
     if (!hasPermission) {
         return <View><Text>카메라 권한을 확인 중입니다...</Text></View>;
@@ -265,82 +295,82 @@ const audioPaths = audioBytesList.map(
     }
 
     const renderPoseDots = () => {
-      if (!pose || !pose.frameWidth || !pose.frameHeight) return null;
+        if (!pose || !pose.frameWidth || !pose.frameHeight) return null;
 
-      const { pose: poseData, frameWidth, frameHeight } = pose;
-      const keysToRender = [
-          'nosePosition',
-          'leftEarPosition',
-          'rightEarPosition',
-          'leftShoulderPosition',
-          'rightShoulderPosition',
-          'leftElbowPosition',
-          'rightElbowPosition',
-          'leftWristPosition',
-          'rightWristPosition',
-          'leftHipPosition',
-          'rightHipPosition',
-          'leftKneePosition',
-          'rightKneePosition',
-          'leftAnklePosition',
-          'rightAnklePosition'
-      ];
+        const { pose: poseData, frameWidth, frameHeight } = pose;
+        const keysToRender = [
+            'nosePosition',
+            'leftEarPosition',
+            'rightEarPosition',
+            'leftShoulderPosition',
+            'rightShoulderPosition',
+            'leftElbowPosition',
+            'rightElbowPosition',
+            'leftWristPosition',
+            'rightWristPosition',
+            'leftHipPosition',
+            'rightHipPosition',
+            'leftKneePosition',
+            'rightKneePosition',
+            'leftAnklePosition',
+            'rightAnklePosition'
+        ];
 
-      const connections = [
-          ['nosePosition', 'leftEarPosition'],
-          ['nosePosition', 'rightEarPosition'],
-          ['leftShoulderPosition', 'rightShoulderPosition'],
-          ['leftShoulderPosition', 'leftElbowPosition'],
-          ['leftElbowPosition', 'leftWristPosition'],
-          ['rightShoulderPosition', 'rightElbowPosition'],
-          ['rightElbowPosition', 'rightWristPosition'],
-          ['leftShoulderPosition', 'leftHipPosition'],
-          ['rightShoulderPosition', 'rightHipPosition'],
-          ['leftHipPosition', 'rightHipPosition'],
-          ['leftHipPosition', 'leftKneePosition'],
-          ['leftKneePosition', 'leftAnklePosition'],
-          ['rightHipPosition', 'rightKneePosition'],
-          ['rightKneePosition', 'rightAnklePosition']
-      ];
+        const connections = [
+            ['nosePosition', 'leftEarPosition'],
+            ['nosePosition', 'rightEarPosition'],
+            ['leftShoulderPosition', 'rightShoulderPosition'],
+            ['leftShoulderPosition', 'leftElbowPosition'],
+            ['leftElbowPosition', 'leftWristPosition'],
+            ['rightShoulderPosition', 'rightElbowPosition'],
+            ['rightElbowPosition', 'rightWristPosition'],
+            ['leftShoulderPosition', 'leftHipPosition'],
+            ['rightShoulderPosition', 'rightHipPosition'],
+            ['leftHipPosition', 'rightHipPosition'],
+            ['leftHipPosition', 'leftKneePosition'],
+            ['leftKneePosition', 'leftAnklePosition'],
+            ['rightHipPosition', 'rightKneePosition'],
+            ['rightKneePosition', 'rightAnklePosition']
+        ];
 
-      const points = keysToRender
-          .filter(key => poseData[key])
-          .map(key => {
-              const point = poseData[key];
-              const x = useFrontCamera
-                  ? screenWidth - ((((point.x / frameWidth) * screenWidth) * 2) - 100) // 좌우 반전 (전면 카메라)
-                  : (((point.x / frameWidth) * screenWidth) * 2) - 100; // 좌우 반전 없음 (후면 카메라)
-              const y = (((point.y / frameHeight) * screenHeight) * 0.8) - 30;
+        const points = keysToRender
+            .filter(key => poseData[key])
+            .map(key => {
+                const point = poseData[key];
+                const x = useFrontCamera
+                    ? screenWidth - ((((point.x / frameWidth) * screenWidth) * 2) - 100) // 좌우 반전 (전면 카메라)
+                    : (((point.x / frameWidth) * screenWidth) * 2) - 100; // 좌우 반전 없음 (후면 카메라)
+                const y = (((point.y / frameHeight) * screenHeight) * 0.8) - 30;
 
-              return { key, x, y };
-          });
+                return { key, x, y };
+            });
 
-      return (
-          <Svg style={{ position: 'absolute', width: screenWidth, height: screenHeight }}>
-              {connections.map(([key1, key2], index) => {
-                  const point1 = points.find(p => p.key === key1);
-                  const point2 = points.find(p => p.key === key2);
-                  if (point1 && point2) {
-                      return (
-                          <Line
-                              key={`line-${index}`}
-                              x1={point1.x}
-                              y1={point1.y}
-                              x2={point2.x}
-                              y2={point2.y}
-                              stroke="blue"
-                              strokeWidth={2}
-                          />
-                      );
-                  }
-                  return null;
-              })}
-              {points.map((point, index) => (
-                  <Circle key={`point-${index}`} cx={point.x} cy={point.y} r={4} fill="red" />
-              ))}
-          </Svg>
-      );
-  };
+        return (
+            <Svg style={{ position: 'absolute', width: screenWidth, height: screenHeight }}>
+                {connections.map(([key1, key2], index) => {
+                    const point1 = points.find(p => p.key === key1);
+                    const point2 = points.find(p => p.key === key2);
+                    if (point1 && point2) {
+                        return (
+                            <Line
+                                key={`line-${index}`}
+                                x1={point1.x}
+                                y1={point1.y}
+                                x2={point2.x}
+                                y2={point2.y}
+                                stroke="blue"
+                                strokeWidth={2}
+                            />
+                        );
+                    }
+                    return null;
+                })}
+                {points.map((point, index) => (
+                    <Circle key={`point-${index}`} cx={point.x} cy={point.y} r={4} fill="red" />
+                ))}
+            </Svg>
+        );
+    };
 
 
     return (
