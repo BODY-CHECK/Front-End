@@ -58,3 +58,33 @@ export const postExerciseSolution = async (exerciseId, solutionVideo, criteria, 
         throw error;
     }
 };
+
+// 솔루션 조회 함수
+export const getSolutions = async (targetBody, period, page) => {
+    try {
+        // 커스텀 axios 인스턴스를 사용하여 GET 요청을 보냄
+        const response = await instance.get(`${baseURL}/solutions`, {
+            params: {
+                targetBody, // 'NULL', 'UPPER_BODY', 'LOWER_BODY' 중 하나의 값
+                period,     // 0, 1, 2, 3, 4 중 하나의 값
+                page,        // 페이지 번호
+            },
+        });
+
+        // 응답 데이터를 반환
+        return response.data;
+    } catch (error) {
+        console.error('Error during GET request:', error);
+        throw error;
+    }
+};
+
+export const getSolutionById = async (solutionId) => {
+    try {
+      const response = await instance.get(`${baseURL}/solutions/${solutionId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error during API call:', error);
+      throw error;
+    }
+  };

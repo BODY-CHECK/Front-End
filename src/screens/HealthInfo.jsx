@@ -38,10 +38,10 @@ import exerciseData from '../components/Health/HealthInfoData';
 export default function HealthInfo() {
   const route = useRoute();
   const navigation = useNavigation();
-  const {id, repCount: initialRepCount} = route.params;
+  const {id} = route.params;
   const exercise = exerciseData.find(ex => ex.id === id);
   const [modalVisible, setModalVisible] = useState(false);
-  const [repCount, setRepCount] = useState(initialRepCount || 12); // 운동 개수 저장
+  const [repCount, setRepCount] = useState(12); // 운동 개수 저장
   const [contentWidth, setContentWidth] = useState(0);
   const itemWidth = 50;
   const numbers = [...Array(20).keys()].map(i => (i + 1).toString());

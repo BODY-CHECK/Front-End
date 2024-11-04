@@ -8,6 +8,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import HeaderMain from '../components/HeaderMain';
 import MyPage from '../screens/Mypage';
 import SettingsScreen from '../screens/SettingScreen';
+import ResultList from '../screens/ResultList';
+import Solution from '../screens/Solution';
 
 const Stack = createStackNavigator();
 const CustomHeader = () => <HeaderMain />;
@@ -27,6 +29,22 @@ function MypageStackNavigator() {
           title: '설정',
           headerTitleAlign: 'center', // 제목을 가운데 정렬
         }}
+      />
+      <Stack.Screen
+        name="ResultList"
+        component={ResultList}
+        options={{headerShown: true,
+          title: 'My 솔루션',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {fontWeight: 'bold'}}}
+      />
+      <Stack.Screen
+        name="Solution"
+        component={Solution}
+        options={{headerShown: true,
+          title: 'My 솔루션',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {fontWeight: 'bold'}}}
       />
       {/*
       <Stack.Screen
