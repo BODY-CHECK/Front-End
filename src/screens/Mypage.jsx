@@ -29,16 +29,20 @@ function MyPage() {
   }, []);
 
   return (
-    <>
+    <ScrollContainer>
       <Container>
         <MypageHeader nickname={nickname} />
         <MyCalendar />
         <BMIGraph />
       </Container>
       <ToSolutionButton />
-    </>
+    </ScrollContainer>
   );
 }
+const ScrollContainer = styled.ScrollView`
+  flex: 1;
+  background-color: #fff;
+`;
 
 const Container = styled.View`
   flex: 1;

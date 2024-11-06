@@ -32,10 +32,6 @@ function SettingsScreen() {
         title="비밀번호 변경"
         onPress={() => navigation.navigate('PasswordChange')}
       />
-      <TitleButton
-        title="환불계좌 관리"
-        onPress={() => navigation.navigate('AccountManagement')}
-      />
 
       <SectionTitle>설정</SectionTitle>
       <TitleButton
