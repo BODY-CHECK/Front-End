@@ -1,13 +1,11 @@
 // SettingsStackNavigator.js
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-// import ProfileEditScreen from '../screens/ProfileEditScreen';
-// import PasswordChangeScreen from '../screens/PasswordChangeScreen';
-// import AccountManagementScreen from '../screens/AccountManagementScreen';
-// import PremiumUpgradeScreen from '../screens/PremiumUpgradeScreen';
 import HeaderMain from '../components/HeaderMain';
 import MyPage from '../screens/Mypage';
 import SettingsScreen from '../screens/SettingScreen';
+import ProfileEdit from '../screens/ProfileEdit';
+import PasswordChange from '../screens/PasswordChange';
 
 const Stack = createStackNavigator();
 const CustomHeader = () => <HeaderMain />;
@@ -28,17 +26,19 @@ function MypageStackNavigator() {
           headerTitleAlign: 'center', // 제목을 가운데 정렬
         }}
       />
-      {/*
+
       <Stack.Screen
         name="ProfileEdit"
-        component={ProfileEditScreen}
-        options={{title: '프로필 수정'}}
+        component={ProfileEdit}
+        options={{title: '프로필 수정', headerTitleAlign: 'center'}}
       />
+
       <Stack.Screen
         name="PasswordChange"
-        component={PasswordChangeScreen}
-        options={{title: '비밀번호 변경'}}
+        component={PasswordChange}
+        options={{title: '비밀번호 변경', headerTitleAlign: 'center'}}
       />
+      {/*
       <Stack.Screen
         name="AccountManagement"
         component={AccountManagementScreen}

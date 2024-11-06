@@ -43,6 +43,7 @@ const InputField = ({
           secureTextEntry={
             isPasswordField ? !isPasswordVisible : secureTextEntry
           } // 비밀번호 필드일 때만 가리기 기능 적용
+          style={{borderColor: errorMessage ? 'red' : '#c8c8c8'}}
         />
         {isPasswordField && (
           <IconWrapper>
@@ -94,7 +95,6 @@ const LabelContainer = styled.View`
 const Input = styled.TextInput`
   border-radius: 5px;
   border-width: 1px;
-  border-color: #c8c8c8;
   padding: 8px;
   height: 50px;
   flex: 1;
