@@ -6,6 +6,7 @@ import MyPage from '../screens/Mypage';
 import SettingsScreen from '../screens/SettingScreen';
 import ProfileEdit from '../screens/ProfileEdit';
 import PasswordChange from '../screens/PasswordChange';
+import PremiumUpgrade from '../screens/PremiumUpgrade';
 
 const Stack = createStackNavigator();
 const CustomHeader = () => <HeaderMain />;
@@ -38,17 +39,12 @@ function MypageStackNavigator() {
         component={PasswordChange}
         options={{title: '비밀번호 변경', headerTitleAlign: 'center'}}
       />
-      {/*
-      <Stack.Screen
-        name="AccountManagement"
-        component={AccountManagementScreen}
-        options={{title: '환불 계좌 관리'}}
-      />
+
       <Stack.Screen
         name="PremiumUpgrade"
-        component={PremiumUpgradeScreen}
-        options={{title: '프리미엄 업그레이드'}}
-      /> */}
+        component={PremiumUpgrade}
+        options={{title: '프리미엄 업그레이드', headerTitleAlign: 'center'}}
+      />
     </Stack.Navigator>
   );
 }
