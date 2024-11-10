@@ -10,6 +10,7 @@ import { calculateAngle, detectOutlier, updateStateAndFeedback } from './calcula
 import { audioBytesList } from '../mockAudioData';
 import RNFS from 'react-native-fs';
 import Sound from 'react-native-sound';
+import RecordScreen from 'react-native-record-screen'
 
 export default function Health() {
     type RouteParams = {
@@ -43,10 +44,59 @@ export default function Health() {
     });
 
     const [isTargetReached, setIsTargetReached] = useState(false);
+    const [isRecording, setIsRecording] = useState(false); //녹화를 위함
 
     const convertBooleansObjectToArray = (booleans) => {
         return Object.values(booleans);
     };
+
+    // 녹화 시작
+    const startRecording = async () => {
+        try {
+            const res = await RecordScreen.startRecording();
+            if (res.error) {
+                console.error('녹화 시작 오류:', res.error);
+            } else {
+                setIsRecording(true);
+                console.log('녹화 시작됨');
+            }
+        } catch (error) {
+            console.error('녹화 시작 실패:', error);
+        }
+    };
+
+    // 녹화 종료 및 파일 저장
+    const stopRecording = async () => {
+        try {
+            const res = await RecordScreen.stopRecording();
+            if (res.error) {
+                console.error('녹화 종료 오류:', res.error);
+            } else {
+                setIsRecording(false);
+                console.log('녹화 종료됨');
+                const videoUri = res.result.outputURL;
+                if (videoUri) {
+                    console.log('녹화된 파일 경로:', videoUri);
+                    Alert.alert('녹화 완료', `녹화된 파일이 저장되었습니다:\n${videoUri}`);
+                }
+            }
+        } catch (error) {
+            console.error('녹화 종료 실패:', error);
+        }
+    };
+
+    // 화면에 들어왔을 때 녹화 시작, 나갈 때 녹화 종료
+    useFocusEffect(
+        React.useCallback(() => {
+            // 화면이 포커스를 받을 때 녹화 시작
+            startRecording();
+
+            // 화면에서 나갈 때(cleanup) 녹화 종료
+            return () => {
+                stopRecording();
+            };
+        }, [])
+    );
 
     // 각 음성 파일을 지정된 이름으로 저장할 경로 설정
     const audioPaths = audioBytesList.map(
