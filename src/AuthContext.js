@@ -19,38 +19,18 @@ export function AuthProvider({children}) {
     Alert.alert('다시 로그인해주세요');
   };
 
-  // 액세스 토큰 새로고침 함수
-  const refreshAccessToken = async () => {
-    const refreshToken = await AsyncStorage.getItem('refreshToken');
-    if (refreshToken) {
-      try {
-        const refreshResponse = await instance.post(
-          `${baseURL}/members/refresh-token`,
-          {refreshToken},
-        );
-        if (refreshResponse.data.isSuccess) {
-          const {accessToken} = refreshResponse.data.result;
-          await AsyncStorage.setItem('accessToken', accessToken);
-          setIsLoggedIn(true); // 로그인 상태 설정
-        } else {
-          await logout();
-        }
-      } catch (error) {
-        console.error('토큰 갱신 오류:', error);
-        await logout();
-      }
-    }
-  };
-
   // 포그라운드 전환 시 토큰 확인 및 갱신
   useEffect(() => {
     const handleAppStateChange = async nextAppState => {
       if (nextAppState === 'active') {
         const accessToken = await AsyncStorage.getItem('accessToken');
-        if (!accessToken) {
-          await refreshAccessToken(); // 액세스 토큰 갱신
-        } else {
+        const refreshToken = await AsyncStorage.getItem('refreshToken');
+
+        if (!accessToken && refreshToken) {
+          // 로그인 시도 시 `axiosInstance.js`가 자동 갱신하도록 대기
           setIsLoggedIn(true);
+        } else if (!accessToken && !refreshToken) {
+          setIsLoggedIn(false);
         }
       }
     };
