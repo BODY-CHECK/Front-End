@@ -10,6 +10,9 @@ const instance = axios.create({
   baseURL,
 });
 
+let isRefreshing = false; // 토큰 갱신 중인지 여부
+let refreshTokenPromise = null; // 갱신 중인 Promise 저장
+
 // 로그아웃 함수
 const logout = async () => {
   await AsyncStorage.removeItem('accessToken');
@@ -21,36 +24,51 @@ const logout = async () => {
 
 // 액세스 토큰 갱신 함수
 const refreshAccessToken = async () => {
-  const refreshToken = await AsyncStorage.getItem('refreshToken');
-  if (!refreshToken) {
-    await logout();
-    return null;
+  if (isRefreshing) {
+    // 이미 갱신 중인 경우 기존 Promise 반환
+    return refreshTokenPromise;
   }
 
-  try {
-    console.log('Attempting to refresh access token...');
-    const refreshResponse = await axios.post(
-      `${baseURL}/members/refresh-token`,
-      {refreshToken},
-    );
-    if (refreshResponse.data.isSuccess) {
-      const {accessToken, refreshToken: newRefreshToken} =
-        refreshResponse.data.result;
-      await AsyncStorage.setItem('accessToken', accessToken);
-      await AsyncStorage.setItem('refreshToken', newRefreshToken); // 새 리프레시 토큰 저장
-      console.log('Access token refreshed successfully:', accessToken);
-      console.log('refresh token refreshed successfully.', newRefreshToken);
-      return accessToken;
-    } else {
-      console.log('Failed to refresh token:', refreshResponse.data.message);
+  isRefreshing = true;
+  refreshTokenPromise = new Promise(async (resolve, reject) => {
+    const refreshToken = await AsyncStorage.getItem('refreshToken');
+    if (!refreshToken) {
       await logout();
-      return null;
+      isRefreshing = false;
+      refreshTokenPromise = null;
+      reject(null);
+      return;
     }
-  } catch (error) {
-    console.error('토큰 갱신 오류:', error);
-    await logout();
-    return null;
-  }
+    try {
+      console.log('Attempting to refresh access and refresh tokens...');
+      const refreshResponse = await axios.post(
+        `${baseURL}/members/refresh-token`,
+        {refreshToken},
+      );
+
+      if (refreshResponse.data.isSuccess) {
+        const {accessToken, refreshToken: newRefreshToken} =
+          refreshResponse.data.result;
+        await AsyncStorage.setItem('accessToken', accessToken);
+        await AsyncStorage.setItem('refreshToken', newRefreshToken); // 새 리프레시 토큰 저장
+        console.log('Access token refreshed successfully:', accessToken);
+        console.log('refresh token refreshed successfully.', newRefreshToken);
+        resolve(accessToken);
+      } else {
+        console.log('Failed to refresh tokens:', refreshResponse.data.message);
+        await logout();
+        reject(null);
+      }
+    } catch (error) {
+      console.error('Token refresh error:', error);
+      await logout();
+      reject(null);
+    } finally {
+      isRefreshing = false;
+      refreshTokenPromise = null; // 갱신 완료 후 초기화
+    }
+  });
+  return refreshTokenPromise;
 };
 
 // 요청 인터셉터: 모든 요청에 access token을 추가
