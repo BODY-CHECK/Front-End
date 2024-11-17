@@ -20,7 +20,8 @@ const PremiumUpgrade = () => {
         // 일정 시간 후에 모달을 표시
         setTimeout(() => {
           setModalVisible(true);
-        }, 5000); // 1초 딜레이 (필요한 시간으로 조정 가능)      } else {
+        }, 4000); // 1초 딜레이 (필요한 시간으로 조정 가능)
+      } else {
         Alert.alert('결제 준비에 실패했습니다. 다시 시도해주세요.');
       }
     } catch (error) {

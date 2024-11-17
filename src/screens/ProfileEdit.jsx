@@ -42,6 +42,8 @@ const ProfileEdit = () => {
 
   // 수정하기 버튼 클릭 시 호출
   const handleEdit = async () => {
+    console.log('닉네임 값:', nickname); // 닉네임 값 출력
+
     const error = await validateNickname(nickname);
     if (error) {
       setErrorMessage(error);
@@ -62,7 +64,19 @@ const ProfileEdit = () => {
       }
     } catch (error) {
       console.error('닉네임 수정 오류:', error);
-      Alert.alert('오류가 발생했습니다. 다시 시도해주세요.');
+      // 500 오류 상세 데이터 출력
+      if (error.response) {
+        console.error('응답 상태 코드:', error.response.status);
+        console.error('응답 헤더:', error.response.headers);
+        console.error('응답 데이터:', error.response.data);
+        Alert.alert(
+          '서버 오류',
+          '서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        );
+      } else {
+        console.error('요청 전송 오류:', error.message);
+        Alert.alert('오류가 발생했습니다. 다시 시도해주세요.');
+      }
     }
   };
 
