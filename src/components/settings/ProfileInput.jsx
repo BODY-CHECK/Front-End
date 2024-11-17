@@ -36,7 +36,7 @@ const ProfileInput = ({
           style={{
             backgroundColor: editable ? '#fff' : '#e0e0e0',
             color: editable ? '#000000' : '#999999',
-            borderColor: errorMessage ? 'red' : '#c8c8c8', // 에러 메시지가 있을 때 보더 색을 빨간색으로 변경
+            borderColor: errorMessage ? '#DD4343' : '#c8c8c8', // 에러 메시지가 있을 때 보더 색을 빨간색으로 변경
           }} // 비활성화 시 배경 회색
           secureTextEntry={
             isPasswordField ? !isPasswordVisible : secureTextEntry
@@ -78,7 +78,7 @@ const Input = styled.TextInput`
 `;
 
 const ErrorText = styled.Text`
-  color: red;
+  color: #DD4343;
   font-size: 10px;
   margin-left: 5px;
   padding-bottom: 6px;

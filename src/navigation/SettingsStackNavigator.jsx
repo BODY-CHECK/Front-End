@@ -9,6 +9,7 @@ import PasswordChange from '../screens/PasswordChange';
 import PremiumUpgrade from '../screens/PremiumUpgrade';
 import ResultList from '../screens/ResultList';
 import Solution from '../screens/Solution';
+import IsPremium from '../screens/IsPremium';
 
 const Stack = createStackNavigator();
 const CustomHeader = () => <HeaderMain />;
@@ -54,13 +55,18 @@ function MypageStackNavigator() {
       <Stack.Screen
         name="PasswordChange"
         component={PasswordChange}
-        options={{title: '비밀번호 변경', headerTitleAlign: 'center'}}
+        options={{title: '비밀번호 수정', headerTitleAlign: 'center'}}
       />
 
       <Stack.Screen
         name="PremiumUpgrade"
         component={PremiumUpgrade}
-        options={{title: '프리미엄 업그레이드', headerTitleAlign: 'center'}}
+        options={{title: '프리미엄 구독', headerTitleAlign: 'center'}}
+      />
+      <Stack.Screen
+        name="IsPremium"
+        component={IsPremium}
+        options={{title:'프리미엄 구독', headerTitleAlign: 'center'}}
       />
     </Stack.Navigator>
   );

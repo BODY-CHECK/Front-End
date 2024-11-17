@@ -31,7 +31,8 @@ const PremiumUpgrade = () => {
   };
 
   return (
-    <Container>
+    <ScrollContainer>
+       <Container>
       <TitleContainer>
         <TitleWrapper>
           <Logo source={logo} />
@@ -80,10 +81,16 @@ const PremiumUpgrade = () => {
         </ModalContainer>
       </Modal>
     </Container>
+    </ScrollContainer>
+   
   );
 };
 
 export default PremiumUpgrade;
+const ScrollContainer = styled.ScrollView`
+  flex: 1;
+  background-color: #fff;
+`
 
 const Container = styled.View`
   flex: 1;

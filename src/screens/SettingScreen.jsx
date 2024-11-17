@@ -39,6 +39,10 @@ function SettingsScreen() {
         title="프리미엄 업그레이드"
         onPress={() => navigation.navigate('PremiumUpgrade')}
       />
+      <TitleButton
+        title="프리미엄 유저"
+        onPress={() => navigation.navigate('IsPremium')}
+      />
       <TitleButton title="로그아웃" onPress={() => setModalVisible(true)} />
       {/* 모달 컴포넌트 */}
       <Modal
