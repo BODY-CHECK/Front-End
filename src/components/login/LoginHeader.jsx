@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import logo_big from '../../assets/images/logo_big.png';
 import logo from '../../assets/images/logo.png';
 
 const LoginHeader = () => {

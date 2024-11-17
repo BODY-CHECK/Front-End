@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Button} from 'react-native';
 import Svg, {Circle, G, Polygon, Rect, Text as SvgText} from 'react-native-svg';
 import styled from 'styled-components/native';
 import instance from '../../axiosInstance';
+import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 
 const graphWidth = 360; // 그래프 너비 고정
 const underweightWidth = (3.5 / 10) * graphWidth; // 133px
@@ -15,6 +16,25 @@ const BMIGraph = () => {
   const [height, setHeight] = useState(''); // cm로 입력받기
   const [weight, setWeight] = useState(''); // kg로 입력받기
   const [bmi, setBmi] = useState(null);
+  const bottomSheetRef = useRef(null); // BottomSheet 참조
+  const snapPoints = useMemo(() => ['35%'], []);
+
+  // 커스텀 backdrop (배경)
+  const renderBackdrop = useCallback(
+    props => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1} // 닫힐 때 배경 흐림 효과 제거
+        opacity={0.7} // 배경의 흐림도 설정
+      />
+    ),
+    [],
+  );
+
+  // BottomSheet 열기 함수
+  const openBottomSheet = useCallback(() => {
+    bottomSheetRef.current?.expand();
+  }, []);
 
   // 초기 데이터 로드 (키, 몸무게)
   useEffect(() => {
@@ -46,9 +66,6 @@ const BMIGraph = () => {
 
   // BMI 값에 따른 그래프 내 위치 계산 (저체중 ~ 비만)
   const bmiPosition = () => {
-    const totalWidth =
-      underweightWidth + normalWeightWidth + overweightWidth + obesityWidth;
-
     if (bmi <= 18.5) return (bmi / 18.5) * underweightWidth;
     if (bmi <= 25)
       return (
@@ -70,7 +87,12 @@ const BMIGraph = () => {
 
   return (
     <Container>
-      <Title>BMI</Title>
+      <TitleContainer>
+        <Title>BMI</Title>
+        <EditButton onPress={openBottomSheet}>
+          <EditButtonText>편집</EditButtonText>
+        </EditButton>
+      </TitleContainer>
 
       {/* 그래프 영역 */}
       <Svg height="80" width={graphWidth} style={{marginBottom: 20}}>
@@ -203,23 +225,31 @@ const BMIGraph = () => {
         </LegendItem>
       </LegendContainer>
 
-      {/* 키와 몸무게 입력 */}
-      <InputContainer>
-        <Input
-          placeholder="키 (cm)"
-          keyboardType="numeric"
-          value={height}
-          onChangeText={setHeight}
-        />
-        <Input
-          placeholder="몸무게 (kg)"
-          keyboardType="numeric"
-          value={weight}
-          onChangeText={setWeight}
-        />
-      </InputContainer>
-
-      <Button title="계산" onPress={calculateBMI} color="#3373eb" />
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        snapPoints={snapPoints}
+        backdropComponent={renderBackdrop} // backdrop 적용
+        enablePanDownToClose={true} // 슬라이드로 닫기
+        enableBackdropDismiss={true} // 배경 터치로 닫기
+      >
+        {/* 키와 몸무게 입력 */}
+        <InputContainer>
+          <Input
+            placeholder="키 (cm)"
+            keyboardType="numeric"
+            value={height}
+            onChangeText={setHeight}
+          />
+          <Input
+            placeholder="몸무게 (kg)"
+            keyboardType="numeric"
+            value={weight}
+            onChangeText={setWeight}
+          />
+        </InputContainer>
+        <Button title="계산하기" onPress={calculateBMI} color="#3373eb" />
+      </BottomSheet>
     </Container>
   );
 };
@@ -230,10 +260,27 @@ const Container = styled.View`
   background-color: #fff;
 `;
 
+const TitleContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
 const Title = styled.Text`
   font-size: 20px;
   font-weight: bold;
   color: black;
+`;
+
+const EditButton = styled.TouchableOpacity`
+  background-color: #3373eb;
+  padding: 5px 10px;
+  border-radius: 5px;
+`;
+
+const EditButtonText = styled.Text`
+  color: white;
+  font-size: 12px;
 `;
 
 const LegendContainer = styled.View`
@@ -265,6 +312,7 @@ const Input = styled.TextInput`
   border-width: 1px;
   border-color: #ccc;
   padding: 10px;
+  height: 50px;
   width: 45%;
 `;
 

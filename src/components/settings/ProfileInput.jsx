@@ -1,23 +1,19 @@
+import React, {useState} from 'react';
+import {TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
-import {Text, TouchableOpacity} from 'react-native';
-import {useState} from 'react';
 
 const eye = require('../../assets/images/eye.png');
 const eyeOff = require('../../assets/images/eye_off.png');
 
-const InputField = ({
+const ProfileInput = ({
   label,
-  withLabel,
-  placeholder,
-  required,
-  withAuthButton,
-  withCheckButton,
   value,
   onChangeText,
+  editable = true,
+  placeholder,
   errorMessage,
   isPasswordField,
   secureTextEntry,
-  onPressBtn,
 }) => {
   const [isPasswordVisible, setPasswordVisible] = useState(false); // 비밀번호 보이기 상태
 
@@ -25,25 +21,26 @@ const InputField = ({
   const togglePasswordVisibility = () => {
     setPasswordVisible(!isPasswordVisible);
   };
-
   return (
-    <>
-      {withLabel && (
-        <LabelContainer withLabel={withLabel}>
-          <Label>{label}</Label>
-          {required && <StarTag>*</StarTag>}
-          {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
-        </LabelContainer>
-      )}
+    <Container>
+      <LabelContainer>
+        <Label>{label}</Label>
+        {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
+      </LabelContainer>
       <InputContainer>
         <Input
-          placeholder={placeholder}
           value={value}
           onChangeText={onChangeText}
+          placeholder={placeholder}
+          editable={editable}
+          style={{
+            backgroundColor: editable ? '#fff' : '#e0e0e0',
+            color: editable ? '#000000' : '#999999',
+            borderColor: errorMessage ? 'red' : '#c8c8c8', // 에러 메시지가 있을 때 보더 색을 빨간색으로 변경
+          }} // 비활성화 시 배경 회색
           secureTextEntry={
             isPasswordField ? !isPasswordVisible : secureTextEntry
           } // 비밀번호 필드일 때만 가리기 기능 적용
-          style={{borderColor: errorMessage ? 'red' : '#c8c8c8'}}
         />
         {isPasswordField && (
           <IconWrapper>
@@ -54,22 +51,16 @@ const InputField = ({
             </TouchableOpacity>
           </IconWrapper>
         )}
-        {withAuthButton && (
-          <AuthButton onPress={onPressBtn}>
-            <Text style={{color: '#fff'}}>인증 요청</Text>
-          </AuthButton>
-        )}
-        {withCheckButton && (
-          <AuthButton onPress={onPressBtn}>
-            <Text style={{color: '#fff'}}>확인</Text>
-          </AuthButton>
-        )}
       </InputContainer>
-    </>
+    </Container>
   );
 };
 
-export default InputField;
+export default ProfileInput;
+
+const Container = styled.View`
+  margin-bottom: 15px;
+`;
 
 const Label = styled.Text`
   font-size: 12px;
@@ -77,39 +68,26 @@ const Label = styled.Text`
   margin-bottom: 8px;
 `;
 
-const StarTag = styled.Text`
-  font-size: 12px;
-  color: red;
-  padding-bottom: 3px;
-  margin-left: 2px;
+const Input = styled.TextInput`
+  border-width: 1px;
+  border-color: #c8c8c8;
+  padding: 10px;
+  height: 40px;
+  color: black;
+  flex: 1;
 `;
 
+const ErrorText = styled.Text`
+  color: red;
+  font-size: 10px;
+  margin-left: 5px;
+  padding-bottom: 6px;
+`;
 const LabelContainer = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
   align-self: flex-start;
-  margin-top: ${({withLabel}) => (withLabel ? '20px' : '0px')};
-`;
-
-const Input = styled.TextInput`
-  border-radius: 5px;
-  border-width: 1px;
-  padding: 8px;
-  height: 50px;
-  flex: 1;
-`;
-
-const AuthButton = styled.TouchableOpacity`
-  width: 72px;
-  height: 48px;
-  background-color: #3373eb;
-  justify-content: center;
-  align-items: center;
-  border-radius: 5px;
-  color: white;
-  margin-left: 10px;
-  z-index: 1;
 `;
 
 const InputContainer = styled.View`
@@ -120,17 +98,10 @@ const InputContainer = styled.View`
   margin-bottom: 5px;
 `;
 
-const ErrorText = styled.Text`
-  color: red;
-  font-size: 10px;
-  margin-left: 5px;
-  padding-bottom: 6px;
-`;
-
 const IconWrapper = styled.View`
   position: absolute;
   right: 10px; /* 오른쪽 끝에 배치 */
-  top: 15px;
+  top: 11px;
 `;
 
 const Icon = styled.Image`
