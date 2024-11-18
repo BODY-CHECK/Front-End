@@ -32,6 +32,8 @@ import {BarChart} from 'react-native-chart-kit';
 import {Alert, Modal} from 'react-native';
 import exerciseData from '../components/Health/HealthInfoData';
 import { postExerciseCriteria, postExerciseSolution } from '../api/SolutionApi'; // API 호출 함수 import
+import RecordScreen from 'react-native-record-screen';
+import RNFS from 'react-native-fs';
 
 export default function HealthResult() {
   const route = useRoute();
@@ -42,6 +44,7 @@ export default function HealthResult() {
   const [apiResponse, setApiResponse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isRecording, setIsRecording] = useState(true); // 녹화 상태 관리
   const CriteriaData = [
     {
       criteriaIdx: 1,
@@ -59,7 +62,6 @@ export default function HealthResult() {
       score: resultArray[2],
     },
   ];
-  console.log(CriteriaData);
 
   useFocusEffect(() => {
     navigation.getParent()?.setOptions({
@@ -87,6 +89,51 @@ export default function HealthResult() {
 
     fetchApiResponse();
   }, [id]);
+
+  // 녹화 종료 함수
+  const stopRecording = async () => {
+    try {
+      console.log('녹화 종료 시도 중...');
+      const response = await RecordScreen.stopRecording();
+      console.log(response);
+
+      if (response.status === 'success') {
+        const url = response.result.outputURL;
+        console.log('녹화된 파일 경로:', url);
+
+        // 파일을 다운로드 폴더로 복사
+        await copyToDownloads(url);
+
+
+      } else if (response.status === 'error') {
+        console.error('녹화 중 오류 발생:', response.result);
+      }
+
+      setIsRecording(false);
+    } catch (error) {
+      console.err('녹화 종료 오류:', error);
+    }
+  };
+
+  // 녹화된 파일을 다운로드 폴더로 복사하는 함수
+  const copyToDownloads = async (filePath) => {
+    try {
+      const downloadDir = `${RNFS.DownloadDirectoryPath}/HD-Recorded-Video.mp4`;
+
+      await RNFS.copyFile(filePath, downloadDir);
+
+      console.log('파일이 다운로드 폴더로 복사되었습니다:', downloadDir);
+    } catch (error) {
+      console.error('파일 복사 오류:', error);
+    }
+  };
+
+  // 컴포넌트가 렌더링될 때 녹화 종료 함수 실행
+  useEffect(() => {
+    if (isRecording) {
+      stopRecording();
+    }
+  }, []);
 
 
   const data = {

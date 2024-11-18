@@ -11,8 +11,14 @@ export const HealthContainer = styled.ScrollView`
 `;
 
 export const HealthType = styled.View`
-  margin-top: 10px;
   flex-direction: row;
+  align-items: center;
+`;
+
+export const PeriodContainer = styled.View`
+  flex: 1;
+  flex-direction: row;
+  justify-content: flex-end;
 `;
 
 export const HealthList = styled.View`
