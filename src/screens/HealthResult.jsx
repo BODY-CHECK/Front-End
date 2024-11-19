@@ -29,9 +29,12 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {BarChart} from 'react-native-chart-kit';
-import {Alert, Modal} from 'react-native';
+import {Alert, Modal, StyleSheet} from 'react-native';
 import exerciseData from '../components/Health/HealthInfoData';
-import { postExerciseCriteria, postExerciseSolution } from '../api/SolutionApi'; // API 호출 함수 import
+import {postExerciseCriteria, postExerciseSolution} from '../api/SolutionApi'; // API 호출 함수 import
+import RecordScreen from 'react-native-record-screen';
+import RNFS from 'react-native-fs';
+import Video from 'react-native-video';
 
 export default function HealthResult() {
   const route = useRoute();
@@ -42,6 +45,8 @@ export default function HealthResult() {
   const [apiResponse, setApiResponse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isRecording, setIsRecording] = useState(true); // 녹화 상태 관리
+  const [isURL, setIsURL] = useState(null);
   const CriteriaData = [
     {
       criteriaIdx: 1,
@@ -59,7 +64,6 @@ export default function HealthResult() {
       score: resultArray[2],
     },
   ];
-  console.log(CriteriaData);
 
   useFocusEffect(() => {
     navigation.getParent()?.setOptions({
@@ -88,6 +92,33 @@ export default function HealthResult() {
     fetchApiResponse();
   }, [id]);
 
+  // 녹화 종료 함수
+  const stopRecording = async () => {
+    try {
+      console.log('녹화 종료 시도 중...');
+      const response = await RecordScreen.stopRecording();
+      console.log(response);
+
+      if (response.status === 'success') {
+        const url = response.result.outputURL;
+        console.log('녹화된 파일 경로:', url);
+        setIsURL(url);
+      } else if (response.status === 'error') {
+        console.error('녹화 중 오류 발생:', response.result);
+      }
+
+      setIsRecording(false);
+    } catch (error) {
+      console.err('녹화 종료 오류:', error);
+    }
+  };
+
+  // 컴포넌트가 렌더링될 때 녹화 종료 함수 실행
+  useEffect(() => {
+    if (isRecording) {
+      stopRecording();
+    }
+  }, []);
 
   const data = {
     labels: ['팔 각도', '자세 장렬', '무릎 각도'],
@@ -113,7 +144,8 @@ export default function HealthResult() {
     fillShadowGradientToOpacity: 1, // 막대 하단 투명도
     propsForHorizontalLabels: {
       dx: -18, // x축 위치 조정
-      dy: 0},
+      dy: 0,
+    },
     propsForBackgroundLines: {
       strokeDasharray: '', // 배경 선을 없앰
     },
@@ -135,10 +167,15 @@ export default function HealthResult() {
         criteria: CriteriaData,
       };
       const content = apiResponse;
-      const video = null;
+      const solutionVideo = isURL;
 
       // postExerciseSolution 함수 호출
-      const result = await postExerciseSolution(exerciseId, video, criteria, content);
+      const result = await postExerciseSolution(
+        exerciseId,
+        solutionVideo,
+        criteria,
+        content,
+      );
       console.log('API Response:', result);
 
       Alert.alert('피드백이 저장되었습니다!');
@@ -147,8 +184,8 @@ export default function HealthResult() {
       navigation.dispatch(
         CommonActions.reset({
           index: 0, // 첫 번째 스크린을 보여줌
-          routes: [{ name: '홈' }], // Home 화면으로 이동
-        })
+          routes: [{name: '홈'}], // Home 화면으로 이동
+        }),
       );
     } catch (error) {
       Alert.alert('데이터 전송에 실패했습니다.');
@@ -164,7 +201,14 @@ export default function HealthResult() {
     <Container>
       <ContentContainer>
         <GIFContainer>
-          <StyledGIF source={exercise.gifSource} />
+          <Video
+            source={{uri: isURL}} // 비디오 파일의 URL 또는 로컬 파일 경로
+            style={styles.video}
+            controls={true} // 기본 컨트롤러 표시 (재생, 일시정지, 탐색바 등)
+            resizeMode="contain" // 비디오 크기 조절 방식 ('cover', 'contain', 'stretch' 등)
+            paused={false} // true일 경우 비디오가 일시정지됨
+            repeat={true} // 비디오 반복 재생
+          />
         </GIFContainer>
         <GraphContainer>
           <BarChart
@@ -180,9 +224,7 @@ export default function HealthResult() {
           />
         </GraphContainer>
         <TextContainer>
-          <ContentText>
-            {apiResponse || '로딩 중...'}
-          </ContentText>
+          <ContentText>{apiResponse || '로딩 중...'}</ContentText>
         </TextContainer>
       </ContentContainer>
       <ButtonContainer>
@@ -220,3 +262,18 @@ export default function HealthResult() {
     </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000',
+  },
+  video: {
+    width: '100%',
+    height: 200,
+    borderWidth: 1,
+    borderColor: 'black',
+  },
+});

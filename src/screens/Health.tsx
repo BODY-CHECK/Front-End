@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, Dimensions, Linking, Alert } from 'react-native';
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { Camera as VisionCamera, useCameraDevices, useFrameProcessor } from 'react-native-vision-camera';
@@ -10,6 +10,7 @@ import { calculateAngle, detectOutlier, updateStateAndFeedback } from './calcula
 import { audioBytesList } from '../mockAudioData';
 import RNFS from 'react-native-fs';
 import Sound from 'react-native-sound';
+
 
 export default function Health() {
     type RouteParams = {
@@ -48,11 +49,12 @@ export default function Health() {
         return Object.values(booleans);
     };
 
+
     // 각 음성 파일을 지정된 이름으로 저장할 경로 설정
     const audioPaths = audioBytesList.map(
         (_, index) => `${RNFS.DocumentDirectoryPath}/audio${index + 1}.wav`,
     );
-  
+
     const setupAudioFiles = async () => {
         // 각 파일이 존재하는지 확인하고 없으면 생성
         await Promise.all(
@@ -120,7 +122,6 @@ export default function Health() {
     useEffect(() => {
         // 컴포넌트가 마운트될 때 한 번만 음성 파일을 설정
         setupAudioFiles()
-        .then(() => Alert.alert('오디오 파일 준비 완료'))
         .catch(error => console.error('오디오 파일 설정 오류:', error));
     }, []);
 
@@ -208,7 +209,7 @@ export default function Health() {
                             console.log('UpdatedBooleansKneeArray:', updatedArray);
                             return updatedArray;
                         });
-                        
+
 
                         playAudio(audioPaths[7 + repCount]);
                         setTimeout(()=>{},1000);

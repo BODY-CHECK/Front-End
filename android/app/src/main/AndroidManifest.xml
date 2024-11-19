@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- 마이크 권한 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!--화면 녹화 권한-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
       android:name=".MainApplication"
