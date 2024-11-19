@@ -4904,6 +4904,11 @@ react-native-vector-icons@^10.2.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
+react-native-video@^6.8.0:
+  version "6.8.0"
+  resolved "https://registry.npmjs.org/react-native-video/-/react-native-video-6.8.0.tgz"
+  integrity sha512-4Q4ccIXcPWG4Xm239DyLfTOTP01DYzrlXV4dBkuygINsrGTqua5E4jedkDRjj/KOOjIqDjO1elstZq2sfS2lOg==
+
 react-native-vision-camera@*, react-native-vision-camera@^4.6.1:
   version "4.6.1"
   resolved "https://registry.npmjs.org/react-native-vision-camera/-/react-native-vision-camera-4.6.1.tgz"

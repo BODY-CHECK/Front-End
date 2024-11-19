@@ -28,16 +28,8 @@ export const GIFContainer = styled.View`
   align-items: center;
   justify-content: center;
   padding: 10px;
-  border-radius: 10px;
-  border: 1px solid black;
 `;
 
-export const StyledGIF = styled.Image`
-  width: 50%;
-  height: 100%;
-  border-width: 1px;
-  border-radius: 10px;
-`;
 
 export const GraphContainer = styled.View`
   padding: 10px;

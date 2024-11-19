@@ -17,7 +17,7 @@ import {
 } from './ResultList.style';
 import exerciseData from '../components/Health/HealthInfoData';
 import { getSolutions } from '../api/SolutionApi'; // API 함수 임포트
-import { ActivityIndicator, View, Text } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 
