@@ -37,10 +37,6 @@ function SettingsScreen() {
       <SectionTitle>설정</SectionTitle>
       <TitleButton
         title="프리미엄 업그레이드"
-        onPress={() => navigation.navigate('PremiumUpgrade')}
-      />
-      <TitleButton
-        title="프리미엄 유저"
         onPress={() => navigation.navigate('SubscriptionHandler')}
       />
       <TitleButton title="로그아웃" onPress={() => setModalVisible(true)} />
