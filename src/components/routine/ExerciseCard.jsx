@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import styled from 'styled-components/native';
 import {Modal, Text} from 'react-native';
 
-const ExerciseCard = () => {
+const ExerciseCard = ({onSetRoutine}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCard, setSelectedCard] = useState(''); // 선택된 카드에 따라 텍스트를 다르게 보여줌
 
@@ -10,6 +10,11 @@ const ExerciseCard = () => {
     setSelectedCard(cardType); // 클릭한 카드 타입을 저장
     setModalVisible(true); // 모달을 보이도록 설정
   };
+
+  // const confirmRoutine = () => {
+  //   onSetRoutine(selectedCard); // 선택된 루틴 타입을 Routine 컴포넌트로 전달
+  //   setModalVisible(false); // 모달 닫기
+  // };
 
   return (
     <CardContainer>

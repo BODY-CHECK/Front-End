@@ -42,7 +42,7 @@ const KakaoLoginRedirect = () => {
         if (user) {
           // 로그인 성공 시 홈 화면으로 이동
           console.log('로그인 성공:', response.data);
-          // 예시로 accessToken을 AsyncStorage에 저장 (토큰 관리)
+          // accessToken을 AsyncStorage에 저장 (토큰 관리)
           await AsyncStorage.setItem('accessToken', accessToken);
           await AsyncStorage.setItem('refreshToken', refreshToken);
           setIsLoggedIn(true); // 로그인 상태 업데이트

@@ -146,6 +146,36 @@ function Routine() {
     setIsEditing(!isEditing); // 설정 모드와 저장 모드 전환
   };
 
+  // // 요일별 루틴 데이터 (초보자용과 고수용 루틴을 생성)
+  // const beginnerRoutine = {
+  //   월: [exerciseData[1], exerciseData[5], exerciseData[10]],
+  //   화: [exerciseData[1], exerciseData[6], exerciseData[9]],
+  //   수: [exerciseData[5], exerciseData[10], exerciseData[7]],
+  //   목: [exerciseData[1], exerciseData[5], exerciseData[10]],
+  //   금: [exerciseData[6], exerciseData[7], exerciseData[10]],
+  //   토: [exerciseData[5], exerciseData[9], exerciseData[8]],
+  //   일: [exerciseData[1], exerciseData[7], exerciseData[5]],
+  // };
+
+  // const advancedRoutine = {
+  //   월: [exerciseData[0], exerciseData[2], exerciseData[4]],
+  //   화: [exerciseData[3], exerciseData[7], exerciseData[11]],
+  //   수: [exerciseData[0], exerciseData[4], exerciseData[6]],
+  //   목: [exerciseData[2], exerciseData[8], exerciseData[9]],
+  //   금: [exerciseData[0], exerciseData[5], exerciseData[6]],
+  //   토: [exerciseData[3], exerciseData[7], exerciseData[8]],
+  //   일: [exerciseData[0], exerciseData[9], exerciseData[11]],
+  // };
+
+  // const handleSetRoutine = routineType => {
+  //   if (routineType === '헬린이') {
+  //     setRoutines(beginnerRoutine);
+  //   } else if (routineType === '헬고수') {
+  //     setRoutines(advancedRoutine);
+  //   }
+  //   setIsEditing(false); // 루틴이 설정된 후 설정 모드로 돌아감
+  // };
+
   return (
     <Container>
       <TitlewithBtn
