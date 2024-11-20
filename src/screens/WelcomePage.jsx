@@ -1,12 +1,13 @@
 import styled from 'styled-components/native';
 import logo_big from '../assets/images/logo_big.png';
 import Button from '../components/signup/Button';
-import {useNavigation} from '@react-navigation/native';
+import {useAuth} from '../AuthContext';
 const WelcomePage = () => {
-  const navigation = useNavigation();
+  const {setIsLoggedIn} = useAuth();
 
   const handleNext = () => {
-    navigation.navigate('Login');
+    // 로그인 상태 업데이트
+    setIsLoggedIn(true);
   };
   return (
     <Container>

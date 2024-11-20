@@ -25,7 +25,7 @@ function Home() {
       />
       <RoutineBox />
       <TitlewithBtn
-        title="AI 추천 운동"
+        title="사용자 맞춤 운동"
         buttonText="전체보기 >"
         onPress={handleClickAI}
       />
