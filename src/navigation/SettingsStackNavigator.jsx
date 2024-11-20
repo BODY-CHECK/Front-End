@@ -10,6 +10,7 @@ import PremiumUpgrade from '../screens/PremiumUpgrade';
 import ResultList from '../screens/ResultList';
 import Solution from '../screens/Solution';
 import IsPremium from '../screens/IsPremium';
+import SubscriptionHandler from './SubscriptionHandler';
 
 const Stack = createStackNavigator();
 const CustomHeader = () => <HeaderMain />;
@@ -33,18 +34,22 @@ function MypageStackNavigator() {
       <Stack.Screen
         name="ResultList"
         component={ResultList}
-        options={{headerShown: true,
+        options={{
+          headerShown: true,
           title: 'My 솔루션',
           headerTitleAlign: 'center',
-          headerTitleStyle: {fontWeight: 'bold'}}}
+          headerTitleStyle: {fontWeight: 'bold'},
+        }}
       />
       <Stack.Screen
         name="Solution"
         component={Solution}
-        options={{headerShown: true,
+        options={{
+          headerShown: true,
           title: 'My 솔루션',
           headerTitleAlign: 'center',
-          headerTitleStyle: {fontWeight: 'bold'}}}
+          headerTitleStyle: {fontWeight: 'bold'},
+        }}
       />
       <Stack.Screen
         name="ProfileEdit"
@@ -61,12 +66,17 @@ function MypageStackNavigator() {
       <Stack.Screen
         name="PremiumUpgrade"
         component={PremiumUpgrade}
-        options={{title: '프리미엄 구독', headerTitleAlign: 'center',}}
+        options={{title: '프리미엄 구독', headerTitleAlign: 'center'}}
       />
       <Stack.Screen
         name="IsPremium"
         component={IsPremium}
-        options={{title:'프리미엄 구독', headerTitleAlign: 'center'}}
+        options={{title: '프리미엄 구독', headerTitleAlign: 'center'}}
+      />
+      <Stack.Screen
+        name="SubscriptionHandler"
+        component={SubscriptionHandler}
+        options={{headerShown: false}} // 로딩 화면을 보여주므로 헤더 비활성화
       />
     </Stack.Navigator>
   );
