@@ -186,7 +186,7 @@ const SubscribeButton = styled.TouchableOpacity`
   height: 40px;
   justify-content: center;
   align-items: center;
-  margin-top: auto;
+  margin-top: 40px;
 `;
 
 const ButtonText = styled.Text`

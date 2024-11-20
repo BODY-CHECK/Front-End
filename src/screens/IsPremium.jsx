@@ -90,11 +90,12 @@ const SubTitle = styled.Text`
 const BenefitContainer = styled.View`
   flex-direction: column;
   align-items: center;
+  margin-top: 20px;
 `
 
 const BenefitTitle = styled.Text`
   font-size: 16px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   color: black;
   font-weight: 500;
   text-decoration: underline;
@@ -103,14 +104,14 @@ const BenefitTitle = styled.Text`
 const BenefitBox = styled.View`
   border-width: 0.5px;
   border-color: #c8c8c8;
-  padding: 15px 15px 0 15px;
+  padding: 25px 20px 0 20px;
   width: 100%;
 `
 
 const FeatureItem = styled.View`
   flex-direction: row;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 `
 
 const FeatureIcon = styled.Image`
