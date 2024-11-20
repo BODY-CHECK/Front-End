@@ -16,7 +16,6 @@ function SettingsScreen() {
       await AsyncStorage.removeItem('accessToken');
       await AsyncStorage.removeItem('refreshToken');
       setIsLoggedIn(false); // 로그아웃 상태로 전환
-      Alert.alert('로그아웃 되었습니다.');
       setModalVisible(false);
     } catch (error) {
       console.error('로그아웃 오류:', error);

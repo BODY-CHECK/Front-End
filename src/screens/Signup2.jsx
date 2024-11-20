@@ -9,13 +9,16 @@ import AgreementCheckbox from '../components/signup/AgreementCheckbox';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {useRoute} from '@react-navigation/native';
-import {Modal, TouchableOpacity, Text} from 'react-native';
+import {Modal, TouchableOpacity, Text, Alert} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAuth} from '../AuthContext';
 
 const baseURL = 'https://dev.bodycheck.store';
 
 const Signup2 = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const {setIsLoggedIn} = useAuth(); // 로그인 상태 업데이트
 
   // Signup1에서 전달된 이메일과 패스워드를 추출
   const {email, password} = route.params;
@@ -29,7 +32,11 @@ const Signup2 = () => {
   const [nicknameError, setNicknameError] = useState('');
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedParts, setSelectedParts] = useState([]);
+  const [selectedPart, setSelectedPart] = useState(null);
+
+  const handleBack = () => {
+    setIsModalVisible(false); // 모달 닫기
+  };
 
   // 닉네임 유효성 검사 (중복 검사 제외)
   const validateNickname = nickname => {
@@ -48,7 +55,6 @@ const Signup2 = () => {
     return true;
   };
 
-  // 유효성 검사에 따라 완료 버튼 활성화 상태 업데이트
   // 유효성 검사에 따라 완료 버튼 활성화 상태 업데이트
   useEffect(() => {
     const isFormComplete =
@@ -90,39 +96,52 @@ const Signup2 = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(`${baseURL}/members/email/sign-up`, {
+      // 요청 데이터 확인
+      const requestData = {
         nickname: nickname,
         height: parseInt(height, 10),
         weight: parseInt(weight, 10),
         gender: gender,
-        email: email, // 전달받은 이메일 사용
-        pw: password, // 전달받은 패스워드 사용
-        preferredParts: selectedParts, // 선택된 운동 부위 추가
-      });
+        email: email,
+        pw: password,
+        exerciseType: selectedPart,
+      };
+
+      console.log('Request Data:', requestData); // 요청 데이터 확인
+
+      const response = await axios.post(
+        `${baseURL}/members/email/sign-up`,
+        requestData,
+      );
 
       if (response.data.success) {
-        alert('회원가입이 완료되었습니다.');
+        const {accessToken, refreshToken} = response.data.result;
+        await AsyncStorage.setItem('accessToken', accessToken); // 토큰 저장
+        await AsyncStorage.setItem('refreshToken', refreshToken);
+
         navigation.navigate('WelcomePage');
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
         const errorCode = error.response.data.code;
         if (errorCode === 'email already exists') {
-          alert('이미 존재하는 이메일입니다.');
+          Alert.alert('이미 존재하는 이메일입니다.');
         } else if (errorCode === 'FRIEND4003') {
-          alert('이미 존재하는 닉네임입니다.');
+          Alert.alert('이미 존재하는 닉네임입니다.');
         } else {
-          alert('회원가입에 실패했습니다. 다시 시도해주세요.');
+          Alert.alert('회원가입에 실패했습니다. 다시 시도해주세요.');
         }
       } else {
         console.log(error);
-        alert(
+        console.log('Error Response:', error.response.data);
+        console.log('Error Status:', error.response.status);
+        console.log('Error Headers:', error.response.headers);
+        Alert.alert(
           '서버와의 통신 중 문제가 발생했습니다. 나중에 다시 시도해주세요.',
         );
       }
     }
   };
-  
 
   return (
     <Container>
@@ -150,30 +169,52 @@ const Signup2 = () => {
       </CheckboxContainer>
       <Button title="완료" onPress={handleNext} disabled={!isFormValid} />
 
-      {/* 모달 UI */}
+      {/* 모달 */}
       <Modal visible={isModalVisible} transparent={true} animationType="slide">
-        <ModalContainer>
+        <ModalOverlay>
           <ModalContent>
-            <ModalTitle>운동 중에서 특히 어느 부위를 선호하나요?</ModalTitle>
-            <PartList>
-              <PartItem
-                selected={selectedParts.includes('상체')}
-                onPress={() => togglePartSelection('상체')}
-              >
-                <PartText>상체</PartText>
-              </PartItem>
-              <PartItem
-                selected={selectedParts.includes('하체')}
-                onPress={() => togglePartSelection('하체')}
-              >
-                <PartText>하체</PartText>
-              </PartItem>
-            </PartList>
-            <SubmitButton onPress={handleSubmit}>
-              <SubmitButtonText>완료</SubmitButtonText>
-            </SubmitButton>
+            <Header>
+              <BackButton onPress={handleBack}>
+                <BackButtonText>x</BackButtonText>
+              </BackButton>
+            </Header>
+            <Body>
+              <ModalTitle>
+                운동 중에서{'\n'}특히 어느 부위를 더 선호하나요?
+              </ModalTitle>
+              <Option onPress={() => setSelectedPart('UPPER_BODY')}>
+                <RadioContainer>
+                  <RadioOuter>
+                    {selectedPart === 'UPPER_BODY' && <RadioInner />}
+                  </RadioOuter>
+                </RadioContainer>
+                <OptionText>상체</OptionText>
+              </Option>
+              <Option onPress={() => setSelectedPart('LOWER_BODY')}>
+                <RadioContainer>
+                  <RadioOuter>
+                    {selectedPart === 'LOWER_BODY' && <RadioInner />}
+                  </RadioOuter>
+                </RadioContainer>
+                <OptionText>하체</OptionText>
+              </Option>
+              <Option onPress={() => setSelectedPart(null)}>
+                <RadioContainer>
+                  <RadioOuter>
+                    {selectedPart === null && <RadioInner />}
+                  </RadioOuter>
+                </RadioContainer>
+                <OptionText>밸런스</OptionText>
+              </Option>
+              <ConfirmButton
+                disabled={selectedPart === undefined} // 선택되지 않았을 때만 비활성화
+                onPress={handleSubmit}
+                active={selectedPart !== undefined}>
+                <ConfirmButtonText>확인</ConfirmButtonText>
+              </ConfirmButton>
+            </Body>
           </ModalContent>
-        </ModalContainer>
+        </ModalOverlay>
       </Modal>
     </Container>
   );
@@ -194,53 +235,93 @@ const CheckboxContainer = styled.View`
   margin-top: 180px;
 `;
 
-const ModalContainer = styled.View`
+const ModalOverlay = styled.View`
   flex: 1;
+  background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
 `;
 
 const ModalContent = styled.View`
-  width: 80%;
   background-color: white;
-  padding: 20px;
-  border-radius: 10px;
+  width: 90%;
+  border-radius: 5px;
+  padding: 10px;
+`;
+
+const Header = styled.View`
+  justify-content: flex-end;
+`;
+
+const BackButton = styled.TouchableOpacity`
+  padding: 5px 10px;
+`;
+
+const BackButtonText = styled.Text`
+  font-size: 18px;
+  color: gray;
+`;
+
+const Body = styled.View`
   align-items: center;
 `;
 
 const ModalTitle = styled.Text`
-  font-size: 16px;
-  margin-bottom: 20px;
+  font-size: 18px;
   font-weight: bold;
+  color: black;
   text-align: center;
-`;
-
-const PartList = styled.View`
-  width: 100%;
   margin-bottom: 20px;
 `;
 
-const PartItem = styled.TouchableOpacity`
-  padding: 10px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-  border-radius: 5px;
+const Option = styled.TouchableOpacity`
+  flex-direction: row;
   align-items: center;
-  background-color: ${({selected}) => (selected ? '#3373EB' : '#fff')};
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
 `;
 
-const PartText = styled.Text`
+const RadioContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+`;
+
+const RadioOuter = styled.View`
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  border: 2px solid #3373eb;
+  justify-content: center;
+  align-items: center;
+`;
+
+const RadioInner = styled.View`
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #3373eb;
+`;
+
+const OptionText = styled.Text`
+  text-align: center;
+  font-size: 16px;
   color: ${({selected}) => (selected ? '#fff' : '#000')};
 `;
 
-const SubmitButton = styled.TouchableOpacity`
-  background-color: #3373EB;
-  padding: 10px 20px;
-  border-radius: 5px;
+const ConfirmButton = styled.TouchableOpacity`
+  width: 100%;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 30px;
+  background-color: ${({active}) => (active ? '#3373eb' : '#ccc')};
 `;
 
-const SubmitButtonText = styled.Text`
+const ConfirmButtonText = styled.Text`
+  font-size: 16px;
   color: white;
-  font-weight: bold;
+  text-align: center;
 `;

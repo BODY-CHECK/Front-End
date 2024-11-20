@@ -16,7 +16,6 @@ export function AuthProvider({children}) {
     await AsyncStorage.removeItem('accessToken');
     await AsyncStorage.removeItem('refreshToken');
     setIsLoggedIn(false);
-    Alert.alert('다시 로그인해주세요');
   };
 
   // 포그라운드 전환 시 토큰 확인 및 갱신
