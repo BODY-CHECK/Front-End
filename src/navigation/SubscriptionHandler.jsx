@@ -15,6 +15,12 @@ const SubscriptionHandler = () => {
           const {logExist, status, last_approved_at} = response.data.result;
 
           // 날짜 계산
+          const formatDateToKorean = dateString => {
+            const date = new Date(dateString);
+            return `${date.getFullYear()}년 ${
+              date.getMonth() + 1
+            }월 ${date.getDate()}일`;
+          };
           const lastApprovedDate = new Date(last_approved_at);
           const currentDate = new Date();
           const diffInDays =
@@ -23,9 +29,22 @@ const SubscriptionHandler = () => {
           if (!logExist || (status === 'INACTIVE' && diffInDays > 30)) {
             navigation.replace('PremiumUpgrade'); // 프리미엄 업그레이드 페이지
           } else if (logExist && status === 'ACTIVE') {
-            navigation.replace('IsPremium'); // 구독 유지 화면
+            const nextPaymentDate = new Date(last_approved_at);
+            nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 1); // 한 달 추가
+            const formattedNextPaymentDate =
+              formatDateToKorean(nextPaymentDate);
+            navigation.replace('IsPremium', {
+              subtitle: `다음 결제 예정일은 ${formattedNextPaymentDate} 입니다.`,
+              showCancelButton: true,
+            }); // 구독 유지 화면
           } else if (logExist && status === 'INACTIVE' && diffInDays <= 30) {
-            navigation.replace('IsPremiumWithoutCancel'); // 프리미엄 유지 예정 화면
+            const premiumEndDate = new Date(last_approved_at);
+            premiumEndDate.setMonth(premiumEndDate.getMonth() + 1); // 한 달 추가
+            const formattedPremiumEndDate = formatDateToKorean(premiumEndDate);
+            navigation.replace('IsPremium', {
+              subtitle: `프리미엄 혜택이 ${formattedPremiumEndDate}에 종료됩니다.`,
+              showCancelButton: false,
+            }); // 프리미엄 유지 예정 화면
           } else {
             Alert.alert('알 수 없는 구독 상태입니다.');
           }
