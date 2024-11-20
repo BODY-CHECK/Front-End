@@ -61,7 +61,7 @@ function MypageStackNavigator() {
       <Stack.Screen
         name="PremiumUpgrade"
         component={PremiumUpgrade}
-        options={{title: '프리미엄 구독', headerTitleAlign: 'center'}}
+        options={{title: '프리미엄 구독', headerTitleAlign: 'center',}}
       />
       <Stack.Screen
         name="IsPremium"

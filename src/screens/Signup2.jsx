@@ -9,6 +9,7 @@ import AgreementCheckbox from '../components/signup/AgreementCheckbox';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {useRoute} from '@react-navigation/native';
+import {Modal, TouchableOpacity, Text} from 'react-native';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -26,6 +27,9 @@ const Signup2 = () => {
   const [isPrivacyAgreed, setIsPrivacyAgreed] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [nicknameError, setNicknameError] = useState('');
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedParts, setSelectedParts] = useState([]);
 
   // 닉네임 유효성 검사 (중복 검사 제외)
   const validateNickname = nickname => {
@@ -81,7 +85,10 @@ const Signup2 = () => {
 
   const handleNext = async () => {
     if (!isFormValid) return;
+    setIsModalVisible(true); // 모달 띄우기
+  };
 
+  const handleSubmit = async () => {
     try {
       const response = await axios.post(`${baseURL}/members/email/sign-up`, {
         nickname: nickname,
@@ -90,6 +97,7 @@ const Signup2 = () => {
         gender: gender,
         email: email, // 전달받은 이메일 사용
         pw: password, // 전달받은 패스워드 사용
+        preferredParts: selectedParts, // 선택된 운동 부위 추가
       });
 
       if (response.data.success) {
@@ -114,6 +122,7 @@ const Signup2 = () => {
       }
     }
   };
+  
 
   return (
     <Container>
@@ -140,6 +149,32 @@ const Signup2 = () => {
         />
       </CheckboxContainer>
       <Button title="완료" onPress={handleNext} disabled={!isFormValid} />
+
+      {/* 모달 UI */}
+      <Modal visible={isModalVisible} transparent={true} animationType="slide">
+        <ModalContainer>
+          <ModalContent>
+            <ModalTitle>운동 중에서 특히 어느 부위를 선호하나요?</ModalTitle>
+            <PartList>
+              <PartItem
+                selected={selectedParts.includes('상체')}
+                onPress={() => togglePartSelection('상체')}
+              >
+                <PartText>상체</PartText>
+              </PartItem>
+              <PartItem
+                selected={selectedParts.includes('하체')}
+                onPress={() => togglePartSelection('하체')}
+              >
+                <PartText>하체</PartText>
+              </PartItem>
+            </PartList>
+            <SubmitButton onPress={handleSubmit}>
+              <SubmitButtonText>완료</SubmitButtonText>
+            </SubmitButton>
+          </ModalContent>
+        </ModalContainer>
+      </Modal>
     </Container>
   );
 };
@@ -157,4 +192,55 @@ const CheckboxContainer = styled.View`
   width: 100%;
   align-items: flex-start;
   margin-top: 180px;
+`;
+
+const ModalContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+const ModalContent = styled.View`
+  width: 80%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  align-items: center;
+`;
+
+const ModalTitle = styled.Text`
+  font-size: 16px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+`;
+
+const PartList = styled.View`
+  width: 100%;
+  margin-bottom: 20px;
+`;
+
+const PartItem = styled.TouchableOpacity`
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  align-items: center;
+  background-color: ${({selected}) => (selected ? '#3373EB' : '#fff')};
+`;
+
+const PartText = styled.Text`
+  color: ${({selected}) => (selected ? '#fff' : '#000')};
+`;
+
+const SubmitButton = styled.TouchableOpacity`
+  background-color: #3373EB;
+  padding: 10px 20px;
+  border-radius: 5px;
+`;
+
+const SubmitButtonText = styled.Text`
+  color: white;
+  font-weight: bold;
 `;
