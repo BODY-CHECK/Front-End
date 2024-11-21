@@ -19,7 +19,6 @@ import {
   ModalContent,
   ModalContentText1,
   ModalContentText2,
-  StyledGIF,
   TextContainer,
 } from './HealtResult.style';
 import {
@@ -31,9 +30,8 @@ import {
 import {BarChart} from 'react-native-chart-kit';
 import {Alert, Modal, StyleSheet} from 'react-native';
 import exerciseData from '../components/Health/HealthInfoData';
-import {postExerciseCriteria, postExerciseSolution} from '../api/SolutionApi'; // API 호출 함수 import
+import {postAttendance, postExerciseCriteria, postExerciseSolution} from '../api/SolutionApi'; // API 호출 함수 import
 import RecordScreen from 'react-native-record-screen';
-import RNFS from 'react-native-fs';
 import Video from 'react-native-video';
 
 export default function HealthResult() {
@@ -75,6 +73,19 @@ export default function HealthResult() {
         tabBarStyle: undefined,
       });
   });
+
+  useEffect(() => {
+    const AttendanceResponse = async () => {
+      try {
+        await postAttendance();
+        console.log('출석 완료!');
+      } catch (err) {
+        console.error('Error during API post:', err.request);
+      }
+    };
+
+    AttendanceResponse();
+  }, [id]);
 
   useEffect(() => {
     const fetchApiResponse = async () => {

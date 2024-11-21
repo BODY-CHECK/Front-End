@@ -5,7 +5,6 @@ import {
   ContentText,
   GIFContainer,
   GraphContainer,
-  StyledGIF,
   TextContainer,
 } from './HealtResult.style';
 import {
