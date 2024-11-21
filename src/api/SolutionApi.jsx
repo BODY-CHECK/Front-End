@@ -104,3 +104,18 @@ export const getSolutionById = async solutionId => {
     throw error;
   }
 };
+
+export const postAttendance = async () => {
+  try {
+    const response = await instance.post(`${baseURL}/api/attendances/check`);
+
+    // 200번 응답일 때 result를 콘솔에 출력
+    if (response.status === 200) {
+      console.log('Result:', response);
+      return response.data.result; // 화면에서 필요 시 반환
+    }
+  } catch (error) {
+    console.error('Error during attendance POST request:', error.request);
+    throw error;
+  }
+};

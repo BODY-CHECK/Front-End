@@ -31,7 +31,7 @@ export const CameraIcon = styled.TouchableOpacity`
   height: 40px;
   color: black;
   position: absolute;
-  top: 10px;
+  top: 17px;
   right: 10px;
   background-color: transparent;
 `;
@@ -47,7 +47,7 @@ export const NumContainer = styled.View`
   align-items: center;
   width: 60px;
   height: 60px;
-  top: 10px;
+  top: 17px;
   background-color: #3373EB;
   border-radius: 90px;
   position: absolute;

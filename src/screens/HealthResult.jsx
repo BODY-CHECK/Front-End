@@ -19,7 +19,6 @@ import {
   ModalContent,
   ModalContentText1,
   ModalContentText2,
-  StyledGIF,
   TextContainer,
 } from './HealtResult.style';
 import {
@@ -31,9 +30,8 @@ import {
 import {BarChart} from 'react-native-chart-kit';
 import {Alert, Modal, StyleSheet} from 'react-native';
 import exerciseData from '../components/Health/HealthInfoData';
-import {postExerciseCriteria, postExerciseSolution} from '../api/SolutionApi'; // API 호출 함수 import
+import {postAttendance, postExerciseCriteria, postExerciseSolution} from '../api/SolutionApi'; // API 호출 함수 import
 import RecordScreen from 'react-native-record-screen';
-import RNFS from 'react-native-fs';
 import Video from 'react-native-video';
 
 export default function HealthResult() {
@@ -75,6 +73,19 @@ export default function HealthResult() {
         tabBarStyle: undefined,
       });
   });
+
+  useEffect(() => {
+    const AttendanceResponse = async () => {
+      try {
+        await postAttendance();
+        console.log('출석 완료!');
+      } catch (err) {
+        console.error('Error during API post:', err.request);
+      }
+    };
+
+    AttendanceResponse();
+  }, [id]);
 
   useEffect(() => {
     const fetchApiResponse = async () => {
@@ -205,7 +216,7 @@ export default function HealthResult() {
             source={{uri: isURL}} // 비디오 파일의 URL 또는 로컬 파일 경로
             style={styles.video}
             controls={true} // 기본 컨트롤러 표시 (재생, 일시정지, 탐색바 등)
-            resizeMode="contain" // 비디오 크기 조절 방식 ('cover', 'contain', 'stretch' 등)
+            resizeMode="cover" // 비디오 크기 조절 방식 ('cover', 'contain', 'stretch' 등)
             paused={false} // true일 경우 비디오가 일시정지됨
             repeat={true} // 비디오 반복 재생
           />
@@ -272,7 +283,7 @@ const styles = StyleSheet.create({
   },
   video: {
     width: '100%',
-    height: 200,
+    height: '100%',
     borderWidth: 1,
     borderColor: 'black',
   },
