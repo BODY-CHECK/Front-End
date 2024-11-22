@@ -37,7 +37,25 @@ function Routine() {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null); // 어떤 인덱스의 플러스 버튼이 눌렸는지 기억
   const sheetRef = useRef(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const beginnerRoutine = {
+    월: [exerciseData[1], exerciseData[5], exerciseData[10]],
+    화: [exerciseData[1], exerciseData[6], exerciseData[9]],
+    수: [exerciseData[5], exerciseData[10], exerciseData[7]],
+    목: [exerciseData[1], exerciseData[5], exerciseData[10]],
+    금: [exerciseData[6], exerciseData[7], exerciseData[10]],
+    토: [exerciseData[5], exerciseData[9], exerciseData[8]],
+    일: [exerciseData[1], exerciseData[7], exerciseData[5]],
+  };
+
+  const advancedRoutine = {
+    월: [exerciseData[0], exerciseData[2], exerciseData[4]],
+    화: [exerciseData[3], exerciseData[7], exerciseData[11]],
+    수: [exerciseData[0], exerciseData[4], exerciseData[6]],
+    목: [exerciseData[2], exerciseData[8], exerciseData[9]],
+    금: [exerciseData[0], exerciseData[5], exerciseData[6]],
+    토: [exerciseData[3], exerciseData[7], exerciseData[8]],
+    일: [exerciseData[0], exerciseData[9], exerciseData[11]],
+  };
 
   useEffect(() => {
     // 선택된 요일 변경 시 루틴 데이터 가져오기
@@ -148,35 +166,37 @@ function Routine() {
     setIsEditing(!isEditing); // 설정 모드와 저장 모드 전환
   };
 
-  // // 요일별 루틴 데이터 (초보자용과 고수용 루틴을 생성)
-  // const beginnerRoutine = {
-  //   월: [exerciseData[1], exerciseData[5], exerciseData[10]],
-  //   화: [exerciseData[1], exerciseData[6], exerciseData[9]],
-  //   수: [exerciseData[5], exerciseData[10], exerciseData[7]],
-  //   목: [exerciseData[1], exerciseData[5], exerciseData[10]],
-  //   금: [exerciseData[6], exerciseData[7], exerciseData[10]],
-  //   토: [exerciseData[5], exerciseData[9], exerciseData[8]],
-  //   일: [exerciseData[1], exerciseData[7], exerciseData[5]],
-  // };
+  // 루틴 업데이트 함수
+  const handleSetRoutine = async routineType => {
+    const newRoutine =
+      routineType === '헬린이' ? beginnerRoutine : advancedRoutine;
 
-  // const advancedRoutine = {
-  //   월: [exerciseData[0], exerciseData[2], exerciseData[4]],
-  //   화: [exerciseData[3], exerciseData[7], exerciseData[11]],
-  //   수: [exerciseData[0], exerciseData[4], exerciseData[6]],
-  //   목: [exerciseData[2], exerciseData[8], exerciseData[9]],
-  //   금: [exerciseData[0], exerciseData[5], exerciseData[6]],
-  //   토: [exerciseData[3], exerciseData[7], exerciseData[8]],
-  //   일: [exerciseData[0], exerciseData[9], exerciseData[11]],
-  // };
+    setRoutines(newRoutine); // 로컬 상태 업데이트
 
-  // const handleSetRoutine = routineType => {
-  //   if (routineType === '헬린이') {
-  //     setRoutines(beginnerRoutine);
-  //   } else if (routineType === '헬고수') {
-  //     setRoutines(advancedRoutine);
-  //   }
-  //   setIsEditing(false); // 루틴이 설정된 후 설정 모드로 돌아감
-  // };
+    // 서버에 저장
+    const data = Object.keys(newRoutine).flatMap(day =>
+      newRoutine[day].map((exercise, idx) => ({
+        weekId: dayMapping[day],
+        routineIdx: idx + 1,
+        exerciseId: exercise ? exercise.id : null,
+        isUpdated: true,
+      })),
+    );
+
+    try {
+      const response = await instance.post(`${baseURL}/api/routine/update`, {
+        routines: data,
+      });
+
+      if (response.data.isSuccess) {
+        Alert.alert(`${routineType} 루틴이 설정되었습니다.`);
+      } else {
+        console.error('루틴 설정 실패:', response.data.message);
+      }
+    } catch (error) {
+      console.error('루틴 설정 API 호출 오류:', error);
+    }
+  };
 
   return (
     <Container>
@@ -192,7 +212,7 @@ function Routine() {
         isEditing={isEditing}
         onDelete={handleDeleteExercise}
       />
-      <ExerciseCard />
+      <ExerciseCard onSetRoutine={handleSetRoutine} />
       <ExerciseListBottomSheet
         sheetRef={sheetRef}
         onSelect={handleExerciseSelect}
