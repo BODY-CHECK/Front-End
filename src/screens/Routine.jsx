@@ -41,8 +41,10 @@ function Routine() {
 
   useEffect(() => {
     // 선택된 요일 변경 시 루틴 데이터 가져오기
-    fetchRoutineData(selectedDay);
-  }, [selectedDay]);
+    if (!isEditing) {
+      fetchRoutineData(selectedDay);
+    }
+  }, [selectedDay, isEditing]);
 
   // 루틴 데이터 가져오는 함수
   const fetchRoutineData = async day => {
