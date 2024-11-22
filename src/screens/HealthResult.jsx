@@ -23,7 +23,6 @@ import {
 } from './HealtResult.style';
 import {
   CommonActions,
-  useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
@@ -62,17 +61,6 @@ export default function HealthResult() {
       score: resultArray[2],
     },
   ];
-
-  useFocusEffect(() => {
-    navigation.getParent()?.setOptions({
-      tabBarStyle: {display: 'none'},
-    });
-
-    return () =>
-      navigation.getParent()?.setOptions({
-        tabBarStyle: undefined,
-      });
-  });
 
   useEffect(() => {
     const AttendanceResponse = async () => {

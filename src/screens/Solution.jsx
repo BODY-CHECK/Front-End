@@ -42,7 +42,6 @@ export default function Solution() {
     fetchSolution();
   }, [id]);
 
-
   const chartConfig = {
     backgroundGradientFrom: '#fff',
     backgroundGradientTo: '#fff',

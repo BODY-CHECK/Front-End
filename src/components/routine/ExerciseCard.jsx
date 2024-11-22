@@ -11,10 +11,10 @@ const ExerciseCard = ({onSetRoutine}) => {
     setModalVisible(true); // 모달을 보이도록 설정
   };
 
-  // const confirmRoutine = () => {
-  //   onSetRoutine(selectedCard); // 선택된 루틴 타입을 Routine 컴포넌트로 전달
-  //   setModalVisible(false); // 모달 닫기
-  // };
+  const confirmRoutineChange = () => {
+    onSetRoutine(selectedCard); // 루틴 타입 전달
+    setModalVisible(false);
+  };
 
   return (
     <CardContainer>
@@ -45,7 +45,7 @@ const ExerciseCard = ({onSetRoutine}) => {
             </ModalText>
             <SubText>기존에 설정한 루틴은 사라집니다.</SubText>
             <ButtonContainer>
-              <ConfirmButton onPress={() => setModalVisible(false)}>
+              <ConfirmButton onPress={confirmRoutineChange}>
                 <ButtonText style={{color: '#fff'}}>확인</ButtonText>
               </ConfirmButton>
               <CancelButton onPress={() => setModalVisible(false)}>

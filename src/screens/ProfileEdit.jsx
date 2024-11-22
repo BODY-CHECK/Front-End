@@ -3,6 +3,7 @@ import styled from 'styled-components/native';
 import ProfileInput from '../components/settings/ProfileInput';
 import instance from '../axiosInstance';
 import {Alert} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -10,6 +11,8 @@ const ProfileEdit = () => {
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchEmail = async () => {
@@ -59,6 +62,7 @@ const ProfileEdit = () => {
       );
       if (response.data.isSuccess) {
         Alert.alert('닉네임이 성공적으로 수정되었습니다.');
+        navigation.navigate('Mypage');
       } else {
         Alert.alert('닉네임 수정 실패:', response.data.message);
       }
