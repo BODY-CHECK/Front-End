@@ -48,17 +48,6 @@ export default function HealthInfo() {
   const numbers = [...Array(20).keys()].map(i => (i + 1).toString());
   const scrollViewRef = useRef(null);
 
-  useFocusEffect(() => {
-    navigation.getParent()?.setOptions({
-      tabBarStyle: {display: 'none'},
-    });
-
-    return () =>
-      navigation.getParent()?.setOptions({
-        tabBarStyle: undefined,
-      });
-  });
-
   useEffect(() => {
     if (scrollViewRef.current) {
       const initialScrollPosition = (repCount - 1) * itemWidth;
@@ -101,7 +90,7 @@ export default function HealthInfo() {
   const handleSelect = () => {
     setModalVisible(false);
     startRecording().then(() => {
-      navigation.navigate('Health', { id, repCount });
+      navigation.navigate('Health', {id, repCount});
     });
   };
 
