@@ -42,17 +42,6 @@ export default function Solution() {
     fetchSolution();
   }, [id]);
 
-  useFocusEffect(() => {
-    navigation.getParent()?.setOptions({
-      tabBarStyle: {display: 'none'},
-    });
-
-    return () =>
-      navigation.getParent()?.setOptions({
-        tabBarStyle: undefined,
-      });
-  });
-
   const chartConfig = {
     backgroundGradientFrom: '#fff',
     backgroundGradientTo: '#fff',

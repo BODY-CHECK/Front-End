@@ -6,7 +6,10 @@ import Routine from '../screens/Routine';
 import HeaderMain from '../components/HeaderMain';
 import HealthStackNavigator from './HealthStackNavigator';
 import MypageStackNavigator from './SettingsStackNavigator';
-import { useNavigationState } from '@react-navigation/native';
+import {
+  getFocusedRouteNameFromRoute,
+  useNavigationState,
+} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
@@ -15,12 +18,32 @@ function HomeScreenWrapper({setIsLoggedIn}) {
 }
 
 function BottomTabNavigator() {
-  const routesToHideTabBar = ['PremiumUpgrade', 'IsPremium']; // 숨길 스크린 이름들
-  const currentRouteName = useNavigationState(state =>
-    state.routes[state.index]?.name
-  );
+  const getTabBarStyle = route => {
+    // 특정 라우트에서만 TabBar 숨기기
+    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+    const routesToHideTabBar = [
+      'PremiumUpgrade',
+      'IsPremium',
+      'SettingScreen',
+      'ResultList',
+      'Solution',
+      'ProfileEdit',
+      'PasswordChange',
+      'HealthInfo',
+      'Health',
+      'HealthResult',
+    ];
 
-  const shouldHideTabBar = routesToHideTabBar.includes(currentRouteName);
+    if (routesToHideTabBar.includes(routeName)) {
+      return {display: 'none'}; // 숨김
+    }
+    return {
+      height: 70,
+      borderTopWidth: 1,
+      borderTopColor: '#E5E5E5',
+      backgroundColor: '#ffffff',
+    };
+  };
 
   return (
     <Tab.Navigator
@@ -51,14 +74,7 @@ function BottomTabNavigator() {
         },
         tabBarActiveTintColor: '#3373EB',
         tabBarInactiveTintColor: '#1C1B1F',
-        tabBarStyle: shouldHideTabBar
-          ? { display: 'none' } // 숨김 처리
-          : {
-              height: 70,
-              borderTopWidth: 1,
-              borderTopColor: '#E5E5E5',
-              backgroundColor: '#ffffff',
-            },
+        tabBarStyle: getTabBarStyle(route),
         tabBarLabelStyle: {
           marginBottom: 8,
         },

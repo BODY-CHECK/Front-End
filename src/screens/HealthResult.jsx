@@ -63,17 +63,6 @@ export default function HealthResult() {
     },
   ];
 
-  useFocusEffect(() => {
-    navigation.getParent()?.setOptions({
-      tabBarStyle: {display: 'none'},
-    });
-
-    return () =>
-      navigation.getParent()?.setOptions({
-        tabBarStyle: undefined,
-      });
-  });
-
   useEffect(() => {
     const AttendanceResponse = async () => {
       try {
