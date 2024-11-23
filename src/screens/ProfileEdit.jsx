@@ -4,6 +4,7 @@ import ProfileInput from '../components/settings/ProfileInput';
 import instance from '../axiosInstance';
 import {Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import ConfirmModal from '../components/ConfirmModal';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -11,6 +12,8 @@ const ProfileEdit = () => {
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [confirmModalVisible, setConirmModalVisible] = useState(false); // 모달 상태
+  const [confirmModalMessage, setConfirmModalMessage] = useState(''); // 모달 메시지
 
   const navigation = useNavigation();
 
@@ -61,10 +64,12 @@ const ProfileEdit = () => {
         },
       );
       if (response.data.isSuccess) {
-        Alert.alert('닉네임이 성공적으로 수정되었습니다.');
+        setConirmModalVisible(true);
+        setConfirmModalMessage('닉네임이 성공적으로 수정되었습니다.');
         navigation.navigate('Mypage');
       } else {
-        Alert.alert('닉네임 수정 실패:', response.data.message);
+        setConirmModalVisible(true);
+        setConfirmModalMessage(response.data.message);
       }
     } catch (error) {
       console.error('닉네임 수정 오류:', error);
@@ -104,6 +109,11 @@ const ProfileEdit = () => {
       <EditButton onPress={handleEdit}>
         <ButtonText>수정하기</ButtonText>
       </EditButton>
+      <ConfirmModal
+        visible={confirmModalVisible}
+        message={confirmModalMessage}
+        onConfirm={() => setConirmModalVisible(false)}
+      />
     </Container>
   );
 };

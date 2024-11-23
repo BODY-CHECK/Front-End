@@ -11,6 +11,7 @@ const baseURL = 'https://dev.bodycheck.store';
 
 function MyPage() {
   const [nickname, setNickname] = useState('');
+  const [premium, setPremium] = useState(false);
 
   // 화면이 포커스될 때 닉네임 가져오기
   useFocusEffect(
@@ -20,6 +21,7 @@ function MyPage() {
           const response = await instance.get(`${baseURL}/members/my-page`);
           if (response.data.isSuccess) {
             setNickname(response.data.result.nickname);
+            setPremium(response.data.result.premium); // 프리미엄 상태 설정
           } else {
             console.error('닉네임을 가져오지 못했습니다.');
           }
@@ -34,7 +36,7 @@ function MyPage() {
   return (
     <ScrollContainer>
       <Container>
-        <MypageHeader nickname={nickname} />
+        <MypageHeader nickname={nickname} premium={premium} />
         <MyCalendar />
         <BMIGraph />
       </Container>
