@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
-  useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
@@ -35,6 +34,7 @@ import {Modal} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import exerciseData from '../components/Health/HealthInfoData';
 import RecordScreen from 'react-native-record-screen';
+import { getPremium } from '../api/SolutionApi';
 
 export default function HealthInfo() {
   const route = useRoute();
@@ -47,6 +47,7 @@ export default function HealthInfo() {
   const itemWidth = 50;
   const numbers = [...Array(20).keys()].map(i => (i + 1).toString());
   const scrollViewRef = useRef(null);
+  const [premium, setPremium] = useState(false);
 
   useEffect(() => {
     if (scrollViewRef.current) {
@@ -57,6 +58,20 @@ export default function HealthInfo() {
       });
     }
   }, [contentWidth]);
+
+  useEffect(() => {
+    const getPremiumResponse = async () => {
+      try {
+        const response = await getPremium();
+        setPremium(response.result.premium);
+        console.log('프리미엄?', premium);
+      } catch (err) {
+        console.error('Error during API posting:', err.request);
+      }
+    };
+
+    getPremiumResponse();
+  }, [id]);
 
   const handleScroll = event => {
     const offsetX = event.nativeEvent.contentOffset.x;
@@ -89,10 +104,16 @@ export default function HealthInfo() {
 
   const handleSelect = () => {
     setModalVisible(false);
-    startRecording().then(() => {
-      navigation.navigate('Health', {id, repCount});
-    });
+
+    if (premium) {
+      startRecording().then(() => {
+        navigation.navigate('Health', { id, repCount });
+      });
+    } else {
+      navigation.navigate('Health', { id, repCount });
+    }
   };
+
 
   const handleCancel = () => {
     setModalVisible(false);

@@ -91,7 +91,7 @@ export default function Solution() {
               repeat={false} // 비디오 반복 재생
             />
           ) : (
-            <ContentText>비디오가 없습니다.</ContentText>
+            <ContentText>프리미엄 회원이 되어보세요!</ContentText>
           )}
         </GIFContainer>
         <GraphContainer>

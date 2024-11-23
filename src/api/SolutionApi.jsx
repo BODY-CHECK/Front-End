@@ -121,3 +121,17 @@ export const postAttendance = async (exerciseId, criteriaData) => {
     throw error;
   }
 };
+
+// 프리미엄 회원 조회 함수
+export const getPremium = async () => {
+  try {
+    // 커스텀 axios 인스턴스를 사용하여 GET 요청을 보냄
+    const response = await instance.get(`${baseURL}/members/my-page`);
+
+    // 응답 데이터를 반환
+    return response.data;
+  } catch (error) {
+    console.error('Error during GET request:', error);
+    throw error;
+  }
+};
