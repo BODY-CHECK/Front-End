@@ -1,16 +1,19 @@
+import {useState} from 'react';
+import {Linking, Modal} from 'react-native';
 import styled from 'styled-components/native';
-import logo from '../assets/images/logo.png';
-import {Alert, Linking, Modal} from 'react-native';
-import instance from '../axiosInstance';
-import saveVideo from '../assets/images/saveVideo.png';
 import AIRoutine from '../assets/images/AIRoutine.png';
 import CompareExercise from '../assets/images/CompareExercise.png';
-import {useState} from 'react';
+import logo from '../assets/images/logo.png';
+import saveVideo from '../assets/images/saveVideo.png';
+import instance from '../axiosInstance';
+import ConfirmModal from '../components/ConfirmModal';
 
 const baseURL = 'https://dev.bodycheck.store';
 
 const PremiumUpgrade = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [confirmModalVisible, setConirmModalVisible] = useState(false); // 모달 상태
+  const [confirmModalMessage, setConfirmModalMessage] = useState(''); // 모달 메시지
 
   // 구독하기 버튼 클릭 시 호출되는 함수
   const handleSubscribe = async () => {
@@ -24,11 +27,13 @@ const PremiumUpgrade = () => {
           setModalVisible(true);
         }, 4000); // 1초 딜레이 (필요한 시간으로 조정 가능)
       } else {
-        Alert.alert('결제 준비에 실패했습니다. 다시 시도해주세요.');
+        setConirmModalVisible(true);
+        setConfirmModalMessage('결제 준비에 실패했습니다. 다시 시도해주세요.');
       }
     } catch (error) {
       console.error('결제 준비 API 호출 오류:', error);
-      Alert.alert('오류가 발생했습니다. 다시 시도해주세요.');
+      setConirmModalVisible(true);
+      setConfirmModalMessage('오류가 발생했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -90,6 +95,11 @@ const PremiumUpgrade = () => {
             </ModalContent>
           </ModalContainer>
         </Modal>
+        <ConfirmModal
+          visible={confirmModalVisible}
+          message={confirmModalMessage}
+          onConfirm={() => setConirmModalVisible(false)}
+        />
       </Container>
     </ScrollContainer>
   );

@@ -11,6 +11,7 @@ import RoutineBox from '../components/routine/RoutineBox';
 import ChatBot from '../assets/images/ChatBot.png';
 import ChatBotModal from '../components/routine/ChatBotModal';
 import {useNavigation} from '@react-navigation/native';
+import ConfirmModal from '../components/ConfirmModal';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -57,6 +58,8 @@ function Routine() {
   const [isChatBotVisible, setIsChatBotVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
+  const [confirmModalVisible, setConirmModalVisible] = useState(false); // 모달 상태
+  const [confirmModalMessage, setConfirmModalMessage] = useState(''); // 모달 메시지
 
   // 요일별 weekId 매핑
   const dayMapping = {일: 1, 월: 2, 화: 3, 수: 4, 목: 5, 금: 6, 토: 7};
@@ -165,11 +168,13 @@ function Routine() {
         setRoutines(newRoutines); // 로컬 상태 업데이트
         setIsChatBotVisible(false); // 챗봇 모달 닫기
       } else {
-        Alert.alert('루틴 저장에 실패했습니다.');
+        setConirmModalVisible(true);
+        setConfirmModalMessage(response.data.message);
       }
     } catch (error) {
       console.error('루틴 저장 API 호출 오류:', error);
-      Alert.alert('루틴 저장 중 오류가 발생했습니다.');
+      setConirmModalVisible(true);
+      setConfirmModalMessage('루틴 저장 중 오류가 발생했습니다.');
     }
   };
 
@@ -230,7 +235,8 @@ function Routine() {
         data,
       );
       if (response.data.isSuccess) {
-        Alert.alert('루틴이 성공적으로 저장되었습니다.');
+        setConirmModalVisible(true);
+        setConfirmModalMessage('루틴이 저장되었습니다.');
         setIsEditing(false); // 저장 후 설정 모드로 전환
       } else {
         console.error('루틴 저장 실패:', response.data.message);
@@ -390,6 +396,11 @@ function Routine() {
           </ModalView>
         </ModalContainer>
       </Modal>
+      <ConfirmModal
+        visible={confirmModalVisible}
+        message={confirmModalMessage}
+        onConfirm={() => setConirmModalVisible(false)}
+      />
     </Container>
   );
 }
