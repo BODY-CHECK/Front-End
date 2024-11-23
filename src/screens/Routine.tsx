@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Alert} from 'react-native';
+import {Alert, Modal, Text} from 'react-native';
 import styled from 'styled-components/native';
 import instance from '../axiosInstance';
 import exerciseData from '../components/Health/HealthInfoData';
@@ -8,10 +8,56 @@ import DaySelector from '../components/routine/DaySelector';
 import ExerciseCard from '../components/routine/ExerciseCard';
 import ExerciseListBottomSheet from '../components/routine/ExerciseListBottomSheet';
 import RoutineBox from '../components/routine/RoutineBox';
+import ChatBot from '../assets/images/ChatBot.png';
+import ChatBotModal from '../components/routine/ChatBotModal';
+import {useNavigation} from '@react-navigation/native';
 
 const baseURL = 'https://dev.bodycheck.store';
 
+// 요일별 루틴을 파싱하는 함수
+const parseRoutineText = text => {
+  const days = ['월', '화', '수', '목', '금', '토', '일'];
+  const routines = {};
+
+  days.forEach(day => {
+    // 요일별로 텍스트를 추출하는 정규식
+    const regex = new RegExp(`${day}\\s*-\\s*([^\\n]*)`, 'g');
+    const match = regex.exec(text);
+
+    if (match && match[1]) {
+      routines[day] = match[1]
+        .split(/[,]/) // 쉼표 기준으로 운동 분리
+        .map(item => item.trim()) // 앞뒤 공백 제거
+        .filter(exercise => exercise && !exercise.includes('휴식')); // "휴식" 제외
+    } else {
+      routines[day] = []; // 해당 요일에 운동이 없으면 빈 배열
+    }
+  });
+
+  console.log('Parsed Routines:', routines); // 디버깅 로그
+  return routines;
+};
+
+// 운동 이름을 exerciseData와 매칭하는 함수
+const matchExerciseNames = (exerciseName: string, exerciseData: any[]) => {
+  const matchedExercise = exerciseData.find(
+    exercise =>
+      exercise.title.replace(/\s+/g, '').toLowerCase() ===
+      exerciseName.replace(/\s+/g, '').toLowerCase(),
+  );
+
+  if (!matchedExercise) {
+    console.error(`운동 이름 매칭 실패: ${exerciseName}`); // 매칭되지 않는 운동 로그
+  }
+
+  return matchedExercise || null;
+};
+
 function Routine() {
+  const [isChatBotVisible, setIsChatBotVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const navigation = useNavigation();
+
   // 요일별 weekId 매핑
   const dayMapping = {일: 1, 월: 2, 화: 3, 수: 4, 목: 5, 금: 6, 토: 7};
   const reverseDayMapping = {
@@ -63,6 +109,69 @@ function Routine() {
       fetchRoutineData(selectedDay);
     }
   }, [selectedDay, isEditing]);
+
+  // 챗봇 루틴을 저장하는 함수
+  const handleSaveChatbotRoutine = async (routineText: string) => {
+    // 텍스트에서 요일별 루틴 파싱
+    const parsedRoutines = parseRoutineText(routineText);
+    console.log('Parsed Routines:', parsedRoutines);
+
+    // 각 요일별로 운동을 매칭하고 새로운 루틴 객체 생성
+    const newRoutines = Object.keys(parsedRoutines).reduce((acc, day) => {
+      const dayExercises = parsedRoutines[day];
+      const matchedExercises = Array(3).fill(null); // 기본적으로 3개의 null로 초기화
+
+      // 찾은 운동들을 순서대로 배열에 넣기
+      dayExercises.forEach((exerciseName, index) => {
+        if (index < 3) {
+          // 최대 3개까지만 저장
+          const matchedExercise = matchExerciseNames(
+            exerciseName,
+            exerciseData,
+          );
+          if (matchedExercise) {
+            matchedExercises[index] = matchedExercise;
+          }
+        }
+      });
+
+      return {
+        ...acc,
+        [day]: matchedExercises,
+      };
+    }, {});
+
+    console.log('Matched Routines:', newRoutines); // 매칭된 루틴 로그
+
+    // 서버에 저장하기 위한 데이터 준비
+    const routinesData = Object.keys(newRoutines).flatMap(day =>
+      newRoutines[day].map((exercise, idx) => ({
+        weekId: dayMapping[day],
+        routineIdx: idx + 1,
+        exerciseId: exercise ? exercise.id : null,
+        isUpdated: true,
+      })),
+    );
+
+    console.log('Prepared Routines Data for API:', routinesData); // 서버로 보낼 데이터 로그
+
+    try {
+      const response = await instance.post(`${baseURL}/api/routine/update`, {
+        routines: routinesData,
+      });
+
+      if (response.data.isSuccess) {
+        console.log('루틴 저장 성공: ', response.data.message);
+        setRoutines(newRoutines); // 로컬 상태 업데이트
+        setIsChatBotVisible(false); // 챗봇 모달 닫기
+      } else {
+        Alert.alert('루틴 저장에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('루틴 저장 API 호출 오류:', error);
+      Alert.alert('루틴 저장 중 오류가 발생했습니다.');
+    }
+  };
 
   // 루틴 데이터 가져오는 함수
   const fetchRoutineData = async day => {
@@ -189,12 +298,35 @@ function Routine() {
       });
 
       if (response.data.isSuccess) {
-        Alert.alert(`${routineType} 루틴이 설정되었습니다.`);
+        console.log('루틴 설정 성공:', response.data.message);
       } else {
         console.error('루틴 설정 실패:', response.data.message);
       }
     } catch (error) {
       console.error('루틴 설정 API 호출 오류:', error);
+    }
+  };
+
+  const checkPremiumStatus = async () => {
+    try {
+      const response = await instance.get('/members/my-page');
+      if (response.data.isSuccess) {
+        const {premium} = response.data.result;
+
+        if (premium) {
+          // premium이 true일 경우 챗봇 모달 띄움
+          setIsChatBotVisible(true);
+        } else {
+          // premium이 false일 경우 프리미엄 안내 모달 띄움
+          setModalVisible(true);
+          console.log(response.data.message);
+        }
+      } else {
+        Alert.alert('에러', '회원 정보를 가져오지 못했습니다.');
+      }
+    } catch (error) {
+      console.error('Premium 상태 확인 오류:', error);
+      Alert.alert('에러', '회원 정보를 가져오는 중 문제가 발생했습니다.');
     }
   };
 
@@ -213,13 +345,56 @@ function Routine() {
         onDelete={handleDeleteExercise}
       />
       <ExerciseCard onSetRoutine={handleSetRoutine} />
+      <ChatBotBtn onPress={checkPremiumStatus}>
+        <ChatBotImg source={ChatBot} />
+      </ChatBotBtn>
       <ExerciseListBottomSheet
         sheetRef={sheetRef}
         onSelect={handleExerciseSelect}
       />
+      <ChatBotModal
+        visible={isChatBotVisible}
+        onClose={() => setIsChatBotVisible(false)}
+        onSaveRoutine={handleSaveChatbotRoutine}
+        exerciseData={exerciseData}
+      />
+      {/* 모달 컴포넌트 */}
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <ModalContainer>
+          <ModalView>
+            <ModalText>
+              이 서비스는{' '}
+              <Text
+                style={{
+                  color: '#3373eb',
+                  fontWeight: 'bold',
+                }}>
+                프리미엄 회원
+              </Text>
+              만 이용가능합니다.
+            </ModalText>
+            <SubText>프리미엄 서비스를 구독하시겠습니까?</SubText>
+            <ButtonContainer>
+              <ConfirmButton onPress={() => navigation.navigate('Subscribe')}>
+                <ButtonText style={{color: '#fff'}}>확인</ButtonText>
+              </ConfirmButton>
+              <CancelButton onPress={() => setModalVisible(false)}>
+                <ButtonText>취소</ButtonText>
+              </CancelButton>
+            </ButtonContainer>
+          </ModalView>
+        </ModalContainer>
+      </Modal>
     </Container>
   );
 }
+
+export default Routine;
 
 const Container = styled.View`
   flex: 1;
@@ -227,4 +402,74 @@ const Container = styled.View`
   background-color: #fff;
   padding: 20px;
 `;
-export default Routine;
+
+const ChatBotBtn = styled.TouchableOpacity`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+`;
+
+const ChatBotImg = styled.Image`
+  width: 90px;
+  height: 90px;
+`;
+
+const ModalContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); /* 배경 투명도 조절 */
+`;
+
+const ModalView = styled.View`
+  width: 80%;
+  height: 185px;
+  background-color: white;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ModalText = styled.Text`
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 10px;
+  color: black;
+`;
+
+const SubText = styled.Text`
+  font-size: 10px;
+  color: #7c86a2;
+  margin-bottom: 35px;
+`;
+
+const ButtonContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+`;
+
+const ConfirmButton = styled.TouchableOpacity`
+  background-color: #3373eb;
+  width: 40%;
+  height: 30px;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 0;
+`;
+
+const CancelButton = styled.TouchableOpacity`
+  background-color: #3c3b40;
+  width: 40%;
+  height: 30px;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ButtonText = styled.Text`
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+`;
