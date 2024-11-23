@@ -161,7 +161,7 @@ function Routine() {
       });
 
       if (response.data.isSuccess) {
-        Alert.alert('루틴이 성공적으로 저장되었습니다.');
+        console.log('루틴 저장 성공: ', response.data.message);
         setRoutines(newRoutines); // 로컬 상태 업데이트
         setIsChatBotVisible(false); // 챗봇 모달 닫기
       } else {
@@ -298,7 +298,7 @@ function Routine() {
       });
 
       if (response.data.isSuccess) {
-        Alert.alert(`${routineType} 루틴이 설정되었습니다.`);
+        console.log('루틴 설정 성공:', response.data.message);
       } else {
         console.error('루틴 설정 실패:', response.data.message);
       }

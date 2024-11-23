@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
   Keyboard,
+  Text,
 } from 'react-native';
 import styled from 'styled-components/native';
 import instance from '../../axiosInstance';
@@ -32,7 +33,7 @@ interface ChatBotModalProps {
 const INITIAL_MESSAGE = {
   id: 1,
   content:
-    '(닉네임)님 안녕하세요!\nBodyCheck 챗봇 몸짱이에요!\n추천받고 싶은 루틴을 골라보세요.',
+    '안녕하세요!\nBodyCheck 챗봇 몸짱이에요!\n추천받고 싶은 루틴을 골라보세요.',
   sender: 'bot' as const,
 };
 
@@ -57,14 +58,42 @@ const ChatBotModal = ({visible, onClose, onSaveRoutine}: ChatBotModalProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false); // 확인 모달 표시 상태
+  const [selectedRoutine, setSelectedRoutine] = useState<string | null>(null); // 선택된 루틴 저장
+  const [nickname, setNickname] = useState<string>(''); // 닉네임 상태
 
   useEffect(() => {
     if (!visible) {
       setMessages([INITIAL_MESSAGE]);
       setInputValue('');
       setShowMenu(false);
+    } else {
+      fetchUserNickname();
     }
   }, [visible]);
+
+  const fetchUserNickname = async () => {
+    try {
+      const response = await instance.get('/members/my-page');
+      if (response.data.isSuccess) {
+        const {nickname} = response.data.result;
+        setNickname(nickname); // 닉네임 상태 업데이트
+
+        // 초기 메시지 설정
+        setMessages([
+          {
+            id: 1,
+            content: `${nickname}님 안녕하세요!\nBodyCheck 챗봇 몸짱이에요!\n추천받고 싶은 루틴을 골라보세요.`,
+            sender: 'bot',
+          },
+        ]);
+      } else {
+        console.error('닉네임 불러오기 실패:', response.data.message);
+      }
+    } catch (error) {
+      console.error('닉네임 API 호출 오류:', error);
+    }
+  };
 
   const getBotResponse = async (prompt: string) => {
     try {
@@ -120,97 +149,140 @@ const ChatBotModal = ({visible, onClose, onSaveRoutine}: ChatBotModalProps) => {
   }, [messages]);
 
   const handleSaveRoutine = (content: string) => {
-    if (onSaveRoutine) {
-      onSaveRoutine(content);
+    setSelectedRoutine(content); // 선택된 루틴 저장
+    setConfirmModalVisible(true); // 확인 모달 표시
+  };
+
+  const handleConfirm = () => {
+    if (onSaveRoutine && selectedRoutine) {
+      onSaveRoutine(selectedRoutine); // 루틴 저장
     }
+    setConfirmModalVisible(false); // 모달 닫기
+  };
+
+  const handleCancel = () => {
+    setSelectedRoutine(null); // 선택된 루틴 초기화
+    setConfirmModalVisible(false); // 모달 닫기
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior="height"
-      style={{flex: 1}}
-      keyboardVerticalOffset={20}>
-      <Modal visible={visible} animationType="fade" transparent>
-        <TouchableWithoutFeedback onPress={onClose}>
-          <ModalOverlay />
-        </TouchableWithoutFeedback>
-        <ModalWrapper>
-          <ModalContainer>
-            <SafeAreaView style={{flex: 1}}>
-              <Container>
-                <Header>
-                  <HeaderTitle>BodyCheck 챗봇 응답</HeaderTitle>
-                  <CloseButton onPress={onClose}>
-                    <CloseButtonText>✕</CloseButtonText>
-                  </CloseButton>
-                </Header>
+    <>
+      <KeyboardAvoidingView
+        behavior="height"
+        style={{flex: 1}}
+        keyboardVerticalOffset={20}>
+        <Modal visible={visible} animationType="fade" transparent>
+          <TouchableWithoutFeedback onPress={onClose}>
+            <ModalOverlay />
+          </TouchableWithoutFeedback>
+          <ModalWrapper>
+            <ModalContainer>
+              <SafeAreaView style={{flex: 1}}>
+                <Container>
+                  <Header>
+                    <HeaderTitle>BodyCheck 챗봇 몸짱</HeaderTitle>
+                    <CloseButton onPress={onClose}>
+                      <CloseButtonText>✕</CloseButtonText>
+                    </CloseButton>
+                  </Header>
 
-                <MessageContainer ref={scrollViewRef}>
-                  {messages.map(message => (
-                    <MessageWrapper key={message.id} sender={message.sender}>
-                      <MessageBubble sender={message.sender}>
-                        <MessageText sender={message.sender}>
-                          {message.content}
-                        </MessageText>
-                        {message.showSaveButton && (
-                          <SaveButton
-                            onPress={() => handleSaveRoutine(message.content)}>
-                            <SaveButtonText>루틴 저장하기</SaveButtonText>
-                          </SaveButton>
-                        )}
-                      </MessageBubble>
-                    </MessageWrapper>
-                  ))}
-                  {isLoading && (
-                    <LoadingContainer>
-                      <ActivityIndicator color="#6C7BF2" />
-                    </LoadingContainer>
-                  )}
-                </MessageContainer>
+                  <MessageContainer ref={scrollViewRef}>
+                    {messages.map(message => (
+                      <MessageWrapper key={message.id} sender={message.sender}>
+                        <MessageBubble sender={message.sender}>
+                          <MessageText sender={message.sender}>
+                            {message.content}
+                          </MessageText>
+                          {message.showSaveButton && (
+                            <SaveButton
+                              onPress={() =>
+                                handleSaveRoutine(message.content)
+                              }>
+                              <SaveButtonText>루틴 저장하기</SaveButtonText>
+                            </SaveButton>
+                          )}
+                        </MessageBubble>
+                      </MessageWrapper>
+                    ))}
+                    {isLoading && (
+                      <LoadingContainer>
+                        <ActivityIndicator color="#6C7BF2" />
+                      </LoadingContainer>
+                    )}
+                  </MessageContainer>
 
-                <BottomContainer>
-                  {showMenu && (
-                    <ChipsContainer>
-                      <ChipButton
-                        onPress={() =>
-                          handleSend('상체 위주 운동을 추천해주세요.')
-                        }>
-                        <ChipText>상체 위주</ChipText>
-                      </ChipButton>
-                      <ChipButton
-                        onPress={() =>
-                          handleSend('하체 위주 운동을 추천해주세요.')
-                        }>
-                        <ChipText>하체 위주</ChipText>
-                      </ChipButton>
-                    </ChipsContainer>
-                  )}
+                  <BottomContainer>
+                    {showMenu && (
+                      <ChipsContainer>
+                        <ChipButton
+                          onPress={() =>
+                            handleSend('상체 위주 운동을 추천해주세요.')
+                          }>
+                          <ChipText>상체 위주</ChipText>
+                        </ChipButton>
+                        <ChipButton
+                          onPress={() =>
+                            handleSend('하체 위주 운동을 추천해주세요.')
+                          }>
+                          <ChipText>하체 위주</ChipText>
+                        </ChipButton>
+                      </ChipsContainer>
+                    )}
 
-                  <InputContainer>
-                    <MenuButton onPress={() => setShowMenu(!showMenu)}>
-                      <MenuButtonText>#</MenuButtonText>
-                    </MenuButton>
-                    <StyledInput
-                      value={inputValue}
-                      onChangeText={setInputValue}
-                      onSubmitEditing={() => handleSend()}
-                      placeholder="몸짱이에게 루틴을 추천 받아 보세요."
-                      placeholderTextColor="#666"
-                      editable={!isLoading}
-                    />
-                    <SendButton
-                      onPress={() => handleSend()}
-                      disabled={isLoading}>
-                      <SendButtonText>›</SendButtonText>
-                    </SendButton>
-                  </InputContainer>
-                </BottomContainer>
-              </Container>
-            </SafeAreaView>
-          </ModalContainer>
-        </ModalWrapper>
+                    <InputContainer>
+                      <MenuButton onPress={() => setShowMenu(!showMenu)}>
+                        <MenuButtonText>#</MenuButtonText>
+                      </MenuButton>
+                      <StyledInput
+                        value={inputValue}
+                        onChangeText={setInputValue}
+                        onSubmitEditing={() => handleSend()}
+                        placeholder="몸짱이에게 루틴을 추천 받아 보세요."
+                        placeholderTextColor="#666"
+                        editable={!isLoading}
+                      />
+                      <SendButton
+                        onPress={() => handleSend()}
+                        disabled={isLoading}>
+                        <SendButtonText>›</SendButtonText>
+                      </SendButton>
+                    </InputContainer>
+                  </BottomContainer>
+                </Container>
+              </SafeAreaView>
+            </ModalContainer>
+          </ModalWrapper>
+        </Modal>
+      </KeyboardAvoidingView>
+
+      {/* 확인 모달 */}
+      <Modal
+        transparent={true}
+        visible={confirmModalVisible}
+        onRequestClose={() => {
+          setConfirmModalVisible(false);
+        }}>
+        <ConfirmModalContainer>
+          <ConfirmModalView>
+            <ConfirmModalText>
+              <Text style={{color: '#3373eb', fontWeight: 'bold'}}>
+                AI가 제공한 루틴
+              </Text>
+              으로 변경하시겠습니까?
+            </ConfirmModalText>
+            <ConfirmSubText>변경 시 기존 루틴은 덮어씌워집니다.</ConfirmSubText>
+            <ConfirmButtonContainer>
+              <ConfirmConfirmButton onPress={handleConfirm}>
+                <ConfirmButtonText>확인</ConfirmButtonText>
+              </ConfirmConfirmButton>
+              <ConfirmCancelButton onPress={handleCancel}>
+                <ConfirmButtonText>취소</ConfirmButtonText>
+              </ConfirmCancelButton>
+            </ConfirmButtonContainer>
+          </ConfirmModalView>
+        </ConfirmModalContainer>
       </Modal>
-    </KeyboardAvoidingView>
+    </>
   );
 };
 
@@ -368,4 +440,64 @@ const SaveButtonText = styled.Text`
 const LoadingContainer = styled.View`
   padding: 16px;
   align-items: center;
+`;
+
+const ConfirmModalContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); /* 배경 투명도 조절 */
+`;
+
+const ConfirmModalView = styled.View`
+  width: 80%;
+  height: 185px;
+  background-color: white;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ConfirmModalText = styled.Text`
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 10px;
+  color: black;
+`;
+
+const ConfirmSubText = styled.Text`
+  font-size: 10px;
+  color: #7c86a2;
+  margin-bottom: 35px;
+`;
+
+const ConfirmButtonContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+`;
+
+const ConfirmConfirmButton = styled.TouchableOpacity`
+  background-color: #3373eb;
+  width: 40%;
+  height: 30px;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 0;
+`;
+
+const ConfirmCancelButton = styled.TouchableOpacity`
+  background-color: #3c3b40;
+  width: 40%;
+  height: 30px;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ConfirmButtonText = styled.Text`
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
 `;
