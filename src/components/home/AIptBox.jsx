@@ -1,16 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
-import {FlatList, ActivityIndicator, Alert} from 'react-native';
+import {
+  FlatList,
+  ActivityIndicator,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import exerciseData from '../Health/HealthInfoData';
 import instance from '../../axiosInstance';
-
-// 4개의 랜덤 운동 선택 함수
-// const getRandomExercises = (data, count) => {
-//   return data.sort(() => Math.random() - 0.5).slice(0, count);
-// };
+import {useNavigation} from '@react-navigation/native';
 
 const AIptBox = () => {
-  //const randomExercises = getRandomExercises(exerciseData, 4); // 4개의 랜덤 운동 선택
+  const navigation = useNavigation();
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -43,6 +44,13 @@ const AIptBox = () => {
     fetchExercises();
   }, []);
 
+  const navigateToHealthInfo = exerciseId => {
+    const exercise = exerciseData.find(ex => ex.id === exerciseId);
+    if (exercise) {
+      navigation.navigate('HomeHealthInfo', {id: exercise.id});
+    }
+  };
+
   // 로딩 상태 처리
   if (loading) {
     return (
@@ -53,18 +61,20 @@ const AIptBox = () => {
   }
 
   const renderItem = ({item}) => (
-    <ExerciseItem>
-      <ExerciseImage source={item.imageSource} />
-      <ExerciseDetails>
-        <NameRepsWrapper>
-          <ExerciseName>{item.title}</ExerciseName>
-          <ExerciseReps>x 12</ExerciseReps>
-        </NameRepsWrapper>
-        <MuscleWrapper>
-          <MainMuscle>{item.mainMuscle}</MainMuscle>
-        </MuscleWrapper>
-      </ExerciseDetails>
-    </ExerciseItem>
+    <TouchableOpacity onPress={() => navigateToHealthInfo(item.id)}>
+      <ExerciseItem>
+        <ExerciseImage source={item.imageSource} />
+        <ExerciseDetails>
+          <NameRepsWrapper>
+            <ExerciseName>{item.title}</ExerciseName>
+            <ExerciseReps>x 12</ExerciseReps>
+          </NameRepsWrapper>
+          <MuscleWrapper>
+            <MainMuscle>{item.mainMuscle}</MainMuscle>
+          </MuscleWrapper>
+        </ExerciseDetails>
+      </ExerciseItem>
+    </TouchableOpacity>
   );
 
   return (
