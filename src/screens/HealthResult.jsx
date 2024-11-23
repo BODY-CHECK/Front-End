@@ -48,18 +48,12 @@ export default function HealthResult() {
   const [saveloading, setSaveLoading] = useState(false);
   const CriteriaData = [
     {
-      criteriaIdx: 1,
-      criteriaName: '팔의 구부림 각도가 정확한가',
       score: resultArray[0],
     },
     {
-      criteriaIdx: 2,
-      criteriaName: '자세가 일직선으로 정렬되어 있는가',
       score: resultArray[1],
     },
     {
-      criteriaIdx: 3,
-      criteriaName: '무릎의 구부림 각도가 정확한가',
       score: resultArray[2],
     },
   ];
@@ -203,6 +197,7 @@ export default function HealthResult() {
   if (saveloading) {
     return <Loading text="데이터 저장 중입니다..." />; // 로딩 화면 표시
   }
+  console.log('넘어온',premium);
 
   return (
     <Container>
