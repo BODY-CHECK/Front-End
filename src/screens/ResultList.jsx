@@ -104,6 +104,7 @@ export default function ResultList({navigation}) {
       // 서버에 `page` 값을 전송하여 데이터 요청
       const response = await getSolutions(targetBody, periodForApi, page);
       const newSolutions = response.result.solutionList;
+      console.log(response);
 
       // 기존 데이터에 새로 받은 데이터를 추가
       setSolutionList(prevList => [...prevList, ...newSolutions]);
@@ -148,7 +149,7 @@ export default function ResultList({navigation}) {
   const handleNavigate = exerciseId => {
     const exercise = solutionList.find(ex => ex.id === exerciseId);
     if (exercise) {
-      navigation.navigate('Solution', {id: exercise.id}); // 데이터를 Solution 화면으로 전달
+      navigation.navigate('Solution', {id: exercise.id, exerciseId: exercise.exerciseId, premium}); // 데이터를 Solution 화면으로 전달
     }
   };
 

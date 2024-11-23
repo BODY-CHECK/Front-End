@@ -11,6 +11,7 @@ import ResultList from '../screens/ResultList';
 import Solution from '../screens/Solution';
 import IsPremium from '../screens/IsPremium';
 import SubscriptionHandler from './SubscriptionHandler';
+import Comparison from '../screens/Comparison';
 
 const Stack = createStackNavigator();
 const CustomHeader = () => <HeaderMain />;
@@ -47,6 +48,16 @@ function MypageStackNavigator() {
         options={{
           headerShown: true,
           title: 'My 솔루션',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {fontWeight: 'bold'},
+        }}
+      />
+      <Stack.Screen
+        name="Comparison"
+        component={Comparison}
+        options={{
+          headerShown: true,
+          title: '자세 비교',
           headerTitleAlign: 'center',
           headerTitleStyle: {fontWeight: 'bold'},
         }}

@@ -1,5 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {
+  Button1,
+  Button2,
+  ButtonContainer,
+  ButtonText1,
+  ButtonText2,
   Container,
   ContentContainer,
   ContentText,
@@ -8,22 +13,24 @@ import {
   TextContainer,
 } from './HealtResult.style';
 import {
-  useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
 import {BarChart} from 'react-native-chart-kit';
 import {getSolutionById} from '../api/SolutionApi'; // API 호출 함수 import
-import {StyleSheet} from 'react-native';
+import {Modal, StyleSheet, Text} from 'react-native';
 import Video from 'react-native-video';
+import { ButtonText, CancelButton, ConfirmButton, ModalContainer, ModalText, ModalView, SubText, ModalButtonContainer, RealButton, RealButtonText } from './Solution.style';
 
 export default function Solution() {
   const route = useRoute();
-  const {id} = route.params;
+  const {id, exerciseId, premium} = route.params;
   const [solutionData, setSolutionData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
+
 
   useEffect(() => {
     const fetchSolution = async () => {
@@ -67,6 +74,7 @@ export default function Solution() {
   const graphStyle = {
     borderRadius: 16,
   };
+
 
   if (loading) {
     return <ContentText>로딩 중...</ContentText>;
@@ -123,6 +131,46 @@ export default function Solution() {
           </ContentText>
         </TextContainer>
       </ContentContainer>
+      <ButtonContainer>
+      {premium ? (<RealButton
+          onPress={() => navigation.navigate('Comparison', { exerciseId, videoUrl: `${solutionData.solutionVideoUrl}.mp4` })}>
+          <RealButtonText>운동 전문가와 자세 비교하기</RealButtonText>
+        </RealButton>):(<RealButton
+          onPress={() => setModalVisible(true)}>
+          <RealButtonText>운동 전문가와 자세 비교하기</RealButtonText>
+        </RealButton>)}
+      </ButtonContainer>
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <ModalContainer>
+          <ModalView>
+            <ModalText>
+              이 서비스는{' '}
+              <Text
+                style={{
+                  color: '#3373eb',
+                  fontWeight: 'bold',
+                }}>
+                프리미엄 회원
+              </Text>
+              만 이용가능합니다.
+            </ModalText>
+            <SubText>프리미엄 서비스를 구독하시겠습니까?</SubText>
+            <ModalButtonContainer>
+              <ConfirmButton onPress={() => navigation.navigate('PremiumUpgrade')}>
+                <ButtonText style={{color: '#fff'}}>확인</ButtonText>
+              </ConfirmButton>
+              <CancelButton onPress={() => setModalVisible(false)}>
+                <ButtonText>취소</ButtonText>
+              </CancelButton>
+            </ModalButtonContainer>
+          </ModalView>
+        </ModalContainer>
+      </Modal>
     </Container>
   );
 }
