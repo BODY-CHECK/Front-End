@@ -8,10 +8,52 @@ import DaySelector from '../components/routine/DaySelector';
 import ExerciseCard from '../components/routine/ExerciseCard';
 import ExerciseListBottomSheet from '../components/routine/ExerciseListBottomSheet';
 import RoutineBox from '../components/routine/RoutineBox';
+import ChatBot from '../assets/images/ChatBot.png';
+import ChatBotModal from '../components/routine/ChatBotModal';
 
 const baseURL = 'https://dev.bodycheck.store';
 
+// 요일별 루틴을 파싱하는 함수
+const parseRoutineText = text => {
+  const days = ['월', '화', '수', '목', '금', '토', '일'];
+  const routines = {};
+
+  days.forEach(day => {
+    // 요일별로 텍스트를 추출하는 정규식
+    const regex = new RegExp(`${day}\\s*-\\s*([^\\n]*)`, 'g');
+    const match = regex.exec(text);
+
+    if (match && match[1]) {
+      routines[day] = match[1]
+        .split(/[,]/) // 쉼표 기준으로 운동 분리
+        .map(item => item.trim()) // 앞뒤 공백 제거
+        .filter(exercise => exercise && !exercise.includes('휴식')); // "휴식" 제외
+    } else {
+      routines[day] = []; // 해당 요일에 운동이 없으면 빈 배열
+    }
+  });
+
+  console.log('Parsed Routines:', routines); // 디버깅 로그
+  return routines;
+};
+
+// 운동 이름을 exerciseData와 매칭하는 함수
+const matchExerciseNames = (exerciseName: string, exerciseData: any[]) => {
+  const matchedExercise = exerciseData.find(
+    exercise =>
+      exercise.title.replace(/\s+/g, '').toLowerCase() ===
+      exerciseName.replace(/\s+/g, '').toLowerCase(),
+  );
+
+  if (!matchedExercise) {
+    console.error(`운동 이름 매칭 실패: ${exerciseName}`); // 매칭되지 않는 운동 로그
+  }
+
+  return matchedExercise || null;
+};
+
 function Routine() {
+  const [isChatBotVisible, setIsChatBotVisible] = useState(false);
   // 요일별 weekId 매핑
   const dayMapping = {일: 1, 월: 2, 화: 3, 수: 4, 목: 5, 금: 6, 토: 7};
   const reverseDayMapping = {
@@ -63,6 +105,69 @@ function Routine() {
       fetchRoutineData(selectedDay);
     }
   }, [selectedDay, isEditing]);
+
+  // 챗봇 루틴을 저장하는 함수
+  const handleSaveChatbotRoutine = async (routineText: string) => {
+    // 텍스트에서 요일별 루틴 파싱
+    const parsedRoutines = parseRoutineText(routineText);
+    console.log('Parsed Routines:', parsedRoutines);
+
+    // 각 요일별로 운동을 매칭하고 새로운 루틴 객체 생성
+    const newRoutines = Object.keys(parsedRoutines).reduce((acc, day) => {
+      const dayExercises = parsedRoutines[day];
+      const matchedExercises = Array(3).fill(null); // 기본적으로 3개의 null로 초기화
+
+      // 찾은 운동들을 순서대로 배열에 넣기
+      dayExercises.forEach((exerciseName, index) => {
+        if (index < 3) {
+          // 최대 3개까지만 저장
+          const matchedExercise = matchExerciseNames(
+            exerciseName,
+            exerciseData,
+          );
+          if (matchedExercise) {
+            matchedExercises[index] = matchedExercise;
+          }
+        }
+      });
+
+      return {
+        ...acc,
+        [day]: matchedExercises,
+      };
+    }, {});
+
+    console.log('Matched Routines:', newRoutines); // 매칭된 루틴 로그
+
+    // 서버에 저장하기 위한 데이터 준비
+    const routinesData = Object.keys(newRoutines).flatMap(day =>
+      newRoutines[day].map((exercise, idx) => ({
+        weekId: dayMapping[day],
+        routineIdx: idx + 1,
+        exerciseId: exercise ? exercise.id : null,
+        isUpdated: true,
+      })),
+    );
+
+    console.log('Prepared Routines Data for API:', routinesData); // 서버로 보낼 데이터 로그
+
+    try {
+      const response = await instance.post(`${baseURL}/api/routine/update`, {
+        routines: routinesData,
+      });
+
+      if (response.data.isSuccess) {
+        Alert.alert('루틴이 성공적으로 저장되었습니다.');
+        setRoutines(newRoutines); // 로컬 상태 업데이트
+        setIsChatBotVisible(false); // 챗봇 모달 닫기
+      } else {
+        Alert.alert('루틴 저장에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('루틴 저장 API 호출 오류:', error);
+      Alert.alert('루틴 저장 중 오류가 발생했습니다.');
+    }
+  };
 
   // 루틴 데이터 가져오는 함수
   const fetchRoutineData = async day => {
@@ -217,9 +322,20 @@ function Routine() {
         sheetRef={sheetRef}
         onSelect={handleExerciseSelect}
       />
+      <ChatBotBtn onPress={() => setIsChatBotVisible(true)}>
+        <ChatBotImg source={ChatBot} />
+      </ChatBotBtn>
+      <ChatBotModal
+        visible={isChatBotVisible}
+        onClose={() => setIsChatBotVisible(false)}
+        onSaveRoutine={handleSaveChatbotRoutine}
+        exerciseData={exerciseData}
+      />
     </Container>
   );
 }
+
+export default Routine;
 
 const Container = styled.View`
   flex: 1;
@@ -227,4 +343,14 @@ const Container = styled.View`
   background-color: #fff;
   padding: 20px;
 `;
-export default Routine;
+
+const ChatBotBtn = styled.TouchableOpacity`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+`;
+
+const ChatBotImg = styled.Image`
+  width: 90px;
+  height: 90px;
+`;
