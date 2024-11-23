@@ -39,6 +39,7 @@
     "react-native-screens": "^3.34.0",
     "react-native-sound": "^0.11.2",
     "react-native-svg": "^15.7.1",
+    "react-native-system-bars": "^0.4.0",
     "react-native-vector-icons": "^10.2.0",
     "react-native-video": "^6.8.0",
     "react-native-vision-camera": "^4.6.1",

@@ -98,7 +98,7 @@ export default function Solution() {
           <BarChart
             style={graphStyle}
             data={{
-              labels: ['팔 각도', '자세 장렬', '무릎 각도', ],
+              labels: ['팔 각도', '자세 정렬', '무릎 각도' ],
               datasets: [
                 {
                   data: solutionData?.criteriaDetailList.map(
