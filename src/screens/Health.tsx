@@ -1,10 +1,13 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {View, Text, StyleSheet, Dimensions, Linking, StatusBar} from 'react-native';
 import {
-  RouteProp,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Linking,
+  StatusBar,
+} from 'react-native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {
   Camera as VisionCamera,
   useCameraDevices,
