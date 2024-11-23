@@ -10,6 +10,7 @@ import {
   getFocusedRouteNameFromRoute,
   useNavigationState,
 } from '@react-navigation/native';
+import RoutineStackNavigator from './RoutineStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,6 +33,7 @@ function BottomTabNavigator() {
       'HealthInfo',
       'Health',
       'HealthResult',
+      'Subscribe',
     ];
 
     if (routesToHideTabBar.includes(routeName)) {
@@ -86,7 +88,11 @@ function BottomTabNavigator() {
         component={HealthStackNavigator}
         options={{headerShown: false}}
       />
-      <Tab.Screen name="운동 루틴" component={Routine} />
+      <Tab.Screen
+        name="운동 루틴"
+        component={RoutineStackNavigator}
+        options={{headerShown: false}}
+      />
       <Tab.Screen
         name="마이페이지"
         component={MypageStackNavigator}

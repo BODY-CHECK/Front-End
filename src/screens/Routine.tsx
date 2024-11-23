@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Alert} from 'react-native';
+import {Alert, Modal, Text} from 'react-native';
 import styled from 'styled-components/native';
 import instance from '../axiosInstance';
 import exerciseData from '../components/Health/HealthInfoData';
@@ -10,6 +10,7 @@ import ExerciseListBottomSheet from '../components/routine/ExerciseListBottomShe
 import RoutineBox from '../components/routine/RoutineBox';
 import ChatBot from '../assets/images/ChatBot.png';
 import ChatBotModal from '../components/routine/ChatBotModal';
+import {useNavigation} from '@react-navigation/native';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -54,6 +55,9 @@ const matchExerciseNames = (exerciseName: string, exerciseData: any[]) => {
 
 function Routine() {
   const [isChatBotVisible, setIsChatBotVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const navigation = useNavigation();
+
   // 요일별 weekId 매핑
   const dayMapping = {일: 1, 월: 2, 화: 3, 수: 4, 목: 5, 금: 6, 토: 7};
   const reverseDayMapping = {
@@ -303,6 +307,29 @@ function Routine() {
     }
   };
 
+  const checkPremiumStatus = async () => {
+    try {
+      const response = await instance.get('/members/my-page');
+      if (response.data.isSuccess) {
+        const {premium} = response.data.result;
+
+        if (premium) {
+          // premium이 true일 경우 챗봇 모달 띄움
+          setIsChatBotVisible(true);
+        } else {
+          // premium이 false일 경우 프리미엄 안내 모달 띄움
+          setModalVisible(true);
+          console.log(response.data.message);
+        }
+      } else {
+        Alert.alert('에러', '회원 정보를 가져오지 못했습니다.');
+      }
+    } catch (error) {
+      console.error('Premium 상태 확인 오류:', error);
+      Alert.alert('에러', '회원 정보를 가져오는 중 문제가 발생했습니다.');
+    }
+  };
+
   return (
     <Container>
       <TitlewithBtn
@@ -318,19 +345,51 @@ function Routine() {
         onDelete={handleDeleteExercise}
       />
       <ExerciseCard onSetRoutine={handleSetRoutine} />
+      <ChatBotBtn onPress={checkPremiumStatus}>
+        <ChatBotImg source={ChatBot} />
+      </ChatBotBtn>
       <ExerciseListBottomSheet
         sheetRef={sheetRef}
         onSelect={handleExerciseSelect}
       />
-      <ChatBotBtn onPress={() => setIsChatBotVisible(true)}>
-        <ChatBotImg source={ChatBot} />
-      </ChatBotBtn>
       <ChatBotModal
         visible={isChatBotVisible}
         onClose={() => setIsChatBotVisible(false)}
         onSaveRoutine={handleSaveChatbotRoutine}
         exerciseData={exerciseData}
       />
+      {/* 모달 컴포넌트 */}
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <ModalContainer>
+          <ModalView>
+            <ModalText>
+              이 서비스는{' '}
+              <Text
+                style={{
+                  color: '#3373eb',
+                  fontWeight: 'bold',
+                }}>
+                프리미엄 회원
+              </Text>
+              만 이용가능합니다.
+            </ModalText>
+            <SubText>프리미엄 서비스를 구독하시겠습니까?</SubText>
+            <ButtonContainer>
+              <ConfirmButton onPress={() => navigation.navigate('Subscribe')}>
+                <ButtonText style={{color: '#fff'}}>확인</ButtonText>
+              </ConfirmButton>
+              <CancelButton onPress={() => setModalVisible(false)}>
+                <ButtonText>취소</ButtonText>
+              </CancelButton>
+            </ButtonContainer>
+          </ModalView>
+        </ModalContainer>
+      </Modal>
     </Container>
   );
 }
@@ -353,4 +412,64 @@ const ChatBotBtn = styled.TouchableOpacity`
 const ChatBotImg = styled.Image`
   width: 90px;
   height: 90px;
+`;
+
+const ModalContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); /* 배경 투명도 조절 */
+`;
+
+const ModalView = styled.View`
+  width: 80%;
+  height: 185px;
+  background-color: white;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ModalText = styled.Text`
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 10px;
+  color: black;
+`;
+
+const SubText = styled.Text`
+  font-size: 10px;
+  color: #7c86a2;
+  margin-bottom: 35px;
+`;
+
+const ButtonContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+`;
+
+const ConfirmButton = styled.TouchableOpacity`
+  background-color: #3373eb;
+  width: 40%;
+  height: 30px;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 0;
+`;
+
+const CancelButton = styled.TouchableOpacity`
+  background-color: #3c3b40;
+  width: 40%;
+  height: 30px;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ButtonText = styled.Text`
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
 `;
