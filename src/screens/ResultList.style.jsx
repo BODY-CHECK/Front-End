@@ -2,17 +2,44 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  padding: 16px;
   background-color: white;
 `;
 
 export const HealthContainer = styled.ScrollView`
   ovewflow-y: auto;
+  margin-left: 16px;
+  margin-right: 16px;
+  margin-bottom: 16px;
 `;
+
+export const PremiumContainer = styled.TouchableOpacity`
+  width: 100%;
+  height: 60px;
+  flex-direction: row;
+  justify-content: center;
+  background-color: #DDF100;
+`;
+
+export const PremiumText = styled.Text`
+  height: 20px;
+  color: black;
+  font-size: 15px;
+  margin-top: 20px;
+`;
+
+export const PremiumImage = styled.Image`
+  width: 25px;
+  margin-top: 13px;
+  margin-right:-12px;
+`;
+
 
 export const HealthType = styled.View`
   flex-direction: row;
   align-items: center;
+  margin-top: 16px;
+  margin-left: 16px;
+  margin-right: 16px;
 `;
 
 export const PeriodContainer = styled.View`
@@ -100,7 +127,6 @@ export const TypeButton = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   margin-right: 10px;
-  margin-bottom: 5px;
   border: 1px solid black;
 `;
 
