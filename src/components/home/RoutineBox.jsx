@@ -4,7 +4,7 @@ import {TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
 import instance from '../../axiosInstance';
 import exerciseData from '../Health/HealthInfoData';
-import defaultImage from '../../assets/images/logo.png';
+import check from '../../assets/images/check.png';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -12,6 +12,7 @@ const HomeRoutineBox = () => {
   const navigation = useNavigation();
   const [routines, setRoutines] = useState([null, null, null]);
   const [hasRoutine, setHasRoutine] = useState(false);
+  const [routineChecks, setRoutineChecks] = useState([false, false, false]);
 
   // 요일 매핑
   const dayMapping = {
@@ -37,11 +38,16 @@ const HomeRoutineBox = () => {
           const exercise = exerciseData.find(ex => ex.title === item.exercise);
           return exercise || null;
         });
+        const routineChecks = response.data.result.map(
+          item => item.routineCheck,
+        );
+
         const hasValidExercises = fetchedRoutines.some(
           exercise => exercise !== null,
         );
 
         setRoutines(fetchedRoutines);
+        setRoutineChecks(routineChecks);
         setHasRoutine(hasValidExercises);
       } else {
         setHasRoutine(false);
@@ -67,7 +73,14 @@ const HomeRoutineBox = () => {
             <ItemWrapper key={index}>
               <RoutineItem>
                 {exercise ? (
-                  <ExerciseImage source={exercise.imageSource} />
+                  <>
+                    <ExerciseImage source={exercise.imageSource} />
+                    {routineChecks[index] && (
+                      <CheckImage
+                        source={require('../../assets/images/check.png')}
+                      />
+                    )}
+                  </>
                 ) : (
                   <PlusImage>+</PlusImage>
                 )}
@@ -154,13 +167,16 @@ const ExerciseImage = styled.Image`
   height: 80px;
 `;
 
-const PlaceholderImage = styled.Image`
-  width: 80px;
-  height: 80px;
-`;
-
 const PlusImage = styled.Text`
   margin-top: 20px;
   font-size: 50px;
   color: #e5e5e5;
+`;
+
+const CheckImage = styled.Image`
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 30px;
+  height: 30px;
 `;
