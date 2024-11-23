@@ -135,3 +135,15 @@ export const getPremium = async () => {
     throw error;
   }
 };
+
+//운동 전문가 영상 조회 함수
+export const getExpertById = async solutionId => {
+  try {
+    const response = await instance.get(`${baseURL}/solutions/expert/${solutionId}`);
+    console.log('이건?: ', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error during API call:', error);
+    throw error;
+  }
+};
