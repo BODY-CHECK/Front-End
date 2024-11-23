@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 import {Alert, StyleSheet, View} from 'react-native';
 import LoginFooter from '../components/login/LoginFooter';
@@ -6,11 +6,14 @@ import LoginForm from '../components/login/LoginForm';
 import LoginHeader from '../components/login/LoginHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuth} from '../AuthContext';
+import ConfirmModal from '../components/ConfirmModal';
 
 const baseURL = 'https://dev.bodycheck.store'; // 서버 주소
 
 function Login() {
   const {setIsLoggedIn} = useAuth();
+  const [confirmModalVisible, setConirmModalVisible] = useState(false); // 모달 상태
+  const [confirmModalMessage, setConfirmModalMessage] = useState(''); // 모달 메시지
 
   const handleLogin = async (email, password) => {
     try {
@@ -27,20 +30,14 @@ function Login() {
         await AsyncStorage.setItem('refreshToken', refreshToken);
 
         setIsLoggedIn(true); // 로그인 성공 시 상태 업데이트
-        Alert.alert('로그인 성공', response.data.message);
       } else {
-        Alert.alert(
-          '로그인 실패',
-          response.data.message || '다시 시도해주세요.',
-        );
+        setConirmModalVisible(true);
+        setConfirmModalMessage(response.data.messag);
       }
     } catch (error) {
       console.error(error);
-      Alert.alert(
-        '로그인 실패',
-        error.response?.data?.message ||
-          '서버와의 통신 중 문제가 발생했습니다.',
-      );
+      setConirmModalVisible(true);
+      setConfirmModalMessage(error.response?.data?.message);
     }
   };
 
@@ -49,6 +46,11 @@ function Login() {
       <LoginHeader />
       <LoginForm onLogin={handleLogin} />
       <LoginFooter />
+      <ConfirmModal
+        visible={confirmModalVisible}
+        message={confirmModalMessage}
+        onConfirm={() => setConirmModalVisible(false)}
+      />
     </View>
   );
 }

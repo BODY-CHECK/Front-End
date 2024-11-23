@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import styled from 'styled-components/native';
-import ProfileInput from '../components/settings/ProfileInput';
-import instance from '../axiosInstance';
-import {Alert} from 'react-native';
-import {useAuth} from '../AuthContext';
 import {useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
+import styled from 'styled-components/native';
+import {useAuth} from '../AuthContext';
+import instance from '../axiosInstance';
+import ConfirmModal from '../components/ConfirmModal';
+import ProfileInput from '../components/settings/ProfileInput';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -14,6 +14,9 @@ const PasswordChange = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
+
+  const [confirmModalVisible, setConirmModalVisible] = useState(false); // 모달 상태
+  const [confirmModalMessage, setConfirmModalMessage] = useState(''); // 모달 메시지
 
   const validatePassword = password => {
     if (password.length < 8 || password.length > 16) {
@@ -75,7 +78,8 @@ const PasswordChange = () => {
       );
 
       if (response.data.isSuccess) {
-        Alert.alert('비밀번호가 성공적으로 변경되었습니다.');
+        setConirmModalVisible(true);
+        setConfirmModalMessage('비밀번호가 성공적으로 변경되었습니다.');
         // 로그아웃 후 로그인 페이지로 이동
         await logout();
         navigation.reset({
@@ -83,11 +87,13 @@ const PasswordChange = () => {
           routes: [{name: 'Login'}], // 로그인 화면의 이름
         });
       } else {
-        Alert.alert('비밀번호 변경에 실패했습니다.', response.data.message);
+        setConirmModalVisible(true);
+        setConfirmModalMessage(response.data.message);
       }
     } catch (error) {
       console.error('비밀번호 변경 오류:', error);
-      Alert.alert('오류가 발생했습니다. 다시 시도해주세요.');
+      setConirmModalVisible(true);
+      setConfirmModalMessage('오류가 발생했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -112,6 +118,11 @@ const PasswordChange = () => {
       <EditButton onPress={handleEdit}>
         <ButtonText>수정하기</ButtonText>
       </EditButton>
+      <ConfirmModal
+        visible={confirmModalVisible}
+        message={confirmModalMessage}
+        onConfirm={() => setConirmModalVisible(false)}
+      />
     </Container>
   );
 };

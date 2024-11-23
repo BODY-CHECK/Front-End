@@ -1,15 +1,13 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
-  ScrollView,
+  ActivityIndicator,
+  Dimensions,
+  KeyboardAvoidingView,
   Modal,
   SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-  Dimensions,
-  TouchableWithoutFeedback,
-  ActivityIndicator,
-  Keyboard,
+  ScrollView,
   Text,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import styled from 'styled-components/native';
 import instance from '../../axiosInstance';

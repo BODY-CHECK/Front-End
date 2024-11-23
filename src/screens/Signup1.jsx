@@ -5,6 +5,7 @@ import InputField from '../components/signup/InputField';
 import Button from '../components/signup/Button';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
+import ConfirmModal from '../components/ConfirmModal';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -17,6 +18,8 @@ function Signup1() {
   const [errors, setErrors] = useState({});
   const [isAuthVerified, setAuthVerified] = useState(false); // 인증 성공 여부
   const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false); // 모달 상태
+  const [modalMessage, setModalMessage] = useState(''); // 모달 메시지
 
   const validateEmail = email => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -103,12 +106,17 @@ function Signup1() {
         },
       );
       if (response.data.success) {
-        alert('인증번호가 이메일로 전송되었습니다.');
+        setModalMessage('인증번호가 이메일로 전송되었습니다.');
+        setModalVisible(true);
       } else {
-        alert('인증번호 전송에 실패했습니다. 다시 시도해주세요.');
+        setModalMessage('인증번호 전송에 실패했습니다. 다시 시도해주세요.');
+        setModalVisible(true);
       }
     } catch (error) {
-      alert('서버와의 통신 중 문제가 발생했습니다. 나중에 다시 시도해주세요.');
+      setModalMessage(
+        '서버와의 통신 중 문제가 발생했습니다. 나중에 다시 시도해주세요.',
+      );
+      setModalVisible(true);
     }
   };
 
@@ -119,14 +127,19 @@ function Signup1() {
         {email: email, code: authCode},
       );
       if (response.data.success) {
-        alert('인증이 완료되었습니다.');
+        setModalMessage('인증이 완료되었습니다.');
+        setModalVisible(true);
         setAuthVerified(true);
       } else {
-        alert('인증번호가 올바르지 않습니다. 다시 시도해주세요.');
+        setModalMessage('인증번호가 올바르지 않습니다. 다시 시도해주세요.');
+        setModalVisible(true);
         setAuthVerified(false);
       }
     } catch (error) {
-      alert('서버와의 통신 중 문제가 발생했습니다. 나중에 다시 시도해주세요.');
+      setModalMessage(
+        '서버와의 통신 중 문제가 발생했습니다. 나중에 다시 시도해주세요.',
+      );
+      setModalVisible(true);
     }
   };
 
@@ -175,6 +188,11 @@ function Signup1() {
         title="다음"
         onPress={handleNext}
         disabled={!isNextButtonEnabled}
+      />
+      <ConfirmModal
+        visible={modalVisible}
+        message={modalMessage}
+        onConfirm={() => setModalVisible(false)}
       />
     </Container>
   );

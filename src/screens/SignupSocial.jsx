@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
-import SignupHeader from '../components/signup/SignupHeader';
-import InputField from '../components/signup/InputField';
+import ConfirmModal from '../components/ConfirmModal';
+import AgreementCheckbox from '../components/signup/AgreementCheckbox';
 import Button from '../components/signup/Button';
 import GenderSelection from '../components/signup/GenderSelection';
+import InputField from '../components/signup/InputField';
+import SignupHeader from '../components/signup/SignupHeader';
 import SizeInput from '../components/signup/SizeInput';
-import AgreementCheckbox from '../components/signup/AgreementCheckbox';
-import {useNavigation} from '@react-navigation/native';
-import axios from 'axios';
-import {useRoute} from '@react-navigation/native';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -25,6 +25,9 @@ const SignupSocial = () => {
   const [isPrivacyAgreed, setIsPrivacyAgreed] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [nicknameError, setNicknameError] = useState('');
+
+  const [confirmModalVisible, setConirmModalVisible] = useState(false); // 모달 상태
+  const [confirmModalMessage, setConfirmModalMessage] = useState(''); // 모달 메시지
 
   // 닉네임 유효성 검사 (중복 검사 제외)
   const validateNickname = nickname => {
@@ -92,18 +95,22 @@ const SignupSocial = () => {
       });
 
       if (response.data.success) {
-        alert('회원가입이 완료되었습니다.');
+        setConirmModalVisible(true);
+        setConfirmModalMessage('회원가입이 완료되었습니다.');
         navigation.navigate('WelcomePage');
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
         const errorCode = error.response.data.code;
         if (errorCode === 'email already exists') {
-          alert('이미 존재하는 이메일입니다.');
+          setConirmModalVisible(true);
+          setConfirmModalMessage('이미 존재하는 이메일입니다.');
         } else if (errorCode === 'FRIEND4003') {
-          alert('이미 존재하는 닉네임입니다.');
+          setConirmModalVisible(true);
+          setConfirmModalMessage('이미 존재하는 닉네임입니다.');
         } else {
-          alert('회원가입에 실패했습니다. 다시 시도해주세요.');
+          setConirmModalVisible(true);
+          setConfirmModalMessage('회원가입에 실패했습니다. 다시 시도해주세요.');
         }
       } else {
         console.log(error);
@@ -140,6 +147,11 @@ const SignupSocial = () => {
         />
       </CheckboxContainer>
       <Button title="완료" onPress={handleNext} disabled={!isFormValid} />
+      <ConfirmModal
+        visible={confirmModalVisible}
+        message={confirmModalMessage}
+        onConfirm={() => setConirmModalVisible(false)}
+      />
     </Container>
   );
 };
