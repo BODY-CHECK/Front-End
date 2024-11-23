@@ -14,11 +14,13 @@ import {
   AreaContainer,
   AreaText,
   PeriodContainer,
+  PremiumContainer,
+  PremiumImage,
+  PremiumText,
 } from './ResultList.style';
 import exerciseData from '../components/Health/HealthInfoData';
-import {getSolutions} from '../api/SolutionApi'; // API 함수 임포트
+import {getPremium, getSolutions} from '../api/SolutionApi'; // API 함수 임포트
 import {ActivityIndicator} from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
 
 export default function ResultList({navigation}) {
@@ -30,6 +32,7 @@ export default function ResultList({navigation}) {
   const [selectedPeriod, setSelectedPeriod] = useState(0);
   const [page, setPage] = useState(0);
   const [hasNext, setHasNext] = useState(true);
+  const [premium, setPremium] = useState(false);
 
   // 현재 월을 가져오기
   const date = new Date();
@@ -127,6 +130,20 @@ export default function ResultList({navigation}) {
     fetchSolutions(0);
   }, [selectedType, selectedPeriod]);
 
+  useEffect(() => {
+    const getPremiumResponse = async () => {
+      try {
+        const response = await getPremium();
+        setPremium(response.result.premium);
+        console.log('프리미엄?', premium);
+      } catch (err) {
+        console.error('Error during API posting:', err.request);
+      }
+    };
+
+    getPremiumResponse();
+  }, []);
+
   // 특정 운동 ID로 해당 운동 데이터를 찾는 함수
   const handleNavigate = exerciseId => {
     const exercise = solutionList.find(ex => ex.id === exerciseId);
@@ -141,72 +158,79 @@ export default function ResultList({navigation}) {
 
   return (
     <Container>
-      <HealthType>
-        <TypeButton
-          isActive={selectedType === '전체'}
-          onPress={() => setSelectedType('전체')}>
-          <TypeButtonText isActive={selectedType === '전체'}>
-            전체
-          </TypeButtonText>
-        </TypeButton>
-        <TypeButton
-          isActive={selectedType === '상체 운동'}
-          onPress={() => setSelectedType('상체 운동')}>
-          <TypeButtonText isActive={selectedType === '상체 운동'}>
-            상체 운동
-          </TypeButtonText>
-        </TypeButton>
-        <TypeButton
-          isActive={selectedType === '하체 운동'}
-          onPress={() => setSelectedType('하체 운동')}>
-          <TypeButtonText isActive={selectedType === '하체 운동'}>
-            하체 운동
-          </TypeButtonText>
-        </TypeButton>
-        <PeriodContainer>
-          <Picker
-            selectedValue={String(selectedPeriod)}
-            onValueChange={itemValue => setSelectedPeriod(String(itemValue))}
-            style={{height: 15, width: 100}}
-            mode="dropdown">
-            {periodOptions.map((option, index) => (
-              <Picker.Item
-                key={index}
-                label={option.label}
-                value={String(option.value)}
-              />
-            ))}
-          </Picker>
-        </PeriodContainer>
-      </HealthType>
-      <HealthContainer onScroll={handleScroll}>
-        {solutionList.map(exercise => {
-          const localExercise = exerciseData.find(
-            e => Number(e.id) === exercise.exerciseId,
-          );
-          return (
-            <HealthList key={exercise.id}>
-              <HealthIcon onPress={() => handleNavigate(exercise.id)}>
-                {localExercise ? (
-                  <StyledImage source={localExercise.imageSource} />
-                ) : null}
-                <LabelContainer>
-                  <TextContainer>
-                    <IconName>
-                      {localExercise
-                        ? localExercise.title
-                        : exercise.exerciseName}
-                    </IconName>
-                  </TextContainer>
-                  <AreaContainer>
-                    <AreaText isFirst={true}>{exercise.exerciseDate}</AreaText>
-                  </AreaContainer>
-                </LabelContainer>
-              </HealthIcon>
-            </HealthList>
-          );
-        })}
-      </HealthContainer>
-    </Container>
+  {!premium && (
+    <PremiumContainer onPress={() => navigation.navigate('PremiumUpgrade')}>
+      <PremiumImage source={require('../assets/images/crown.png')} />
+      <PremiumText>프리미엄으로 업그레이드 하기</PremiumText>
+    </PremiumContainer>
+  )}
+  <HealthType>
+    <TypeButton
+      isActive={selectedType === '전체'}
+      onPress={() => setSelectedType('전체')}>
+      <TypeButtonText isActive={selectedType === '전체'}>
+        전체
+      </TypeButtonText>
+    </TypeButton>
+    <TypeButton
+      isActive={selectedType === '상체 운동'}
+      onPress={() => setSelectedType('상체 운동')}>
+      <TypeButtonText isActive={selectedType === '상체 운동'}>
+        상체 운동
+      </TypeButtonText>
+    </TypeButton>
+    <TypeButton
+      isActive={selectedType === '하체 운동'}
+      onPress={() => setSelectedType('하체 운동')}>
+      <TypeButtonText isActive={selectedType === '하체 운동'}>
+        하체 운동
+      </TypeButtonText>
+    </TypeButton>
+    <PeriodContainer>
+      <Picker
+        selectedValue={String(selectedPeriod)}
+        onValueChange={itemValue => setSelectedPeriod(String(itemValue))}
+        style={{ height: 15, width: 100, }}
+        mode="dropdown">
+        {periodOptions.map((option, index) => (
+          <Picker.Item
+            key={index}
+            label={option.label}
+            value={String(option.value)}
+          />
+        ))}
+      </Picker>
+    </PeriodContainer>
+  </HealthType>
+  <HealthContainer onScroll={handleScroll}>
+    {solutionList.map(exercise => {
+      const localExercise = exerciseData.find(
+        e => Number(e.id) === exercise.exerciseId,
+      );
+      return (
+        <HealthList key={exercise.id}>
+          <HealthIcon onPress={() => handleNavigate(exercise.id)}>
+            {localExercise ? (
+              <StyledImage source={localExercise.imageSource} />
+            ) : null}
+            <LabelContainer>
+              <TextContainer>
+                <IconName>
+                  {localExercise
+                    ? localExercise.title
+                    : exercise.exerciseName}
+                </IconName>
+              </TextContainer>
+              <AreaContainer>
+                <AreaText isFirst={true}>{exercise.exerciseDate}</AreaText>
+              </AreaContainer>
+            </LabelContainer>
+          </HealthIcon>
+        </HealthList>
+      );
+    })}
+  </HealthContainer>
+</Container>
+
   );
 }
