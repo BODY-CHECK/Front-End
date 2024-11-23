@@ -27,7 +27,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {BarChart} from 'react-native-chart-kit';
-import {Alert, Modal, StyleSheet, Text} from 'react-native';
+import {Alert, Modal, StyleSheet} from 'react-native';
 import exerciseData from '../components/Health/HealthInfoData';
 import {getPremium, postAttendance, postExerciseCriteria, postExerciseSolution} from '../api/SolutionApi'; // API 호출 함수 import
 import RecordScreen from 'react-native-record-screen';
@@ -36,7 +36,7 @@ import Loading from './Loading';
 
 export default function HealthResult() {
   const route = useRoute();
-  const {id, resultArray} = route.params;
+  const {id, resultArray, premium} = route.params;
   const exercise = exerciseData.find(ex => ex.id === id);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
@@ -46,7 +46,6 @@ export default function HealthResult() {
   const [isRecording, setIsRecording] = useState(true); // 녹화 상태 관리
   const [isURL, setIsURL] = useState(null);
   const [saveloading, setSaveLoading] = useState(false);
-  const [premium, setPremium] = useState(false);
   const CriteriaData = [
     {
       criteriaIdx: 1,
@@ -64,20 +63,6 @@ export default function HealthResult() {
       score: resultArray[2],
     },
   ];
-
-  useEffect(() => {
-    const getPremiumResponse = async () => {
-      try {
-        const response = await getPremium();
-        setPremium(response.result.premium);
-        console.log('프리미엄?', premium);
-      } catch (err) {
-        console.error('Error during API posting:', err.request);
-      }
-    };
-
-    getPremiumResponse();
-  }, [id]);
 
   useEffect(() => {
     const AttendanceResponse = async () => {
@@ -136,7 +121,7 @@ export default function HealthResult() {
   }, []);
 
   const data = {
-    labels: ['팔 각도', '자세 장렬', '무릎 각도'],
+    labels: ['팔 각도', '자세 정렬', '무릎 각도' ],
     datasets: [
       {
         data: resultArray || [0, 0, 0],

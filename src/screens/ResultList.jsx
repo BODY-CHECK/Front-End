@@ -135,7 +135,7 @@ export default function ResultList({navigation}) {
       try {
         const response = await getPremium();
         setPremium(response.result.premium);
-        console.log('프리미엄?', premium);
+        console.log('프리미엄?', response.result.premium);
       } catch (err) {
         console.error('Error during API posting:', err.request);
       }

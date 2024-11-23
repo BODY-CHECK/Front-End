@@ -107,10 +107,10 @@ export default function HealthInfo() {
 
     if (premium) {
       startRecording().then(() => {
-        navigation.navigate('Health', { id, repCount });
+        navigation.navigate('Health', { id, repCount, premium });
       });
     } else {
-      navigation.navigate('Health', { id, repCount });
+      navigation.navigate('Health', { id, repCount, premium });
     }
   };
 
