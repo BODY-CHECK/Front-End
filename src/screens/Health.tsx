@@ -31,6 +31,7 @@ import {
 import {audioBytesList} from '../mockAudioData';
 import RNFS from 'react-native-fs';
 import Sound from 'react-native-sound';
+import Loading from './Loading';
 
 export default function Health() {
   type RouteParams = {
@@ -363,7 +364,7 @@ export default function Health() {
           id: route.params?.id,
           resultArray,
         });
-      }, 2000);
+      }, 5000);
     }
   }, [booleansElbowArray, booleansHipArray, booleansKneeArray, repCount]);
 
@@ -381,6 +382,10 @@ export default function Health() {
         <Text>카메라 장치를 찾을 수 없습니다...</Text>
       </View>
     );
+  }
+
+  if (isTargetReached) {
+    return <Loading text={'솔루션을 생성하고 있어요..'}/>; // 로딩 화면 표시
   }
 
   const renderPoseDots = () => {

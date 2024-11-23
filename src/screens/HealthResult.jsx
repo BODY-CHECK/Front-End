@@ -32,6 +32,7 @@ import exerciseData from '../components/Health/HealthInfoData';
 import {postAttendance, postExerciseCriteria, postExerciseSolution} from '../api/SolutionApi'; // API 호출 함수 import
 import RecordScreen from 'react-native-record-screen';
 import Video from 'react-native-video';
+import Loading from './Loading';
 
 export default function HealthResult() {
   const route = useRoute();
@@ -44,6 +45,7 @@ export default function HealthResult() {
   const [error, setError] = useState(null);
   const [isRecording, setIsRecording] = useState(true); // 녹화 상태 관리
   const [isURL, setIsURL] = useState(null);
+  const [saveloading, setSaveLoading] = useState(false);
   const CriteriaData = [
     {
       criteriaIdx: 1,
@@ -161,6 +163,7 @@ export default function HealthResult() {
 
   const handleSave = async () => {
     try {
+      setSaveLoading(true);
       const exerciseId = id;
       const criteria = {
         criteria: CriteriaData,
@@ -189,12 +192,19 @@ export default function HealthResult() {
     } catch (error) {
       Alert.alert('데이터 전송에 실패했습니다.');
     }
+    finally {
+    setSaveLoading(false); // 로딩 종료
+    }
   };
 
   // 모달에서 아니오를 눌렀을 때 처리
   const handleCancel = () => {
     setModalVisible(false);
   };
+
+  if (saveloading) {
+    return <Loading text="데이터 저장 중입니다..." />; // 로딩 화면 표시
+  }
 
   return (
     <Container>

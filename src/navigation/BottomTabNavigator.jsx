@@ -32,6 +32,7 @@ function BottomTabNavigator() {
       'HealthInfo',
       'Health',
       'HealthResult',
+      'Loading',
     ];
 
     if (routesToHideTabBar.includes(routeName)) {

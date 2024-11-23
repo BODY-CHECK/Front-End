@@ -35,6 +35,7 @@ export default function Healthlist({navigation}) {
   const handleNavigate = exerciseId => {
     const exercise = exerciseData.find(ex => ex.id === exerciseId);
     if (exercise) {
+      //navigation.navigate('Loading');
       navigation.navigate('HealthInfo', {id: exercise.id}); // 데이터를 HealthInfo 화면으로 전달
     }
   };
