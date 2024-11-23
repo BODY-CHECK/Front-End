@@ -27,7 +27,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {BarChart} from 'react-native-chart-kit';
-import {Alert, Modal, StyleSheet, Text} from 'react-native';
+import {Alert, Modal, StyleSheet} from 'react-native';
 import exerciseData from '../components/Health/HealthInfoData';
 import {getPremium, postAttendance, postExerciseCriteria, postExerciseSolution} from '../api/SolutionApi'; // API 호출 함수 import
 import RecordScreen from 'react-native-record-screen';
@@ -136,7 +136,7 @@ export default function HealthResult() {
   }, []);
 
   const data = {
-    labels: ['팔 각도', '자세 장렬', '무릎 각도'],
+    labels: ['팔 각도', '자세 정렬', '무릎 각도' ],
     datasets: [
       {
         data: resultArray || [0, 0, 0],
