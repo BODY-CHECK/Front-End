@@ -36,7 +36,7 @@ import Loading from './Loading';
 
 export default function HealthResult() {
   const route = useRoute();
-  const {id, resultArray} = route.params;
+  const {id, resultArray, premium} = route.params;
   const exercise = exerciseData.find(ex => ex.id === id);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
@@ -46,7 +46,6 @@ export default function HealthResult() {
   const [isRecording, setIsRecording] = useState(true); // 녹화 상태 관리
   const [isURL, setIsURL] = useState(null);
   const [saveloading, setSaveLoading] = useState(false);
-  const [premium, setPremium] = useState(false);
   const CriteriaData = [
     {
       criteriaIdx: 1,
@@ -64,20 +63,6 @@ export default function HealthResult() {
       score: resultArray[2],
     },
   ];
-
-  useEffect(() => {
-    const getPremiumResponse = async () => {
-      try {
-        const response = await getPremium();
-        setPremium(response.result.premium);
-        console.log('프리미엄?', premium);
-      } catch (err) {
-        console.error('Error during API posting:', err.request);
-      }
-    };
-
-    getPremiumResponse();
-  }, [id]);
 
   useEffect(() => {
     const AttendanceResponse = async () => {

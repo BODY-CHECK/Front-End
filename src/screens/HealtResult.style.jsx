@@ -27,8 +27,6 @@ export const GIFContainer = styled.View`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
-  border: 1px solid black;
 `;
 
 

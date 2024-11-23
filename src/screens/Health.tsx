@@ -1,8 +1,7 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {View, Text, StyleSheet, Dimensions, Linking, Alert} from 'react-native';
+import React, {useEffect, useState, useRef} from 'react';
+import {View, Text, StyleSheet, Dimensions, Linking, StatusBar} from 'react-native';
 import {
   RouteProp,
-  useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
@@ -31,12 +30,13 @@ import {
 import {audioBytesList} from '../mockAudioData';
 import RNFS from 'react-native-fs';
 import Sound from 'react-native-sound';
-import Loading from './Loading';
+import AndroidSystemBars from 'react-native-system-bars';
 
 export default function Health() {
   type RouteParams = {
     id: number;
     repCount: number;
+    premium: boolean;
   };
   const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
   const {repCount: initialRepCount} = route.params; // 'repCount'를 'initialRepCount'로 변경
@@ -140,6 +140,24 @@ export default function Health() {
     console.log('calculateFalseCount:', falseCount);
     return Math.floor((100 * falseCount) / array.length);
   };
+
+  useEffect(() => {
+    // 상태 표시줄 및 네비게이션 바 숨기기
+    AndroidSystemBars.hideStatusAndNavigationBars();
+
+    return () => {
+      // 컴포넌트 해제 시 상태 표시줄 복구
+      AndroidSystemBars.setSystemUIVisibility('SYSTEM_UI_FLAG_VISIBLE');
+    };
+  }, []);
+
+  useEffect(() => {
+    // 상태 표시줄 숨기기
+    StatusBar.setHidden(true); // 상태 표시줄 숨기기
+    return () => {
+      StatusBar.setHidden(false); // 화면에서 벗어날 때 다시 표시
+    };
+  }, []);
 
   useEffect(() => {
     // 컴포넌트가 마운트될 때 한 번만 음성 파일을 설정
@@ -363,8 +381,9 @@ export default function Health() {
         navigation.navigate('HealthResult', {
           id: route.params?.id,
           resultArray,
+          premium: route.params?.premium,
         });
-      }, 5000);
+      }, 2000);
     }
   }, [booleansElbowArray, booleansHipArray, booleansKneeArray, repCount]);
 
@@ -382,10 +401,6 @@ export default function Health() {
         <Text>카메라 장치를 찾을 수 없습니다...</Text>
       </View>
     );
-  }
-
-  if (isTargetReached) {
-    return <Loading text={'솔루션을 생성하고 있어요..'}/>; // 로딩 화면 표시
   }
 
   const renderPoseDots = () => {
