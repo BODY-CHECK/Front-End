@@ -105,9 +105,11 @@ export const getSolutionById = async solutionId => {
   }
 };
 
-export const postAttendance = async () => {
+export const postAttendance = async (exerciseId, criteriaData) => {
   try {
-    const response = await instance.post(`${baseURL}/api/attendances/check`);
+    const response = await instance.post(`${baseURL}/api/attendances/check/exercise/${exerciseId}`, {
+      criteria: criteriaData,
+    },);
 
     // 200번 응답일 때 result를 콘솔에 출력
     if (response.status === 200) {
@@ -116,6 +118,20 @@ export const postAttendance = async () => {
     }
   } catch (error) {
     console.error('Error during attendance POST request:', error.request);
+    throw error;
+  }
+};
+
+// 프리미엄 회원 조회 함수
+export const getPremium = async () => {
+  try {
+    // 커스텀 axios 인스턴스를 사용하여 GET 요청을 보냄
+    const response = await instance.get(`${baseURL}/members/my-page`);
+
+    // 응답 데이터를 반환
+    return response.data;
+  } catch (error) {
+    console.error('Error during GET request:', error);
     throw error;
   }
 };

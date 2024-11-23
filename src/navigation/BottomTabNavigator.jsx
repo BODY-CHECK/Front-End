@@ -33,6 +33,7 @@ function BottomTabNavigator() {
       'HealthInfo',
       'Health',
       'HealthResult',
+      'Loading',
       'Subscribe',
     ];
 

@@ -6,6 +6,7 @@ import Health from '../screens/Health';
 import HealthResult from '../screens/HealthResult';
 import HeaderMain from '../components/HeaderMain';
 import exerciseData from '../components/Health/HealthInfoData';
+import Loading from '../screens/Loading';
 
 const Stack = createStackNavigator();
 const CustomHeader = () => <HeaderMain />;
@@ -36,6 +37,11 @@ export default function HealthStackNavigator() {
       <Stack.Screen
         name="Health"
         component={Health}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Loading"
+        component={Loading}
         options={{headerShown: false}}
       />
       <Stack.Screen
