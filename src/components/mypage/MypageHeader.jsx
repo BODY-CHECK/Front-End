@@ -1,12 +1,16 @@
 import {useNavigation} from '@react-navigation/native';
 import styled from 'styled-components/native';
+import crown from '../../assets/images/crown.png';
 
-const MypageHeader = ({nickname}) => {
+const MypageHeader = ({nickname, premium}) => {
   const navigation = useNavigation();
   return (
     <Wrapper onPress={() => navigation.navigate('SettingScreen')}>
       <TitleWrapper>
-        <Nickname>{nickname} </Nickname>
+        <NicknameWrapper>
+          {premium && <Crown source={crown} />}
+          <Nickname>{nickname} </Nickname>
+        </NicknameWrapper>
         <Title>님의 프로필!</Title>
       </TitleWrapper>
       <NavBtn>&gt;</NavBtn>
@@ -29,8 +33,23 @@ const Title = styled.Text`
   color: black;
 `;
 
+const NicknameWrapper = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-left: 10px;
+`;
+
+const Crown = styled.Image`
+  width: 18px;
+  height: 11px;
+  margin-left: -18px;
+  margin-top: -24px;
+`;
+
 const Nickname = styled.Text`
   font-size: 24px;
+  margin-left: -10px;
+  margin-bottom: 2px;
   color: black;
   font-weight: bold;
 `;
