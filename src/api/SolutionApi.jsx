@@ -105,9 +105,11 @@ export const getSolutionById = async solutionId => {
   }
 };
 
-export const postAttendance = async () => {
+export const postAttendance = async (exerciseId, criteriaData) => {
   try {
-    const response = await instance.post(`${baseURL}/api/attendances/check`);
+    const response = await instance.post(`${baseURL}/api/attendances/check/exercise/${exerciseId}`, {
+      criteria: criteriaData,
+    },);
 
     // 200번 응답일 때 result를 콘솔에 출력
     if (response.status === 200) {

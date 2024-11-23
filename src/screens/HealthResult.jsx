@@ -67,7 +67,7 @@ export default function HealthResult() {
   useEffect(() => {
     const AttendanceResponse = async () => {
       try {
-        await postAttendance();
+        await postAttendance(id, CriteriaData);
         console.log('출석 완료!');
       } catch (err) {
         console.error('Error during API post:', err.request);
