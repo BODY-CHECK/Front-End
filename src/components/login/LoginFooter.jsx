@@ -1,11 +1,10 @@
 // LoginFooter.js
-import React from 'react';
-import styled from 'styled-components/native';
-import logoKakao from '../../assets/images/logo_kakao.png';
-import logoGoogle from '../../assets/images/logoGoogle.png';
 import {useNavigation} from '@react-navigation/native';
-import {Linking, TouchableOpacity} from 'react-native';
 import axios from 'axios';
+import React from 'react';
+import {TouchableOpacity} from 'react-native';
+import styled from 'styled-components/native';
+import logoKakao from '../../assets/images/kakao_login_medium_wide.png';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -62,9 +61,6 @@ const LoginFooter = () => {
         <TouchableOpacity onPress={handleKakaoLogin}>
           <Icon source={logoKakao} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleGoogleLogin}>
-          <Icon source={logoGoogle} />
-        </TouchableOpacity>
       </IconsContainer>
     </FooterContainer>
   );
@@ -115,8 +111,6 @@ const IconsContainer = styled.View`
 `;
 
 const Icon = styled.Image`
-  width: 50px;
-  height: 50px;
   margin: 0 15px;
   cursor: pointer;
 `;
