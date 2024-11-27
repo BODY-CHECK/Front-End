@@ -22,10 +22,6 @@ const PremiumUpgrade = () => {
       if (response.status === 200 && response.data.isSuccess) {
         const redirectUrl = response.data.result.next_redirect_mobile_url;
         Linking.openURL(redirectUrl);
-        // 일정 시간 후에 모달을 표시
-        setTimeout(() => {
-          setModalVisible(true);
-        }, 4000); // 1초 딜레이 (필요한 시간으로 조정 가능)
       } else {
         setConirmModalVisible(true);
         setConfirmModalMessage('결제 준비에 실패했습니다. 다시 시도해주세요.');
@@ -82,7 +78,6 @@ const PremiumUpgrade = () => {
           <ButtonText>구독하기</ButtonText>
         </SubscribeButton>
         <Modal
-          animationType="slide"
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => setModalVisible(false)}>
@@ -230,5 +225,5 @@ const PriceText = styled.Text`
   font-weight: 700;
   color: black;
   text-align: center;
-  margin-top: 15px;
+  margin-top: 35px;
 `;

@@ -169,7 +169,7 @@ const ChatBotModal = ({visible, onClose, onSaveRoutine}: ChatBotModalProps) => {
         behavior="height"
         style={{flex: 1}}
         keyboardVerticalOffset={20}>
-        <Modal visible={visible} animationType="fade" transparent>
+        <Modal visible={visible} transparent>
           <TouchableWithoutFeedback onPress={onClose}>
             <ModalOverlay />
           </TouchableWithoutFeedback>

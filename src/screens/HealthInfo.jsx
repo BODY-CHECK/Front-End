@@ -1,8 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   Button,
   ButtonText,
@@ -34,7 +31,7 @@ import {Modal} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import exerciseData from '../components/Health/HealthInfoData';
 import RecordScreen from 'react-native-record-screen';
-import { getPremium } from '../api/SolutionApi';
+import {getPremium} from '../api/SolutionApi';
 
 export default function HealthInfo() {
   const route = useRoute();
@@ -107,13 +104,12 @@ export default function HealthInfo() {
 
     if (premium) {
       startRecording().then(() => {
-        navigation.navigate('Health', { id, repCount, premium });
+        navigation.navigate('Health', {id, repCount, premium});
       });
     } else {
-      navigation.navigate('Health', { id, repCount, premium });
+      navigation.navigate('Health', {id, repCount, premium});
     }
   };
-
 
   const handleCancel = () => {
     setModalVisible(false);
@@ -154,7 +150,6 @@ export default function HealthInfo() {
         <ButtonText>AI와 함께 운동해보세요!</ButtonText>
       </Button>
       <Modal
-        animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}>

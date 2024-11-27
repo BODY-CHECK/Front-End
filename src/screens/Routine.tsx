@@ -386,7 +386,11 @@ function Routine() {
             </ModalText>
             <SubText>프리미엄 서비스를 구독하시겠습니까?</SubText>
             <ButtonContainer>
-              <ConfirmButton onPress={() => navigation.navigate('Subscribe')}>
+              <ConfirmButton
+                onPress={() => {
+                  navigation.navigate('RoutineSubscriptionHandler');
+                  setModalVisible(false);
+                }}>
                 <ButtonText style={{color: '#fff'}}>확인</ButtonText>
               </ConfirmButton>
               <CancelButton onPress={() => setModalVisible(false)}>

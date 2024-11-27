@@ -6,7 +6,7 @@ const ConfirmModal = ({visible, message, onConfirm}) => {
   if (!visible) return null;
 
   return (
-    <Modal transparent={true} animationType="fade" visible={visible}>
+    <Modal transparent={true} visible={visible}>
       <ModalContainer>
         <ModalView>
           <ModalText>{message}</ModalText>

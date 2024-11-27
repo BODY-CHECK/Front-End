@@ -176,7 +176,7 @@ const Signup2 = () => {
       <Button title="완료" onPress={handleNext} disabled={!isFormValid} />
 
       {/* 모달 */}
-      <Modal visible={isModalVisible} transparent={true} animationType="slide">
+      <Modal visible={isModalVisible} transparent={true}>
         <ModalOverlay>
           <ModalContent>
             <Header>
