@@ -30,9 +30,9 @@ import {BarChart} from 'react-native-chart-kit';
 import {Alert, Modal, StyleSheet} from 'react-native';
 import exerciseData from '../components/Health/HealthInfoData';
 import {getPremium, postAttendance, postExerciseCriteria, postExerciseSolution} from '../api/SolutionApi'; // API 호출 함수 import
-import RecordScreen from 'react-native-record-screen';
 import Video from 'react-native-video';
 import Loading from './Loading';
+import { stopRecording } from './Record';
 
 export default function HealthResult() {
   const route = useRoute();
@@ -87,30 +87,11 @@ export default function HealthResult() {
     fetchApiResponse();
   }, [id]);
 
-  // 녹화 종료 함수
-  const stopRecording = async () => {
-    try {
-      console.log('녹화 종료 시도 중...');
-      const response = await RecordScreen.stopRecording();
-
-      if (response.status === 'success') {
-        const url = response.result.outputURL;
-        console.log('녹화된 파일 경로:', url);
-        setIsURL(url);
-      } else if (response.status === 'error') {
-        console.error('녹화 중 오류 발생:', response.result);
-      }
-
-      setIsRecording(false);
-    } catch (error) {
-      console.err('녹화 종료 오류:', error);
-    }
-  };
 
   // 컴포넌트가 렌더링될 때 녹화 종료 함수 실행
   useEffect(() => {
     if (isRecording && premium) {
-      stopRecording();
+      stopRecording(setIsURL, setIsRecording);
     }
   }, []);
 

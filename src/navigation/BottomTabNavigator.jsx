@@ -11,12 +11,9 @@ import {
   useNavigationState,
 } from '@react-navigation/native';
 import RoutineStackNavigator from './RoutineStackNavigator';
+import HomeHealthStackNavigator from './HomeHealthStackNavigator';
 
 const Tab = createBottomTabNavigator();
-
-function HomeScreenWrapper({setIsLoggedIn}) {
-  return <Home setIsLoggedIn={setIsLoggedIn} />;
-}
 
 function BottomTabNavigator() {
   const getTabBarStyle = route => {
@@ -35,6 +32,7 @@ function BottomTabNavigator() {
       'HealthResult',
       'Loading',
       'Subscribe',
+      'HomeHealthInfo',
     ];
 
     if (routesToHideTabBar.includes(routeName)) {
@@ -83,7 +81,11 @@ function BottomTabNavigator() {
         },
         headerTitle: () => <HeaderMain />,
       })}>
-      <Tab.Screen name="홈" component={HomeScreenWrapper} />
+      <Tab.Screen
+        name="홈"
+        component={HomeHealthStackNavigator}
+        options={{headerShown: false}}
+      />
       <Tab.Screen
         name="AI 피티"
         component={HealthStackNavigator}

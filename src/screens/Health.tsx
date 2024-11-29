@@ -25,8 +25,11 @@ import Sound from 'react-native-sound';
 import { setUpdateIntervalForType, SensorTypes, accelerometer } from 'react-native-sensors';
 import Loading from './Loading';
 import AndroidSystemBars from 'react-native-system-bars';
+import RecordScreen from 'react-native-record-screen';
+import { stopRecording } from './Record';
 
 export default function Health() {
+    console.log('아직 화면 안넘어감');
     type RouteParams = {
         id: number;
         repCount: number;
@@ -64,6 +67,10 @@ export default function Health() {
         return Object.values(booleans);
     };
 
+    const [isRecording, setIsRecording] = useState(true); // 녹화 상태 관리
+    const [isURL, setIsURL] = useState(null);
+
+
     useEffect(() => {
       // 상태 표시줄 및 네비게이션 바 숨기기
       AndroidSystemBars.hideStatusAndNavigationBars();
@@ -73,6 +80,22 @@ export default function Health() {
         AndroidSystemBars.setSystemUIVisibility('SYSTEM_UI_FLAG_VISIBLE');
       };
     }, []);
+
+    // useFocusEffect를 이용해 화면에서 벗어날 때 녹화 종료
+    useFocusEffect(
+        React.useCallback(() => {
+        // 화면이 포커스를 받으면
+        console.log('Health 화면 포커스 받음');
+
+            return () => {
+                // 화면이 포커스를 잃을 때 실행됨
+                console.log('Health 화면 포커스 잃음');
+                if (isRecording && route.params?.premium) {
+                    stopRecording(setIsURL, setIsRecording);
+                }
+            };
+        }, [isRecording, route.params?.premium])
+    );
 
     useEffect(() => {
       // 컴포넌트가 마운트될 때 한 번만 음성 파일을 설정
@@ -368,7 +391,6 @@ export default function Health() {
     useEffect(() => {
         // 컴포넌트가 마운트될 때 한 번만 음성 파일을 설정
         setupAudioFiles()
-        .then(() => Alert.alert('오디오 파일 준비 완료'))
         .catch(error => console.error('오디오 파일 설정 오류:', error));
     }, [exerciseAudioData]);
     //export { setupExerciseAudioFiles, playAudio, playAudioWithDelay };
@@ -395,20 +417,32 @@ export default function Health() {
 
     // 카메라 permission check
     useEffect(() => {
-        const checkPermission = async () => {
-            const cameraPermission = await VisionCamera.getCameraPermissionStatus();
-            if (cameraPermission === 'authorized' || cameraPermission === 'granted') {
-                setHasPermission(true);
-            } else if (cameraPermission === 'not-determined') {
-                const newCameraPermission = await VisionCamera.requestCameraPermission();
-                setHasPermission(newCameraPermission === 'authorized' || newCameraPermission === 'granted');
-                if (newCameraPermission === 'denied') await Linking.openSettings();
-            } else {
-                await Linking.openSettings();
-            }
-        };
-        checkPermission();
-    }, []);
+      const checkPermission = async () => {
+          const cameraPermission = await VisionCamera.getCameraPermissionStatus();
+  
+          if (cameraPermission === 'authorized' || cameraPermission === 'granted') {
+              // 권한이 이미 허용된 경우
+              setHasPermission(true);
+          } else if (cameraPermission === 'not-determined') {
+              // 아직 권한이 요청되지 않았으므로 팝업 표시
+              const newCameraPermission = await VisionCamera.requestCameraPermission();
+              setHasPermission(newCameraPermission === 'authorized' || newCameraPermission === 'granted');
+          } else {
+              // 권한이 거부된 경우 설정 페이지로 이동하도록 안내
+              Alert.alert(
+                  '권한 필요',
+                  '카메라 사용을 위해 권한이 필요합니다. 설정으로 이동해 권한을 허용해주세요.',
+                  [
+                      { text: '취소', style: 'cancel' },
+                      { text: '설정 열기', onPress: () => Linking.openSettings() },
+                  ]
+              );
+          }
+      };
+  
+      checkPermission();
+  }, []);
+  
 
     const [pitch, setPitch] = useState(0); // X축 기울기
     const [roll, setRoll] = useState(0); // Y축 기울기
@@ -677,7 +711,7 @@ export default function Health() {
             // 페이지 이동 전에 isTargetReached 상태 업데이트
             setIsTargetReached(true);
             setTimeout(() => {
-                navigation.navigate('HealthResult', { id: route.params?.id, resultArray, premium: route.params?.premium });
+                navigation.replace('HealthResult', { id: route.params?.id, resultArray, premium: route.params?.premium });
             }, 5000);
         }
     }, [booleansMoveArray]);
@@ -688,10 +722,6 @@ export default function Health() {
 
     if (!currentCamera) {
         return <View><Text>카메라 장치를 찾을 수 없습니다...</Text></View>;
-    }
-
-    if (isTargetReached) {
-      return <Loading text="솔루션을 생성하고 있어요..." />;
     }
 
     const renderPoseDots = (id) => {
@@ -1015,9 +1045,6 @@ export default function Health() {
             <CameraIcon onPress={() => setUseFrontCamera(!useFrontCamera)}>
                 <CameraImage source={require('../assets/images/uil_camera-change.png')} />
             </CameraIcon>
-            <Button onPress={() => navigation.navigate('HealthResult', { id: route.params?.id, resultArray: [booleansMoveArray, booleansStop1Array, booleansStop2Array] })}>
-                <ButtonText>운동 결과 보기</ButtonText>
-            </Button>
         </Container>
     );
 }
