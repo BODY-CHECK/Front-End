@@ -12,6 +12,7 @@ import KakaoLoginRedirect from '../components/login/KakaoLoginRedirect';
 import SignupSocial from '../screens/SignupSocial';
 import GoogleLoginWebview from '../components/login/GoogleLoginWebview';
 import GoogleLoginRedirect from '../components/login/GoogleLoginRedirect';
+import Agreement from '../screens/Agreement';
 
 const Stack = createStackNavigator();
 
@@ -67,6 +68,11 @@ function LoginNavigator() {
           <Stack.Screen
             name="SignupSocial"
             component={SignupSocial}
+            options={{title: ''}}
+          />
+          <Stack.Screen
+            name="Agreement"
+            component={Agreement}
             options={{title: ''}}
           />
         </>

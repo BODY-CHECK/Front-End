@@ -165,6 +165,7 @@ const Signup2 = () => {
       <SizeInput
         onHeightChange={handleHeightChange}
         onWeightChange={handleWeightChange}
+        required
       />
       <CheckboxContainer>
         <AgreementCheckbox

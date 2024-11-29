@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
 import {TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const AgreementCheckbox = ({label, required, onValueChange}) => {
   const [checked, setChecked] = useState(false);
+  const navigation = useNavigation();
 
   const toggleCheckbox = () => {
     const newValue = !checked;
@@ -18,9 +20,11 @@ const AgreementCheckbox = ({label, required, onValueChange}) => {
       <TouchableOpacity onPress={toggleCheckbox}>
         <Checkbox checked={checked}>{checked && <Checkmark />}</Checkbox>
       </TouchableOpacity>
-      <Label>
-        {label} {required && <RequiredText>(필수)</RequiredText>}
-      </Label>
+      <TouchableOpacity onPress={() => navigation.navigate('Agreement')}>
+        <Label>
+          {label} {required && <RequiredText>(필수)</RequiredText>}
+        </Label>
+      </TouchableOpacity>
     </CheckboxContainer>
   );
 };
@@ -55,6 +59,8 @@ const Checkmark = styled.View`
 const Label = styled.Text`
   font-size: 12px;
   margin-left: 10px;
+  color: black;
+  text-decoration: underline;
 `;
 
 const RequiredText = styled.Text`
