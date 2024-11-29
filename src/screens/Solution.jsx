@@ -21,6 +21,7 @@ import {getSolutionById} from '../api/SolutionApi'; // API 호출 함수 import
 import {Modal, StyleSheet, Text} from 'react-native';
 import Video from 'react-native-video';
 import { ButtonText, CancelButton, ConfirmButton, ModalContainer, ModalText, ModalView, SubText, ModalButtonContainer, RealButton, RealButtonText } from './Solution.style';
+import Loading from './Loading';
 
 export default function Solution() {
   const route = useRoute();
@@ -77,7 +78,7 @@ export default function Solution() {
 
 
   if (loading) {
-    return <ContentText>로딩 중...</ContentText>;
+    return <Loading text="데이터를 불러오고 있어요..." />; // 로딩 화면 표시
   }
 
   if (error) {

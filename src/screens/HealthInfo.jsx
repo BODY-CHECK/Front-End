@@ -33,8 +33,8 @@ import {
 import {Modal} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import exerciseData from '../components/Health/HealthInfoData';
-import RecordScreen from 'react-native-record-screen';
 import { getPremium } from '../api/SolutionApi';
+import { startRecording } from './Record';
 
 export default function HealthInfo() {
   const route = useRoute();
@@ -64,7 +64,6 @@ export default function HealthInfo() {
       try {
         const response = await getPremium();
         setPremium(response.result.premium);
-        console.log('프리미엄?', premium);
       } catch (err) {
         console.error('Error during API posting:', err.request);
       }
@@ -73,30 +72,14 @@ export default function HealthInfo() {
     getPremiumResponse();
   }, [id]);
 
+  console.log(premium);
+
   const handleScroll = event => {
     const offsetX = event.nativeEvent.contentOffset.x;
     const index = Math.round(offsetX / itemWidth);
     setRepCount(index + 1); // Index starts from 0, so adding 1
   };
 
-  // 녹화 시작 함수
-  const startRecording = async () => {
-    try {
-      const response = await RecordScreen.startRecording({
-        fps: 30,
-        bitrate: 1000000,
-        mic: true,
-      });
-
-      if (response === 'started') {
-        console.log('녹화가 시작되었습니다.');
-      } else if (response === 'permission_error') {
-        console.warn('녹화 권한이 거부되었습니다.');
-      }
-    } catch (error) {
-      console.error('녹화 시작 오류:', error);
-    }
-  };
 
   const handleExcercise = () => {
     setModalVisible(true);
