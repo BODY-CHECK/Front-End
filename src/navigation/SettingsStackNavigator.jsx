@@ -12,6 +12,7 @@ import Solution from '../screens/Solution';
 import IsPremium from '../screens/IsPremium';
 import SubscriptionHandler from './SubscriptionHandler';
 import Comparison from '../screens/Comparison';
+import PWAuthentication from '../screens/PWAuthentication';
 
 const Stack = createStackNavigator();
 const CustomHeader = () => <HeaderMain />;
@@ -88,6 +89,11 @@ function MypageStackNavigator() {
         name="SubscriptionHandler"
         component={SubscriptionHandler}
         options={{headerShown: false}} // 로딩 화면을 보여주므로 헤더 비활성화
+      />
+      <Stack.Screen
+        name="PWAuthentication"
+        component={PWAuthentication}
+        options={{title: '비밀번호 확인', headerTitleAlign: 'center'}}
       />
     </Stack.Navigator>
   );

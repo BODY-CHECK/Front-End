@@ -75,7 +75,7 @@ const KakaoLoginRedirect = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>카카오 로그인 처리 중...</Text>
-      <ActivityIndicator size="large" color="#0000ff" />
+      <ActivityIndicator size="large" color="#ffffff" />
     </SafeAreaView>
   );
 };

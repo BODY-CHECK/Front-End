@@ -142,9 +142,8 @@ const Signup2 = () => {
         console.log('Error Response:', error.response.data);
         console.log('Error Status:', error.response.status);
         console.log('Error Headers:', error.response.headers);
-        Alert.alert(
-          '서버와의 통신 중 문제가 발생했습니다. 나중에 다시 시도해주세요.',
-        );
+        setConirmModalVisible(true);
+        setConfirmModalMessage(error.response?.data?.message);
       }
     }
   };
