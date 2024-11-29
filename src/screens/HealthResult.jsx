@@ -92,6 +92,7 @@ export default function HealthResult() {
   useEffect(() => {
     if (isRecording && premium) {
       stopRecording(setIsURL, setIsRecording);
+      console.log(isURL);
     }
   }, []);
 
@@ -178,7 +179,7 @@ export default function HealthResult() {
   if (saveloading) {
     return <Loading text="데이터 저장 중입니다..." />; // 로딩 화면 표시
   }
-  console.log('넘어온',premium);
+
 
   return (
     <Container>

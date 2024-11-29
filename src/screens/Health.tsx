@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, Dimensions, Linking, Alert } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Linking, Alert, AppState } from 'react-native';
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { Camera as VisionCamera, useCameraDevices, useFrameProcessor } from 'react-native-vision-camera';
 import Svg, { Circle, Line } from 'react-native-svg';
@@ -25,7 +25,6 @@ import Sound from 'react-native-sound';
 import { setUpdateIntervalForType, SensorTypes, accelerometer } from 'react-native-sensors';
 import Loading from './Loading';
 import AndroidSystemBars from 'react-native-system-bars';
-import RecordScreen from 'react-native-record-screen';
 import { stopRecording } from './Record';
 
 export default function Health() {
@@ -67,10 +66,6 @@ export default function Health() {
         return Object.values(booleans);
     };
 
-    const [isRecording, setIsRecording] = useState(true); // 녹화 상태 관리
-    const [isURL, setIsURL] = useState(null);
-
-
     useEffect(() => {
       // 상태 표시줄 및 네비게이션 바 숨기기
       AndroidSystemBars.hideStatusAndNavigationBars();
@@ -81,21 +76,52 @@ export default function Health() {
       };
     }, []);
 
-    // useFocusEffect를 이용해 화면에서 벗어날 때 녹화 종료
+    const [isRecording, setIsRecording] = useState(true); // 녹화 상태 관리
+    const [isURL, setIsURL] = useState(null);
+
     useFocusEffect(
         React.useCallback(() => {
-        // 화면이 포커스를 받으면
-        console.log('Health 화면 포커스 받음');
-
-            return () => {
-                // 화면이 포커스를 잃을 때 실행됨
-                console.log('Health 화면 포커스 잃음');
+            console.log('Health 화면 포커스 받음');
+            const onBeforeRemove = (event) => {
+                // 만약 특정 화면으로 이동한다면, 녹화 종료를 막음
+                if (event.data.action.type === 'NAVIGATE' && event.data.action.payload?.name === 'HealthResult') {
+                    // HealthResult로 가는 경우라면 녹화 종료를 막음
+                    return;
+                }
+                // 그 외의 경우에는 녹화를 종료
                 if (isRecording && route.params?.premium) {
                     stopRecording(setIsURL, setIsRecording);
+                    console.log(isURL);
                 }
             };
-        }, [isRecording, route.params?.premium])
+            // 화면에서 벗어날 때 이벤트 리스너 추가
+            navigation.addListener('beforeRemove', onBeforeRemove);
+            return () => {
+                console.log('Health 화면 포커스 잃음');
+                navigation.removeListener('beforeRemove', onBeforeRemove);
+            };
+        }, [isRecording, route.params?.premium, navigation])
     );
+
+    // AppState를 이용하여 앱 상태 변경 감지
+    useEffect(() => {
+        const handleAppStateChange = (nextAppState) => {
+            if (nextAppState === 'background' || nextAppState === 'inactive') {
+                // 앱이 백그라운드로 전환되거나 비활성화될 때 녹화를 종료
+                if (isRecording && route.params?.premium) {
+                    stopRecording(setIsURL, setIsRecording);
+                    console.log('앱이 비활성화됨 - 녹화 종료');
+                }
+            }
+        };
+
+        const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+        return () => {
+            subscription.remove();
+        };
+    }, [isRecording, route.params?.premium]);
+
 
     useEffect(() => {
       // 컴포넌트가 마운트될 때 한 번만 음성 파일을 설정
@@ -711,7 +737,7 @@ export default function Health() {
             // 페이지 이동 전에 isTargetReached 상태 업데이트
             setIsTargetReached(true);
             setTimeout(() => {
-                navigation.replace('HealthResult', { id: route.params?.id, resultArray, premium: route.params?.premium });
+                navigation.replace('HealthResult', { id: route.params?.id, resultArray, premium: route.params?.premium, isURL });
             }, 5000);
         }
     }, [booleansMoveArray]);
