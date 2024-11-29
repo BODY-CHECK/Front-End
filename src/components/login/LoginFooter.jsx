@@ -53,8 +53,8 @@ const LoginFooter = () => {
           <LinkText>회원가입</LinkText>
         </LinkItem>
         <Divider />
-        <LinkItem onPress={() => alert('비밀번호 찾기')}>
-          <LinkText>비밀번호 찾기</LinkText>
+        <LinkItem onPress={() => navigation.navigate('ResetPassword')}>
+          <LinkText>비밀번호 재설정</LinkText>
         </LinkItem>
       </LinksContainer>
       <IconsContainer>

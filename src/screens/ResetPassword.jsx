@@ -21,13 +21,15 @@ const ResetPassword = () => {
       });
 
       if (response.data.isSuccess) {
-        setMessage('비밀번호 재발급 이메일이 전송되었습니다.');
+        setMessage(
+          '비밀번호 재발급 이메일이 전송되었습니다. 로그인 후 비밀번호를 변경해주세요.',
+        );
       } else {
         setMessage('비밀번호 재발급에 실패했습니다. 다시 시도해주세요.');
       }
     } catch (error) {
       console.error('비밀번호 재발급 요청 오류:', error);
-      setMessage('오류가 발생했습니다. 나중에 다시 시도해주세요.');
+      setMessage(error.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -35,7 +37,7 @@ const ResetPassword = () => {
 
   return (
     <Container>
-      <Title>비밀번호 재발급</Title>
+      <Title>비밀번호 재설정</Title>
       <Input
         placeholder="이메일을 입력하세요"
         value={email}
@@ -97,7 +99,7 @@ const Message = styled.Text`
   margin-top: 20px;
   font-size: 14px;
   color: ${props =>
-    props.children.includes('실패') || props.children.includes('오류')
+    props.children.includes('실패') || props.children.includes('없')
       ? 'red'
       : 'green'};
 `;
