@@ -518,11 +518,6 @@ export default function Health() {
     const [booleansStop1Array, setBooleansStop1Array] = useState<number[]>([]);
     const [booleansStop2Array, setBooleansStop2Array] = useState<number[]>([]);
 
-    // 화면의 활성화 (front-end 관련)
-    useFocusEffect(() => {
-        navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' } });
-        return () => navigation.getParent()?.setOptions({ tabBarStyle: undefined });
-    });
 
     // 카메라 permission check
     useEffect(() => {
