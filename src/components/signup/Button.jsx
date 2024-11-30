@@ -18,7 +18,7 @@ const StyledButton = styled.TouchableOpacity`
   justify-content: center;
   width: 90%;
   margin-top: auto;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
 `;
 const ButtonText = styled.Text`
   color: white;

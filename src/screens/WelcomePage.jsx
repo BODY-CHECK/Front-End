@@ -2,21 +2,35 @@ import styled from 'styled-components/native';
 import logo_big from '../assets/images/logo_big.png';
 import Button from '../components/signup/Button';
 import {useAuth} from '../AuthContext';
+import { useNavigation } from '@react-navigation/native';
 const WelcomePage = () => {
   const {setIsLoggedIn} = useAuth();
+  const navigation = useNavigation();
 
   const handleNext = () => {
     // 로그인 상태 업데이트
     setIsLoggedIn(true);
   };
+
+  const handleNoSkip = () => {
+    // Health 화면으로 이동하면서 운동 ID와 반복 횟수 전달
+    navigation.navigate('Health', {
+      id: 0, // 운동 번호
+      repCount: 3, // 반복 횟수
+    });
+  };
+
   return (
     <Container>
       <ContentContainer>
         <WelcomeLogo source={logo_big} />
         <WelcomeTitle>환영합니다!</WelcomeTitle>
-        <WelcomeMsg>BodeCheck과 함께 운동을 시작해 봅시다!</WelcomeMsg>
+        <WelcomeMsg>BodyCheck과 함께 운동을 시작해 봅시다!</WelcomeMsg>
       </ContentContainer>
-      <Button title="BodyCheck 시작하기" onPress={handleNext} />
+      <Button title="튜토리얼 시작하기!" onPress={handleNoSkip} />
+      <SkipTextContainer onPress={handleNext}>
+        <SkipText>튜토리얼 건너뛰기</SkipText>
+      </SkipTextContainer>
     </Container>
   );
 };
@@ -54,4 +68,15 @@ const WelcomeMsg = styled.Text`
   font-size: 16px;
   font-weight: 500;
   color: #000;
+`;
+
+const SkipTextContainer = styled.TouchableOpacity`
+  border-bottom-color: gray;
+  border-bottom-width: 1px;
+`;
+
+const SkipText = styled.Text`
+  font-size: 16px;
+  font-weight: bold;
+  color: gray;
 `;
