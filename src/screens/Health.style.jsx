@@ -45,7 +45,7 @@ export const NumContainer = styled.View`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60px;
+  width: 80px;
   height: 60px;
   top: 17px;
   background-color: #3373EB;
