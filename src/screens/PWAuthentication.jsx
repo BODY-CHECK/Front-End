@@ -4,11 +4,15 @@ import ProfileInput from '../components/settings/ProfileInput';
 import {useEffect, useState} from 'react';
 import instance from '../axiosInstance';
 import PasswordInput from '../components/settings/PasswordInput';
+import {useNavigation} from '@react-navigation/native';
 
 const PWAuthentication = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const [isPasswordValid, setIsPasswordValid] = useState(false); // 비밀번호 검증 성공 여부
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchEmail = async () => {
@@ -46,9 +50,12 @@ const PWAuthentication = () => {
         password={password}
         setPassword={setPassword}
         setErrors={setErrors}
+        setIsPasswordValid={setIsPasswordValid} // 검증 성공 여부 전달
       />
       {errors.password && <ErrorText>{errors.password}</ErrorText>}
-      <StyledButton disabled={true}>
+      <StyledButton
+        disabled={!isPasswordValid}
+        onPress={() => navigation.navigate('PasswordChange')}>
         <ButtonText>확인</ButtonText>
       </StyledButton>
     </Container>
@@ -98,6 +105,7 @@ const RowWrapper = styled.View`
   flex-direction: row;
 `;
 const ErrorText = styled.Text`
+  align-self: flex-start;
   color: red;
   font-size: 12px;
   margin-bottom: 10px;

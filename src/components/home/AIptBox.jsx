@@ -47,7 +47,7 @@ const AIptBox = () => {
   const navigateToHealthInfo = exerciseId => {
     const exercise = exerciseData.find(ex => ex.id === exerciseId);
     if (exercise) {
-      navigation.navigate('HomeHealthInfo', {id: exercise.id});
+      navigation.navigate('HealthInfo', {id: exercise.id});
     }
   };
 

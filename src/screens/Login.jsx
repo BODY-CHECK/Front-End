@@ -32,7 +32,7 @@ function Login() {
         setIsLoggedIn(true); // 로그인 성공 시 상태 업데이트
       } else {
         setConirmModalVisible(true);
-        setConfirmModalMessage(response.data.messag);
+        setConfirmModalMessage(response.data.message);
       }
     } catch (error) {
       console.error(error);
