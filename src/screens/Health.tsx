@@ -20,10 +20,10 @@ import { exerciseId9 } from '../exerciseId_9';
 import { exerciseId10 } from '../exerciseId_10';
 import { exerciseId11 } from '../exerciseId_11';
 import { exerciseId12 } from '../exerciseId_12';
+import { cameraVoice } from '../camera_voice';
 import RNFS from 'react-native-fs';
 import Sound from 'react-native-sound';
 import { setUpdateIntervalForType, SensorTypes, accelerometer } from 'react-native-sensors';
-import Loading from './Loading';
 import AndroidSystemBars from 'react-native-system-bars';
 import { stopRecording } from './Record';
 import { useAuth } from '../AuthContext';
@@ -36,7 +36,6 @@ export default function Health() {
     };
     const route = useRoute<RouteProp<{ params: RouteParams }, 'params'>>();
     const { repCount: initialRepCount, id: exerciseType } = route.params; // 'repCount'를 'initialRepCount'로 변경
-
     const navigation = useNavigation();
     const targetRepCount = initialRepCount; // 목표 repCount
     const [hasPermission, setHasPermission] = useState(false);  // camera permission?
@@ -68,71 +67,71 @@ export default function Health() {
     };
 
     useEffect(() => {
-      // 상태 표시줄 및 네비게이션 바 숨기기
-      AndroidSystemBars.hideStatusAndNavigationBars();
-
-      return () => {
-        // 컴포넌트 해제 시 상태 표시줄 복구
-        AndroidSystemBars.setSystemUIVisibility('SYSTEM_UI_FLAG_VISIBLE');
-      };
-    }, []);
-
-    const [isRecording, setIsRecording] = useState(true); // 녹화 상태 관리
-    const [isURL, setIsURL] = useState(null);
-    console.log('목표: ', targetRepCount);
-    console.log('운동 번호: ', exerciseType);
-
-    useFocusEffect(
-        React.useCallback(() => {
-            console.log('Health 화면 포커스 받음');
-            const onBeforeRemove = (event) => {
-                // 만약 특정 화면으로 이동한다면, 녹화 종료를 막음
-                if (event.data.action.type === 'NAVIGATE' && event.data.action.payload?.name === 'HealthResult') {
-                    // HealthResult로 가는 경우라면 녹화 종료를 막음
-                    return;
-                }
-                // 그 외의 경우에는 녹화를 종료
-                if (isRecording && route.params?.premium) {
-                    stopRecording(setIsURL, setIsRecording);
-                    console.log(isURL);
-                }
-            };
-            // 화면에서 벗어날 때 이벤트 리스너 추가
-            navigation.addListener('beforeRemove', onBeforeRemove);
-            return () => {
-                console.log('Health 화면 포커스 잃음');
-                navigation.removeListener('beforeRemove', onBeforeRemove);
-            };
-        }, [isRecording, route.params?.premium, navigation])
-    );
-
-    // AppState를 이용하여 앱 상태 변경 감지
-    useEffect(() => {
-        const handleAppStateChange = (nextAppState) => {
-            if (nextAppState === 'background' || nextAppState === 'inactive') {
-                // 앱이 백그라운드로 전환되거나 비활성화될 때 녹화를 종료
-                if (isRecording && route.params?.premium) {
-                    stopRecording(setIsURL, setIsRecording);
-                    console.log('앱이 비활성화됨 - 녹화 종료');
-                }
-            }
-        };
-
-        const subscription = AppState.addEventListener('change', handleAppStateChange);
+        // 상태 표시줄 및 네비게이션 바 숨기기
+        AndroidSystemBars.hideStatusAndNavigationBars();
 
         return () => {
-            subscription.remove();
+          // 컴포넌트 해제 시 상태 표시줄 복구
+          AndroidSystemBars.setSystemUIVisibility('SYSTEM_UI_FLAG_VISIBLE');
         };
-    }, [isRecording, route.params?.premium]);
+      }, []);
+
+      const [isRecording, setIsRecording] = useState(true); // 녹화 상태 관리
+      const [isURL, setIsURL] = useState(null);
 
 
-    useEffect(() => {
-      // 컴포넌트가 마운트될 때 한 번만 음성 파일을 설정
-      setupAudioFiles().catch(error =>
-        console.error('오디오 파일 설정 오류:', error),
+      useFocusEffect(
+          React.useCallback(() => {
+              console.log('Health 화면 포커스 받음');
+              const onBeforeRemove = (event) => {
+                  // 만약 특정 화면으로 이동한다면, 녹화 종료를 막음
+                  if (event.data.action.type === 'NAVIGATE' && event.data.action.payload?.name === 'HealthResult') {
+                      // HealthResult로 가는 경우라면 녹화 종료를 막음
+                      return;
+                  }
+                  // 그 외의 경우에는 녹화를 종료
+                  if (isRecording && route.params?.premium) {
+                      stopRecording(setIsURL, setIsRecording);
+                      console.log(isURL);
+                  }
+              };
+              // 화면에서 벗어날 때 이벤트 리스너 추가
+              navigation.addListener('beforeRemove', onBeforeRemove);
+              return () => {
+                  console.log('Health 화면 포커스 잃음');
+                  navigation.removeListener('beforeRemove', onBeforeRemove);
+              };
+          }, [isRecording, route.params?.premium, navigation])
       );
-    }, []);
-
+  
+      // AppState를 이용하여 앱 상태 변경 감지
+      useEffect(() => {
+          const handleAppStateChange = (nextAppState) => {
+              if (nextAppState === 'background' || nextAppState === 'inactive') {
+                  // 앱이 백그라운드로 전환되거나 비활성화될 때 녹화를 종료
+                  if (isRecording && route.params?.premium) {
+                      stopRecording(setIsURL, setIsRecording);
+                      console.log('앱이 비활성화됨 - 녹화 종료');
+                  }
+              }
+          };
+  
+          const subscription = AppState.addEventListener('change', handleAppStateChange);
+  
+          return () => {
+              subscription.remove();
+          };
+      }, [isRecording, route.params?.premium]);
+  
+  
+      useEffect(() => {
+        // 컴포넌트가 마운트될 때 한 번만 음성 파일을 설정
+        setupAudioFiles().catch(error =>
+          console.error('오디오 파일 설정 오류:', error),
+        );
+      }, []);
+  
+    console.log('운동 숫자:', exerciseType);
     // 각 운동에 따른 관절 위치 정의
     const jointSets = {
         0: { // 튜토리얼
@@ -202,7 +201,7 @@ export default function Health() {
             lie: ['rightShoulderPosition', 'rightHipPosition'],
         },
         11: { // 카프레이즈
-            move: ['rightKneePosition', 'rightHillPosition', 'rightFootIndexPosition'],          // 뒤꿈치
+            move: ['rightKneePosition', 'rightHillPosition', 'rightFootIndexPosition'],     // 뒤꿈치
             stop1: ['rightHipPosition', 'rightKneePosition', 'rightAnklePosition'],         // 무릎
             stop2: ['rightShoulderPosition', 'rightHipPosition'],                           // 상체
             lie: ['rightShoulderPosition', 'rightHipPosition'],
@@ -238,8 +237,10 @@ export default function Health() {
     useEffect(() => {
         let paths = [];
         let audioData = [];
-
-        if (Number(exerciseType) === 1) {
+        if (Number(exerciseType) === 0) {
+            paths = exerciseId1.map((_, index) => `${RNFS.DocumentDirectoryPath}/audio${index + 1}.wav`);
+            audioData = exerciseId1;
+        } else if (Number(exerciseType) === 1) {
             paths = exerciseId1.map((_, index) => `${RNFS.DocumentDirectoryPath}/audio${index + 1}.wav`);
             audioData = exerciseId1;
         } else if (Number(exerciseType) === 2) {
@@ -275,9 +276,6 @@ export default function Health() {
         } else if (Number(exerciseType) === 12) {
             paths = exerciseId12.map((_, index) => `${RNFS.DocumentDirectoryPath}/audio${index + 1}.wav`);
             audioData = exerciseId12;
-        } else if (Number(exerciseType) === 0) {
-            paths = exerciseId1.map((_, index) => `${RNFS.DocumentDirectoryPath}/audio${index + 1}.wav`);
-            audioData = exerciseId1;
         }
         setAudioPaths(paths);
         setExerciseAudioData(audioData);
@@ -410,6 +408,87 @@ export default function Health() {
         });
     };
 
+    // cameraVoice 음성 파일 관련 설정
+    const [cameraVoicePaths, setCameraVoicePaths] = useState([]); // 음성 파일 경로 상태
+    const [cameraVoiceData, setCameraVoiceData] = useState([]);   // 음성 파일 데이터 상태
+
+    // cameraVoice 데이터 로드 (예제 데이터 설정)
+    useEffect(() => {
+        // cameraVoice 데이터의 길이에 따라 경로 생성
+        const paths = cameraVoice.map((_, index) => `${RNFS.DocumentDirectoryPath}/camera_voice${index + 1}.wav`);
+        setCameraVoicePaths(paths);
+        setCameraVoiceData(cameraVoice);
+    }, []);
+
+    // cameraVoice 음성 파일 설정
+    const setupCameraVoiceFiles = async () => {
+        await Promise.all(
+            cameraVoiceData.map(async (audioBytes, index) => {
+                const path = cameraVoicePaths[index];
+                // 기존 파일 삭제 (필요한 경우)
+                if (await RNFS.exists(path)) {
+                    await RNFS.unlink(path);
+                }
+                await RNFS.writeFile(path, audioBytes, 'base64'); // base64 데이터를 파일로 저장
+            }),
+        );
+    };
+
+    // cameraVoice 음성 파일 재생
+    const playCameraVoice = (index) => {
+        const audioPath = cameraVoicePaths[index];
+        return new Promise((resolve) => {
+            const sound = new Sound(audioPath, '', (error) => {
+                if (error) {
+                    console.error('카메라 음성 파일 로드 오류:', error);
+                    resolve();
+                    return;
+                }
+                sound.play((success) => {
+                    if (success) {
+                        console.log('카메라 음성 파일 재생 성공');
+                    } else {
+                        console.error('카메라 음성 파일 재생 오류');
+                    }
+                    sound.release();
+                    resolve();
+                });
+            });
+        });
+    };
+
+    // cameraVoice 음성 파일 재생 (지연 시간 포함)
+    const playCameraVoiceWithDelay = (index, delay = 1000) => {
+        const audioPath = cameraVoicePaths[index];
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                const sound = new Sound(audioPath, '', (error) => {
+                    if (error) {
+                        console.error('카메라 음성 파일 로드 오류:', error);
+                        resolve();
+                        return;
+                    }
+                    sound.play((success) => {
+                        if (success) {
+                            console.log('카메라 음성 파일 재생 성공');
+                        } else {
+                            console.error('카메라 음성 파일 재생 오류');
+                        }
+                        sound.release();
+                        resolve();
+                    });
+                });
+            }, delay);
+        });
+    };
+
+    // cameraVoice 설정 초기화
+    useEffect(() => {
+        setupCameraVoiceFiles()
+            .then(() => console.log('카메라 음성 파일 준비 완료'))
+            .catch((error) => console.error('카메라 음성 파일 설정 오류:', error));
+    }, [cameraVoiceData]);
+
     useEffect(() => {
         setupCountAudioFiles()
             .then(() => console.log('카운트 오디오 파일 준비 완료'))
@@ -420,6 +499,7 @@ export default function Health() {
     useEffect(() => {
         // 컴포넌트가 마운트될 때 한 번만 음성 파일을 설정
         setupAudioFiles()
+        .then(() => Alert.alert('오디오 파일 준비 완료'))
         .catch(error => console.error('오디오 파일 설정 오류:', error));
     }, [exerciseAudioData]);
     //export { setupExerciseAudioFiles, playAudio, playAudioWithDelay };
@@ -446,38 +526,31 @@ export default function Health() {
 
     // 카메라 permission check
     useEffect(() => {
-      const checkPermission = async () => {
-          const cameraPermission = await VisionCamera.getCameraPermissionStatus();
-  
-          if (cameraPermission === 'authorized' || cameraPermission === 'granted') {
-              // 권한이 이미 허용된 경우
-              setHasPermission(true);
-          } else if (cameraPermission === 'not-determined') {
-              // 아직 권한이 요청되지 않았으므로 팝업 표시
-              const newCameraPermission = await VisionCamera.requestCameraPermission();
-              setHasPermission(newCameraPermission === 'authorized' || newCameraPermission === 'granted');
-          } else {
-              // 권한이 거부된 경우 설정 페이지로 이동하도록 안내
-              Alert.alert(
-                  '권한 필요',
-                  '카메라 사용을 위해 권한이 필요합니다. 설정으로 이동해 권한을 허용해주세요.',
-                  [
-                      { text: '취소', style: 'cancel' },
-                      { text: '설정 열기', onPress: () => Linking.openSettings() },
-                  ]
-              );
-          }
-      };
-  
-      checkPermission();
-  }, []);
-  
+        const checkPermission = async () => {
+            const cameraPermission = await VisionCamera.getCameraPermissionStatus();
+            if (cameraPermission === 'authorized' || cameraPermission === 'granted') {
+                setHasPermission(true);
+            } else if (cameraPermission === 'not-determined') {
+                const newCameraPermission = await VisionCamera.requestCameraPermission();
+                setHasPermission(newCameraPermission === 'authorized' || newCameraPermission === 'granted');
+                if (newCameraPermission === 'denied') await Linking.openSettings();
+            } else {
+                await Linking.openSettings();
+            }
+
+            playCameraVoice(0);
+        };
+        checkPermission();
+    }, []);
 
     const [pitch, setPitch] = useState(0); // X축 기울기
     const [roll, setRoll] = useState(0); // Y축 기울기
     const [isPoseDetectionActive, setIsPoseDetectionActive] = useState(false); // Pose Detection 활성화 여부
     const pitchTimeRef = useRef(null); // Pitch가 70~90 사이에 유지된 시간 기록
+    const notPitchTimeRef = useRef(null); // Pitch가 적정 각도 밖에서 유지된 시간 기록
     const isPitchStableRef = useRef(false); // Pitch 안정 상태 기록
+    const isNotPitchStableRef = useRef(false); // Pitch 불안정 상태 기록
+    const hasPlayedFinalVoice = useRef(false); // playCameraVoice(3) 실행 여부 추적
 
     // 각도를 라디안에서 도(degree)로 변환하는 함수
     const toDegrees = (radians) => {
@@ -489,14 +562,17 @@ export default function Health() {
         setUpdateIntervalForType(SensorTypes.accelerometer, 100);
 
         const subscription = accelerometer.subscribe(({ x, y, z }) => {
+            if (hasPlayedFinalVoice.current) {
+                subscription.unsubscribe(); // playCameraVoice(3)이 실행된 후에는 전체 useEffect 종료
+                return;
+            }
+
             const rollAngle = toDegrees(Math.atan(y / Math.sqrt(x * x + z * z)));
 
             // roll 상태 업데이트
             if (Math.abs(roll - rollAngle) > 0.1) {
                 setRoll(rollAngle.toFixed(2));
             }
-
-            //console.log('Roll Angle:', rollAngle);
 
             // roll 각도가 특정 범위 내에 있는지 확인 (예: -30도에서 30도 사이)
             if (rollAngle >= 60 && rollAngle <= 90) {
@@ -507,16 +583,28 @@ export default function Health() {
                 if (elapsedTime >= 3 && !isPitchStableRef.current) {
                     isPitchStableRef.current = true;
                     console.log("Roll 안정 상태 유지됨, Pose Detection 대기 중...");
-
-                    // 5초 대기 후 Pose Detection 활성화
+                    playCameraVoice(1); // 첫 번째 카메라 음성 파일 재생
+                    // 10초 대기 후 Pose Detection 활성화
                     setTimeout(() => {
                         setIsPoseDetectionActive(true);
                         console.log("Pose Detection 활성화됨.");
-                    }, 5000);
+                        playCameraVoice(3); // 최종 음성 파일 재생
+                        hasPlayedFinalVoice.current = true; // playCameraVoice(3) 실행 여부를 true로 설정
+                        subscription.unsubscribe(); // 이후 useEffect의 동작을 중단
+                    }, 10000);
                 }
+                notPitchTimeRef.current = null;
+                isNotPitchStableRef.current = false;
             } else {
+                if (!notPitchTimeRef.current) {
+                    notPitchTimeRef.current = Date.now();
+                }
+                const elapsedTime_notPitch = (Date.now() - notPitchTimeRef.current) / 1000; // 초 단위
+                if (elapsedTime_notPitch >= 3 && !isNotPitchStableRef.current) {
+                    isNotPitchStableRef.current = true;
+                    playCameraVoice(2); // 적정 각도가 아닌 상태에서 음성 파일 재생
+                }
                 // Roll이 범위를 벗어나면 초기화
-                //console.log("Roll이 적정 각도 내에 들어오지 못함");
                 pitchTimeRef.current = null;
                 isPitchStableRef.current = false;
             }
@@ -743,11 +831,11 @@ export default function Health() {
             if (exerciseType === 0 && targetRepCount === 3) {
                 setTimeout(() => {
                     setIsLoggedIn(true);
-                }, 5000);
+                }, 3000);
             } else {
                 setTimeout(() => {
                     navigation.replace('HealthResult', { id: route.params?.id, resultArray, premium: route.params?.premium, isURL });
-                }, 5000);
+                }, 3000);
             }
         }
     }, [booleansMoveArray]);
