@@ -36,6 +36,7 @@ import {
 import Video from 'react-native-video';
 import Loading from './Loading';
 import {stopRecording} from './Record';
+import ConfirmModal from '../components/ConfirmModal';
 
 export default function HealthResult() {
   const route = useRoute();
@@ -49,6 +50,10 @@ export default function HealthResult() {
   const [isRecording, setIsRecording] = useState(true); // 녹화 상태 관리
   const [isURL, setIsURL] = useState(null);
   const [saveloading, setSaveLoading] = useState(false);
+
+  const [confirmModalVisible, setConirmModalVisible] = useState(false); // 모달 상태
+  const [confirmModalMessage, setConfirmModalMessage] = useState(''); // 모달 메시지
+
   const CriteriaData = [
     {
       score: resultArray[0],
@@ -156,17 +161,10 @@ export default function HealthResult() {
         content,
       );
 
-
       setModalVisible(false);
-
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0, // 첫 번째 스크린을 보여줌
-          routes: [{name: '홈'}], // Home 화면으로 이동
-        }),
-      );
+      setConirmModalVisible(true);
+      setConfirmModalMessage('피드백이 저장되었습니다.');
     } catch (error) {
-
     } finally {
       setSaveLoading(false); // 로딩 종료
     }
@@ -186,6 +184,16 @@ export default function HealthResult() {
   // 모달에서 x를 눌렀을 때 처리
   const handleX = () => {
     setModalVisible(false);
+  };
+
+  const handleConfirmClick = () => {
+    setConirmModalVisible(false);
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0, // 첫 번째 스크린을 보여줌
+        routes: [{name: '홈'}], // Home 화면으로 이동
+      }),
+    );
   };
 
   if (saveloading) {
@@ -261,6 +269,11 @@ export default function HealthResult() {
           </ModalContent>
         </ModalContainer>
       </Modal>
+      <ConfirmModal
+        visible={confirmModalVisible}
+        message={confirmModalMessage}
+        onConfirm={handleConfirmClick}
+      />
     </Container>
   );
 }
