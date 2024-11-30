@@ -159,3 +159,17 @@ export const ModalButtonText2 = styled.Text`
   font-size: 16px;
   font-weight: bold;
 `;
+
+export const ModalExitButton = styled.TouchableOpacity`
+  border-radius: 20px;
+  padding: 10px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+`;
+
+export const ModalExitButtonText = styled.Text`
+  color: gray;
+  font-size: 20px;
+  font-weight: bold;
+`;

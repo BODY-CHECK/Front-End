@@ -19,6 +19,8 @@ import {
   ModalContent,
   ModalContentText1,
   ModalContentText2,
+  ModalExitButton,
+  ModalExitButtonText,
   TextContainer,
 } from './HealtResult.style';
 import {CommonActions, useNavigation, useRoute} from '@react-navigation/native';
@@ -154,7 +156,7 @@ export default function HealthResult() {
         content,
       );
 
-      Alert.alert('피드백이 저장되었습니다!');
+
       setModalVisible(false);
 
       navigation.dispatch(
@@ -164,7 +166,7 @@ export default function HealthResult() {
         }),
       );
     } catch (error) {
-      Alert.alert('데이터 전송에 실패했습니다.');
+
     } finally {
       setSaveLoading(false); // 로딩 종료
     }
@@ -172,6 +174,17 @@ export default function HealthResult() {
 
   // 모달에서 아니오를 눌렀을 때 처리
   const handleCancel = () => {
+    setModalVisible(false);
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: '홈'}],
+      }),
+    );
+  };
+
+  // 모달에서 x를 눌렀을 때 처리
+  const handleX = () => {
     setModalVisible(false);
   };
 
@@ -229,6 +242,9 @@ export default function HealthResult() {
         onRequestClose={() => setModalVisible(false)}>
         <ModalContainer>
           <ModalContent>
+            <ModalExitButton onPress={handleX}>
+              <ModalExitButtonText>X</ModalExitButtonText>
+            </ModalExitButton>
             <ModalContentText1>저장하시겠습니까?</ModalContentText1>
             <ModalContentText2>
               피드백을 저장하면 마이페이지에서 다시 확인할 수 있습니다.

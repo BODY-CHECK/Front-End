@@ -14,6 +14,7 @@ import GoogleLoginWebview from '../components/login/GoogleLoginWebview';
 import GoogleLoginRedirect from '../components/login/GoogleLoginRedirect';
 import Agreement from '../screens/Agreement';
 import ResetPassword from '../screens/ResetPassword';
+import Health from '../screens/Health';
 
 const Stack = createStackNavigator();
 
@@ -80,6 +81,11 @@ function LoginNavigator() {
             name="ResetPassword"
             component={ResetPassword}
             options={{title: '비밀번호 재설정'}}
+          />
+          <Stack.Screen
+            name="Health"
+            component={Health}
+            options={{headerShown: false}}
           />
         </>
       )}
