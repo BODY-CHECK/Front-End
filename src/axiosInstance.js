@@ -19,7 +19,6 @@ const logout = async () => {
   await AsyncStorage.removeItem('refreshToken');
   const auth = useAuth();
   auth.setIsLoggedIn(false);
-  Alert.alert('다시 로그인해주세요');
 };
 
 // 액세스 토큰 갱신 함수

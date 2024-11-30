@@ -584,7 +584,7 @@ const InputItemsContainer = styled.View`
 const ImagePreviewContainer = styled.View`
   flex-direction: row;
   align-items: center;
-  margin-bottom: 10px;
+  padding: 2px 5px;
 `;
 
 const PreviewImage = styled.Image`
@@ -594,14 +594,19 @@ const PreviewImage = styled.Image`
 `;
 
 const DeleteButton = styled.TouchableOpacity`
-  margin-left: 10px;
-  padding: 5px;
+  top: -20px; /* 사진 위쪽 여백 */
+  right: 10px; /* 사진 오른쪽 여백 */
+  width: 15px;
+  height: 15px;
   background-color: red;
-  border-radius: 5px;
+  border-radius: 10px; /* 동그라미 버튼 */
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 `;
 
 const DeleteButtonText = styled.Text`
   color: white;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: bold;
 `;
