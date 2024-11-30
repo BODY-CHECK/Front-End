@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import instance from '../../axiosInstance';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const {width, height} = Dimensions.get('window');
 
@@ -59,6 +60,29 @@ const ChatBotModal = ({visible, onClose, onSaveRoutine}: ChatBotModalProps) => {
   const [confirmModalVisible, setConfirmModalVisible] = useState(false); // 확인 모달 표시 상태
   const [selectedRoutine, setSelectedRoutine] = useState<string | null>(null); // 선택된 루틴 저장
   const [nickname, setNickname] = useState<string>(''); // 닉네임 상태
+  const [selectedImage, setSelectedImage] = useState(null); // 선택된 이미지
+
+  const handleSelectImage = () => {
+    const options = {
+      mediaType: 'photo',
+      quality: 0.8, // 이미지 품질 (0.0 ~ 1.0)
+    };
+
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('이미지 선택 취소');
+      } else if (response.errorCode) {
+        console.error('이미지 선택 오류:', response.errorMessage);
+      } else {
+        const image = response.assets[0];
+        setSelectedImage({
+          uri: image.uri,
+          name: image.fileName,
+          type: image.type,
+        });
+      }
+    });
+  };
 
   useEffect(() => {
     if (!visible) {
@@ -93,12 +117,32 @@ const ChatBotModal = ({visible, onClose, onSaveRoutine}: ChatBotModalProps) => {
     }
   };
 
-  const getBotResponse = async (prompt: string) => {
+  const getBotResponse = async (prompt: string, image: any = null) => {
     try {
       setIsLoading(true);
-      const response = await instance.post('/api/routine/recommendation', {
-        prompt,
-      });
+      // FormData 생성
+      const formData = new FormData();
+      if (image) {
+        formData.append('image', {
+          uri: image.uri,
+          name: image.name,
+          type: image.type,
+        });
+      }
+      if (prompt) {
+        formData.append('prompt', prompt);
+      }
+
+      // API 호출
+      const response = await instance.post(
+        '/api/routine/recommendation',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
 
       if (response.data.isSuccess) {
         return response.data.result;
@@ -116,15 +160,18 @@ const ChatBotModal = ({visible, onClose, onSaveRoutine}: ChatBotModalProps) => {
   const handleSend = async (content: string = inputValue) => {
     if (!content.trim()) return;
 
+    // 사용자 메시지 추가
     const newUserMessage = {
       id: messages.length + 1,
-      content: content,
+      content: content || '', // 텍스트가 없으면 빈 문자열
       sender: 'user' as const,
+      image: selectedImage || null, // 선택된 이미지 추가
     };
 
     setMessages(prev => [...prev, newUserMessage]);
     setInputValue('');
     setShowMenu(false);
+    setSelectedImage(null); // 선택된 이미지 초기화
 
     // Get bot response from API
     const botResponse = await getBotResponse(content);
@@ -188,9 +235,17 @@ const ChatBotModal = ({visible, onClose, onSaveRoutine}: ChatBotModalProps) => {
                     {messages.map(message => (
                       <MessageWrapper key={message.id} sender={message.sender}>
                         <MessageBubble sender={message.sender}>
-                          <MessageText sender={message.sender}>
-                            {message.content}
-                          </MessageText>
+                          {/* 이미지 표시 */}
+                          {message.image && (
+                            <MessageImage source={{uri: message.image.uri}} />
+                          )}
+                          {/* 텍스트 표시 */}
+                          {message.content && (
+                            <MessageText sender={message.sender}>
+                              {message.content}
+                            </MessageText>
+                          )}
+
                           {message.showSaveButton && (
                             <SaveButton
                               onPress={() =>
@@ -224,26 +279,40 @@ const ChatBotModal = ({visible, onClose, onSaveRoutine}: ChatBotModalProps) => {
                           }>
                           <ChipText>하체 위주</ChipText>
                         </ChipButton>
+                        <ChipButton onPress={handleSelectImage}>
+                          <ChipText>사진 첨부</ChipText>
+                        </ChipButton>
                       </ChipsContainer>
                     )}
 
                     <InputContainer>
-                      <MenuButton onPress={() => setShowMenu(!showMenu)}>
-                        <MenuButtonText>#</MenuButtonText>
-                      </MenuButton>
-                      <StyledInput
-                        value={inputValue}
-                        onChangeText={setInputValue}
-                        onSubmitEditing={() => handleSend()}
-                        placeholder="몸짱이에게 루틴을 추천 받아 보세요."
-                        placeholderTextColor="#666"
-                        editable={!isLoading}
-                      />
-                      <SendButton
-                        onPress={() => handleSend()}
-                        disabled={isLoading}>
-                        <SendButtonText>›</SendButtonText>
-                      </SendButton>
+                      {/* 이미지 미리보기 UI */}
+                      {selectedImage && (
+                        <ImagePreviewContainer>
+                          <PreviewImage source={{uri: selectedImage.uri}} />
+                          <DeleteButton onPress={() => setSelectedImage(null)}>
+                            <DeleteButtonText>✕</DeleteButtonText>
+                          </DeleteButton>
+                        </ImagePreviewContainer>
+                      )}
+                      <InputItemsContainer>
+                        <MenuButton onPress={() => setShowMenu(!showMenu)}>
+                          <MenuButtonText>#</MenuButtonText>
+                        </MenuButton>
+                        <StyledInput
+                          value={inputValue}
+                          onChangeText={setInputValue}
+                          onSubmitEditing={() => handleSend()}
+                          placeholder="몸짱이에게 루틴을 추천 받아 보세요."
+                          placeholderTextColor="#666"
+                          editable={!isLoading}
+                        />
+                        <SendButton
+                          onPress={() => handleSend()}
+                          disabled={isLoading}>
+                          <SendButtonText>›</SendButtonText>
+                        </SendButton>
+                      </InputItemsContainer>
                     </InputContainer>
                   </BottomContainer>
                 </Container>
@@ -364,6 +433,14 @@ const MessageText = styled.Text<{sender: string}>`
   color: ${props => (props.sender === 'user' ? '#FFFFFF' : '#000000')};
 `;
 
+const MessageImage = styled.Image`
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+`;
+
 const BottomContainer = styled.View`
   padding: 16px;
   background-color: #ffffff;
@@ -388,8 +465,7 @@ const ChipText = styled.Text`
 `;
 
 const InputContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
   background-color: #eef1ff;
   border-radius: 25px;
   padding: 4px;
@@ -498,4 +574,34 @@ const ConfirmButtonText = styled.Text`
   font-size: 10px;
   font-weight: bold;
   color: white;
+`;
+
+const InputItemsContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const ImagePreviewContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
+const PreviewImage = styled.Image`
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+`;
+
+const DeleteButton = styled.TouchableOpacity`
+  margin-left: 10px;
+  padding: 5px;
+  background-color: red;
+  border-radius: 5px;
+`;
+
+const DeleteButtonText = styled.Text`
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
 `;

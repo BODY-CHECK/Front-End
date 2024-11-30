@@ -4,6 +4,9 @@ import HeaderMain from '../components/HeaderMain';
 import exerciseData from '../components/Health/HealthInfoData';
 import HealthInfo from '../screens/HealthInfo';
 import Home from '../screens/Home';
+import Health from '../screens/Health';
+import Loading from '../screens/Loading';
+import HealthResult from '../screens/HealthResult';
 
 const Stack = createStackNavigator();
 const CustomHeader = () => <HeaderMain />;
@@ -17,7 +20,7 @@ export default function HomeHealthStackNavigator() {
         options={{headerTitle: CustomHeader}}
       />
       <Stack.Screen
-        name="HomeHealthInfo"
+        name="HealthInfo"
         component={HealthInfo}
         options={({route}) => {
           const exercise = exerciseData.find(ex => ex.id === route.params?.id);
@@ -29,6 +32,26 @@ export default function HomeHealthStackNavigator() {
               fontWeight: 'bold',
             },
           };
+        }}
+      />
+      <Stack.Screen
+        name="Health"
+        component={Health}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Loading"
+        component={Loading}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="HealthResult"
+        component={HealthResult}
+        options={{
+          headerShown: true,
+          title: '솔루션',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {fontWeight: 'bold'},
         }}
       />
     </Stack.Navigator>

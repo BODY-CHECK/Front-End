@@ -4838,6 +4838,11 @@ react-native-gifted-charts@^1.4.47:
   dependencies:
     gifted-charts-core "0.1.47"
 
+react-native-image-picker@^7.2.1:
+  version "7.2.1"
+  resolved "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-7.2.1.tgz"
+  integrity sha512-dmZELlE79ldgRPLt/n3qkiFUtcJ/pst/aBP+EsHWAIjjWSqM337iiOzsaKYxTPrheop6bJ52jRSGxAubTj7y8w==
+
 react-native-linear-gradient@*, react-native-linear-gradient@^2.8.3:
   version "2.8.3"
   resolved "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz"
@@ -4913,10 +4918,10 @@ react-native-video@^6.8.0:
   resolved "https://registry.npmjs.org/react-native-video/-/react-native-video-6.8.0.tgz"
   integrity sha512-4Q4ccIXcPWG4Xm239DyLfTOTP01DYzrlXV4dBkuygINsrGTqua5E4jedkDRjj/KOOjIqDjO1elstZq2sfS2lOg==
 
-react-native-vision-camera@*, react-native-vision-camera@^4.6.1:
-  version "4.6.1"
-  resolved "https://registry.npmjs.org/react-native-vision-camera/-/react-native-vision-camera-4.6.1.tgz"
-  integrity sha512-USp7g+Q/H7nzIS2XBJTWVdzZArxgZu+IFafgswVzxdmr0iSpLjLUtoUp+SUWxZ+nLhJriYYvqg8hfZrJtnpnlw==
+react-native-vision-camera@*, react-native-vision-camera@^4.6.3:
+  version "4.6.3"
+  resolved "https://registry.npmjs.org/react-native-vision-camera/-/react-native-vision-camera-4.6.3.tgz"
+  integrity sha512-fVHww4cNFrxvMYOlUZcjl3iYmR3vcUtvLZKW9NHlKZ3o4zsspwYjbw2vheZvHrHtJ30OrE3N2NFqT6CxgPvRCw==
 
 react-native-webview@^13.12.3:
   version "13.12.3"
