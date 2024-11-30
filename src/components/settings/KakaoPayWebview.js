@@ -48,11 +48,7 @@ const KakaoPayWebview = ({url, onClose, onSuccess}) => {
   };
 
   return (
-    <Modal
-      visible={!!url}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={onClose}>
+    <Modal visible={!!url} transparent={true} onRequestClose={onClose}>
       <SafeAreaView style={styles.container}>
         <WebView
           source={{uri: url}}

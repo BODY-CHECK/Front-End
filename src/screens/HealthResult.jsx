@@ -21,18 +21,19 @@ import {
   ModalContentText2,
   TextContainer,
 } from './HealtResult.style';
-import {
-  CommonActions,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {CommonActions, useNavigation, useRoute} from '@react-navigation/native';
 import {BarChart} from 'react-native-chart-kit';
 import {Alert, Modal, StyleSheet} from 'react-native';
 import exerciseData from '../components/Health/HealthInfoData';
-import {getPremium, postAttendance, postExerciseCriteria, postExerciseSolution} from '../api/SolutionApi'; // API 호출 함수 import
+import {
+  getPremium,
+  postAttendance,
+  postExerciseCriteria,
+  postExerciseSolution,
+} from '../api/SolutionApi'; // API 호출 함수 import
 import Video from 'react-native-video';
 import Loading from './Loading';
-import { stopRecording } from './Record';
+import {stopRecording} from './Record';
 
 export default function HealthResult() {
   const route = useRoute();
@@ -87,7 +88,6 @@ export default function HealthResult() {
     fetchApiResponse();
   }, [id]);
 
-
   // 컴포넌트가 렌더링될 때 녹화 종료 함수 실행
   useEffect(() => {
     if (isRecording && premium) {
@@ -97,7 +97,7 @@ export default function HealthResult() {
   }, []);
 
   const data = {
-    labels: ['팔 각도', '자세 정렬', '무릎 각도' ],
+    labels: ['팔 각도', '자세 정렬', '무릎 각도'],
     datasets: [
       {
         data: resultArray || [0, 0, 0],
@@ -165,9 +165,8 @@ export default function HealthResult() {
       );
     } catch (error) {
       Alert.alert('데이터 전송에 실패했습니다.');
-    }
-    finally {
-    setSaveLoading(false); // 로딩 종료
+    } finally {
+      setSaveLoading(false); // 로딩 종료
     }
   };
 
@@ -180,19 +179,22 @@ export default function HealthResult() {
     return <Loading text="데이터 저장 중입니다..." />; // 로딩 화면 표시
   }
 
-
   return (
     <Container>
       <ContentContainer>
         <GIFContainer>
-          {premium ? (<Video
-            source={{uri: isURL}} // 비디오 파일의 URL 또는 로컬 파일 경로
-            style={styles.video}
-            controls={true} // 기본 컨트롤러 표시 (재생, 일시정지, 탐색바 등)
-            resizeMode="contain" // 비디오 크기 조절 방식 ('cover', 'contain', 'stretch' 등)
-            paused={false} // true일 경우 비디오가 일시정지됨
-            repeat={false} // 비디오 반복 재생
-          />) : (<ContentText>프리미엄 회원이 되어보세요!</ContentText>)}
+          {premium ? (
+            <Video
+              source={{uri: isURL}} // 비디오 파일의 URL 또는 로컬 파일 경로
+              style={styles.video}
+              controls={true} // 기본 컨트롤러 표시 (재생, 일시정지, 탐색바 등)
+              resizeMode="contain" // 비디오 크기 조절 방식 ('cover', 'contain', 'stretch' 등)
+              paused={false} // true일 경우 비디오가 일시정지됨
+              repeat={false} // 비디오 반복 재생
+            />
+          ) : (
+            <ContentText>프리미엄 회원이 되어보세요!</ContentText>
+          )}
         </GIFContainer>
         <GraphContainer>
           <BarChart
@@ -222,7 +224,6 @@ export default function HealthResult() {
         </Button2>
       </ButtonContainer>
       <Modal
-        animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}>

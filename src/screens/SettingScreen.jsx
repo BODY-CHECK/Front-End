@@ -31,7 +31,7 @@ function SettingsScreen() {
       />
       <TitleButton
         title="비밀번호 변경"
-        onPress={() => navigation.navigate('PasswordChange')}
+        onPress={() => navigation.navigate('PWAuthentication')}
       />
       <SectionTitle>설정</SectionTitle>
       <TitleButton

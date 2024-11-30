@@ -1,5 +1,5 @@
 // KakaoLoginRedirect.js
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ActivityIndicator,
@@ -11,6 +11,7 @@ import axios from 'axios';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuth} from '../../AuthContext';
+import ConfirmModal from '../ConfirmModal';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -19,6 +20,9 @@ const KakaoLoginRedirect = () => {
   const route = useRoute();
   const {setIsLoggedIn} = useAuth(); // setIsLoggedIn 가져오기
   const code = route.params?.token;
+
+  const [confirmModalVisible, setConirmModalVisible] = useState(false); // 모달 상태
+  const [confirmModalMessage, setConfirmModalMessage] = useState(''); // 모달 메시지
 
   useEffect(() => {
     if (code) {
@@ -54,10 +58,8 @@ const KakaoLoginRedirect = () => {
       } else {
         console.log('로그인 실패:', response.data);
         // 로그인 실패 시 경고 메시지 표시
-        Alert.alert(
-          '로그인 실패',
-          response.data.message || '알 수 없는 오류가 발생했습니다.',
-        );
+        setConirmModalVisible(true);
+        setConfirmModalMessage(response.data.message);
         navigation.navigate('Login');
       }
     } catch (error) {
@@ -75,7 +77,12 @@ const KakaoLoginRedirect = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>카카오 로그인 처리 중...</Text>
-      <ActivityIndicator size="large" color="#0000ff" />
+      <ActivityIndicator size="large" color="#ffffff" />
+      <ConfirmModal
+        visible={confirmModalVisible}
+        message={confirmModalMessage}
+        onConfirm={() => setConirmModalVisible(false)}
+      />
     </SafeAreaView>
   );
 };

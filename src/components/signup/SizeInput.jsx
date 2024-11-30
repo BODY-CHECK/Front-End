@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import styled from 'styled-components/native';
 
-const SizeInput = ({onHeightChange, onWeightChange}) => {
+const SizeInput = ({onHeightChange, onWeightChange, required}) => {
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
 
@@ -19,7 +19,11 @@ const SizeInput = ({onHeightChange, onWeightChange}) => {
     <Container>
       <SInputWrapper>
         <SContainer>
-          <SLabel>키</SLabel>
+          <LabelContainer>
+            <SLabel>키</SLabel>
+            {required && <StarTag>*</StarTag>}
+          </LabelContainer>
+
           <SInput
             value={height}
             onChangeText={handleHeightChange}
@@ -28,7 +32,10 @@ const SizeInput = ({onHeightChange, onWeightChange}) => {
           <UnitText>cm</UnitText>
         </SContainer>
         <SContainer>
-          <SLabel>몸무게</SLabel>
+          <LabelContainer>
+            <SLabel>몸무게</SLabel>
+            {required && <StarTag>*</StarTag>}
+          </LabelContainer>
           <SInput
             value={weight}
             onChangeText={handleWeightChange}
@@ -51,13 +58,13 @@ const Container = styled.View`
 const SContainer = styled.View`
   flex-direction: column;
   width: 49%;
+  margin-top: 30px;
 `;
 
 const SLabel = styled.Text`
   font-size: 12px;
   color: black;
   margin-bottom: 8px;
-  margin-top: 30px;
 `;
 
 const SInputWrapper = styled.View`
@@ -77,4 +84,16 @@ const SInput = styled.TextInput`
 const UnitText = styled.Text`
   font-size: 12px;
   color: #b0bec5;
+`;
+
+const StarTag = styled.Text`
+  font-size: 12px;
+  color: red;
+  padding-bottom: 3px;
+  margin-left: 2px;
+`;
+
+const LabelContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
 `;

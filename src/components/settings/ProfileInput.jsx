@@ -58,9 +58,7 @@ const ProfileInput = ({
 
 export default ProfileInput;
 
-const Container = styled.View`
-  margin-bottom: 15px;
-`;
+const Container = styled.View``;
 
 const Label = styled.Text`
   font-size: 12px;
@@ -78,7 +76,7 @@ const Input = styled.TextInput`
 `;
 
 const ErrorText = styled.Text`
-  color: #DD4343;
+  color: #dd4343;
   font-size: 10px;
   margin-left: 5px;
   padding-bottom: 6px;
@@ -88,6 +86,7 @@ const LabelContainer = styled.View`
   flex-direction: row;
   align-items: center;
   align-self: flex-start;
+  margin-top: 5px;
 `;
 
 const InputContainer = styled.View`

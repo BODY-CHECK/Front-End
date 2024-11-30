@@ -142,9 +142,8 @@ const Signup2 = () => {
         console.log('Error Response:', error.response.data);
         console.log('Error Status:', error.response.status);
         console.log('Error Headers:', error.response.headers);
-        Alert.alert(
-          '서버와의 통신 중 문제가 발생했습니다. 나중에 다시 시도해주세요.',
-        );
+        setConirmModalVisible(true);
+        setConfirmModalMessage(error.response?.data?.message);
       }
     }
   };
@@ -165,6 +164,7 @@ const Signup2 = () => {
       <SizeInput
         onHeightChange={handleHeightChange}
         onWeightChange={handleWeightChange}
+        required
       />
       <CheckboxContainer>
         <AgreementCheckbox
@@ -176,7 +176,7 @@ const Signup2 = () => {
       <Button title="완료" onPress={handleNext} disabled={!isFormValid} />
 
       {/* 모달 */}
-      <Modal visible={isModalVisible} transparent={true} animationType="slide">
+      <Modal visible={isModalVisible} transparent={true}>
         <ModalOverlay>
           <ModalContent>
             <Header>
