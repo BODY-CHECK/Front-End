@@ -26,9 +26,9 @@ import { setUpdateIntervalForType, SensorTypes, accelerometer } from 'react-nati
 import Loading from './Loading';
 import AndroidSystemBars from 'react-native-system-bars';
 import { stopRecording } from './Record';
+import { useAuth } from '../AuthContext';
 
 export default function Health() {
-    console.log('아직 화면 안넘어감');
     type RouteParams = {
         id: number;
         repCount: number;
@@ -43,6 +43,7 @@ export default function Health() {
     const [useFrontCamera, setUseFrontCamera] = useState(false);    // Front Camera
     const [pose, setPose] = useState(null); // pose data
     const cameraRef = useRef(null);
+    const {setIsLoggedIn} = useAuth();
 
     const devices = useCameraDevices();
     const backCamera = devices?.find(device => device.position === 'back');
@@ -78,6 +79,8 @@ export default function Health() {
 
     const [isRecording, setIsRecording] = useState(true); // 녹화 상태 관리
     const [isURL, setIsURL] = useState(null);
+    console.log('목표: ', targetRepCount);
+    console.log('운동 번호: ', exerciseType);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -736,9 +739,16 @@ export default function Health() {
 
             // 페이지 이동 전에 isTargetReached 상태 업데이트
             setIsTargetReached(true);
-            setTimeout(() => {
-                navigation.replace('HealthResult', { id: route.params?.id, resultArray, premium: route.params?.premium, isURL });
-            }, 5000);
+            // 운동 id가 0이고 repCount가 3일 경우 Home으로 이동
+            if (exerciseType === 0 && targetRepCount === 3) {
+                setTimeout(() => {
+                    setIsLoggedIn(true);
+                }, 5000);
+            } else {
+                setTimeout(() => {
+                    navigation.replace('HealthResult', { id: route.params?.id, resultArray, premium: route.params?.premium, isURL });
+                }, 5000);
+            }
         }
     }, [booleansMoveArray]);
 
