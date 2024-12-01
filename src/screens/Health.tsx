@@ -108,7 +108,7 @@ export default function Health() {
               };
           }, [isRecording, route.params?.premium, navigation])
       );
-  
+
       // AppState를 이용하여 앱 상태 변경 감지
       useEffect(() => {
           const handleAppStateChange = (nextAppState) => {
@@ -120,15 +120,15 @@ export default function Health() {
                   }
               }
           };
-  
+
           const subscription = AppState.addEventListener('change', handleAppStateChange);
-  
+
           return () => {
               subscription.remove();
           };
       }, [isRecording, route.params?.premium]);
-  
-  
+
+
       useEffect(() => {
         // 컴포넌트가 마운트될 때 한 번만 음성 파일을 설정
         setupAudioFiles().catch(error =>
