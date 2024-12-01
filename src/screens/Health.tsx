@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, Dimensions, Linking, Alert, AppState } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Linking, AppState } from 'react-native';
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { Camera as VisionCamera, useCameraDevices, useFrameProcessor } from 'react-native-vision-camera';
 import Svg, { Circle, Line } from 'react-native-svg';
-import { Button, ButtonText, CameraIcon, CameraImage, Container, NumContainer, NumText } from './Health.style';
+import { CameraIcon, CameraImage, Container, NumContainer, NumText } from './Health.style';
 import { detectPose } from './detectPose';
 import { Worklets } from 'react-native-worklets-core';
 import { calculateAngle, calculateSlopeAngle, detectOutlier, updateStateAndFeedback, updateStateAndFeedbackwithTime, updateStateofTutorial } from './calculate_feedback';
@@ -324,6 +324,9 @@ export default function Health() {
                     resolve();
                     return;
                 }
+
+                const { isPlaying, playerKey = '' } = sound;
+
                 sound.play(success => {
                     if (success) {
                         //console.log('성공적으로 재생되었습니다.');
@@ -348,6 +351,9 @@ export default function Health() {
                         resolve();
                         return;
                     }
+
+                    const { isPlaying, playerKey = '' } = sound;
+
                     sound.play(success => {
                         if (success) {
                             //console.log('성공적으로 재생되었습니다.');
@@ -371,6 +377,9 @@ export default function Health() {
                     resolve();
                     return;
                 }
+
+                const { isPlaying, playerKey = '' } = sound;
+
                 sound.play(success => {
                     if (success) {
                         //console.log('성공적으로 재생되었습니다.');
@@ -394,6 +403,9 @@ export default function Health() {
                         resolve();
                         return;
                     }
+
+                    const { isPlaying, playerKey = '' } = sound;
+
                     sound.play(success => {
                         if (success) {
                             //console.log('성공적으로 재생되었습니다.');
@@ -444,6 +456,9 @@ export default function Health() {
                     resolve();
                     return;
                 }
+
+                const { isPlaying, playerKey = '' } = sound;
+
                 sound.play((success) => {
                     if (success) {
                         console.log('카메라 음성 파일 재생 성공');
@@ -468,6 +483,9 @@ export default function Health() {
                         resolve();
                         return;
                     }
+
+                    const { isPlaying, playerKey = '' } = sound;
+
                     sound.play((success) => {
                         if (success) {
                             console.log('카메라 음성 파일 재생 성공');
@@ -499,8 +517,8 @@ export default function Health() {
     useEffect(() => {
         // 컴포넌트가 마운트될 때 한 번만 음성 파일을 설정
         setupAudioFiles()
-        .then(() => Alert.alert('오디오 파일 준비 완료'))
         .catch(error => console.error('오디오 파일 설정 오류:', error));
+        playCameraVoice(0)
     }, [exerciseAudioData]);
     //export { setupExerciseAudioFiles, playAudio, playAudioWithDelay };
 
@@ -545,7 +563,7 @@ export default function Health() {
     const notPitchTimeRef = useRef(null); // Pitch가 적정 각도 밖에서 유지된 시간 기록
     const isPitchStableRef = useRef(false); // Pitch 안정 상태 기록
     const isNotPitchStableRef = useRef(false); // Pitch 불안정 상태 기록
-    const hasPlayedFinalVoice = useRef(false); // playCameraVoice(3) 실행 여부 추적
+    const hasPlayedFinalVoice = useRef(false); // playCameraVoice(1) 실행 여부 추적
 
     // 각도를 라디안에서 도(degree)로 변환하는 함수
     const toDegrees = (radians) => {
@@ -558,8 +576,7 @@ export default function Health() {
 
         const subscription = accelerometer.subscribe(({ x, y, z }) => {
             if (hasPlayedFinalVoice.current) {
-                subscription.unsubscribe(); // playCameraVoice(3)이 실행된 후에는 전체 useEffect 종료
-                return;
+                return; // 이미 실행된 경우 다시 실행하지 않음
             }
 
             const rollAngle = toDegrees(Math.atan(y / Math.sqrt(x * x + z * z)));
@@ -569,23 +586,26 @@ export default function Health() {
                 setRoll(rollAngle.toFixed(2));
             }
 
-            // roll 각도가 특정 범위 내에 있는지 확인 (예: -30도에서 30도 사이)
+            // roll 각도가 특정 범위 내에 있는지 확인 (예: 60도에서 90도 사이)
             if (rollAngle >= 60 && rollAngle <= 90) {
                 if (!pitchTimeRef.current) {
                     pitchTimeRef.current = Date.now();
                 }
                 const elapsedTime = (Date.now() - pitchTimeRef.current) / 1000; // 초 단위
-                if (elapsedTime >= 3 && !isPitchStableRef.current) {
+                if (elapsedTime >= 6 && !isPitchStableRef.current) {
                     isPitchStableRef.current = true;
-                    console.log("Roll 안정 상태 유지됨, Pose Detection 대기 중...");
+                    //console.log("Roll 안정 상태 유지됨, Pose Detection 대기 중...");
                     playCameraVoice(1); // 첫 번째 카메라 음성 파일 재생
+                    hasPlayedFinalVoice.current = true; // playCameraVoice(1) 실행 여부를 true로 설정
+
                     // 10초 대기 후 Pose Detection 활성화
                     setTimeout(() => {
                         setIsPoseDetectionActive(true);
-                        console.log("Pose Detection 활성화됨.");
+                        //console.log("Pose Detection 활성화됨.");
                         playCameraVoice(3); // 최종 음성 파일 재생
-                        hasPlayedFinalVoice.current = true; // playCameraVoice(3) 실행 여부를 true로 설정
-                        subscription.unsubscribe(); // 이후 useEffect의 동작을 중단
+
+                        // 여기에서 구독 해제
+                        subscription.unsubscribe();
                     }, 10000);
                 }
                 notPitchTimeRef.current = null;
@@ -595,7 +615,7 @@ export default function Health() {
                     notPitchTimeRef.current = Date.now();
                 }
                 const elapsedTime_notPitch = (Date.now() - notPitchTimeRef.current) / 1000; // 초 단위
-                if (elapsedTime_notPitch >= 3 && !isNotPitchStableRef.current) {
+                if (elapsedTime_notPitch >= 6 && !isNotPitchStableRef.current) {
                     isNotPitchStableRef.current = true;
                     playCameraVoice(2); // 적정 각도가 아닌 상태에서 음성 파일 재생
                 }
@@ -836,7 +856,7 @@ export default function Health() {
     }, [booleansMoveArray]);
 
     if (!hasPermission) {
-        return <View><Text>카메라 권한을 확인 중입니다...</Text></View>;
+        return <View><Text>카메라 권한을 허용한 뒤, 뒤로가기를 눌러주세요!</Text></View>;
     }
 
     if (!currentCamera) {
@@ -1156,8 +1176,8 @@ export default function Health() {
                 frameProcessor={frameProcessor}
             />
             {renderPoseDots(route.params.id)}
-            <NumContainer style={{ width: '13%', justifyContent: 'center', alignItems: 'center' }}>
-                <NumText style={{ fontSize: 24, paddingHorizontal: 20, textAlign: 'center' }}>
+            <NumContainer >
+                <NumText>
                     {repCount}
                 </NumText>
             </NumContainer>

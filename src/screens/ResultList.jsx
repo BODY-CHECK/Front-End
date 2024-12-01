@@ -160,7 +160,7 @@ export default function ResultList({navigation}) {
   return (
     <Container>
   {!premium && (
-    <PremiumContainer onPress={() => navigation.navigate('PremiumUpgrade')}>
+    <PremiumContainer onPress={() => navigation.navigate('SubscriptionHandler')}>
       <PremiumImage source={require('../assets/images/crown.png')} />
       <PremiumText>프리미엄으로 업그레이드 하기</PremiumText>
     </PremiumContainer>

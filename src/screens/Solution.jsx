@@ -100,7 +100,7 @@ export default function Solution() {
               repeat={false} // 비디오 반복 재생
             />
           ) : (
-            <ContentText>프리미엄 회원이 되어보세요!</ContentText>
+            <ContentText>{`녹화된 영상이 없어요..\n프리미엄을 구독하거나 녹화 권한을 추가해주세요!`}</ContentText>
           )}
         </GIFContainer>
         <GraphContainer>
