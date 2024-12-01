@@ -31,20 +31,20 @@ const ModalContainer = styled.View`
 `;
 
 const ModalView = styled.View`
-  width: 75%;
-  height: 160px;
+  width: 350px;
+  height: 185px;
   background-color: white;
-  border-radius: 5px;
+  border-radius: 10px;
   align-items: center;
   justify-content: center;
 `;
 
 const ModalText = styled.Text`
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 30px;
   color: black;
+  margin-bottom: 35px;
 `;
 
 const SubText = styled.Text`
@@ -62,15 +62,15 @@ const ButtonContainer = styled.View`
 const ConfirmButton = styled.TouchableOpacity`
   background-color: #3373eb;
   width: 40%;
-  height: 30px;
+  height: 40px;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
-  padding: 5px 0;
+  padding: 10px;
 `;
 
 const ButtonText = styled.Text`
-  font-size: 10px;
+  font-size: 16px;
   font-weight: bold;
   color: white;
 `;

@@ -42,7 +42,7 @@ export default function HealthInfo() {
   const [repCount, setRepCount] = useState(12); // 운동 개수 저장
   const [contentWidth, setContentWidth] = useState(0);
   const itemWidth = 50;
-  const numbers = [...Array(20).keys()].map(i => (i + 1).toString());
+  const numbers = [...Array(30).keys()].map(i => (i + 1).toString());
   const scrollViewRef = useRef(null);
   const [premium, setPremium] = useState(false);
 
