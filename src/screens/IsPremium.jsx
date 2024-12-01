@@ -233,9 +233,9 @@ const ModalContainer = styled.View`
 const ModalContent = styled.View`
   width: 80%;
   height: 185px;
+  padding: 20px;
   background-color: white;
   border-radius: 5px;
-  padding: 20px;
   align-items: center;
   justify-content: center;
 `;
@@ -259,26 +259,22 @@ const ModalConfirmButton = styled.TouchableOpacity`
   background-color: #3373eb;
   width: 45%;
   height: 40px;
-  width: 45%;
-  height: 40px;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
-  padding: 10px ;
-  margin: 0 10px 0 5px;
+  padding: 10px;
+  margin: 0 7px 0 5px;
 `;
 
 const ModalCancelButton = styled.TouchableOpacity`
   background-color: #3c3b40;
   width: 45%;
   height: 40px;
-  width: 45%;
-  height: 40px;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
-  padding: 10px ;
-  margin: 0 7px 0 5px;
+  padding: 10px;
+  margin: 0 5px 0 7px;
 `;
 
 const ModalButtonText = styled.Text`

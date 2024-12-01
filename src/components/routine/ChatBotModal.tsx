@@ -373,7 +373,7 @@ const ModalOverlay = styled.View`
 
 const ModalContainer = styled.View`
   width: ${width * 0.9}px;
-  height: ${height * 0.8}px;
+  height: ${height * 0.6}px;
   background-color: #eef1ff;
   border-radius: 20px;
   overflow: hidden;
@@ -526,6 +526,7 @@ const ConfirmModalContainer = styled.View`
 const ConfirmModalView = styled.View`
   width: 80%;
   height: 185px;
+  padding: 20px;
   background-color: white;
   border-radius: 5px;
   align-items: center;
@@ -540,7 +541,7 @@ const ConfirmModalText = styled.Text`
 `;
 
 const ConfirmSubText = styled.Text`
-  font-size: 10px;
+  font-size: 12px;
   color: #7c86a2;
   margin-bottom: 35px;
 `;
@@ -553,25 +554,28 @@ const ConfirmButtonContainer = styled.View`
 
 const ConfirmConfirmButton = styled.TouchableOpacity`
   background-color: #3373eb;
-  width: 40%;
-  height: 30px;
+  width: 45%;
+  height: 40px;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
-  padding: 5px 0;
+  padding: 10px;
+  margin: 0 7px 0 5px;
 `;
 
 const ConfirmCancelButton = styled.TouchableOpacity`
   background-color: #3c3b40;
-  width: 40%;
-  height: 30px;
+  width: 45%;
+  height: 40px;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
+  padding: 10px;
+  margin: 0 5px 0 7px;
 `;
 
 const ConfirmButtonText = styled.Text`
-  font-size: 10px;
+  font-size: 14px;
   font-weight: bold;
   color: white;
 `;

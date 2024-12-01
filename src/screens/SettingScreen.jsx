@@ -89,6 +89,7 @@ const ModalContainer = styled.View`
 const ModalView = styled.View`
   width: 80%;
   height: 185px;
+  padding: 20px;
   background-color: white;
   border-radius: 5px;
   align-items: center;
@@ -96,7 +97,7 @@ const ModalView = styled.View`
 `;
 
 const ModalText = styled.Text`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 30px;
@@ -119,8 +120,8 @@ const ConfirmButton = styled.TouchableOpacity`
   border-radius: 10px;
   justify-content: center;
   align-items: center;
-  padding: 10px ;
-  margin: 0 10px 0 5px;
+  padding: 10px;
+  margin: 0 7px 0 5px;
 `;
 
 const CancelButton = styled.TouchableOpacity`
@@ -132,8 +133,8 @@ const CancelButton = styled.TouchableOpacity`
   border-radius: 10px;
   justify-content: center;
   align-items: center;
-  padding: 10px ;
-  margin: 0 7px 0 5px;
+  padding: 10px;
+  margin: 0 5px 0 7px;
 `;
 
 const ButtonText = styled.Text`

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Alert, Modal, Text} from 'react-native';
 import styled from 'styled-components/native';
 import instance from '../axiosInstance';
@@ -10,7 +10,7 @@ import ExerciseListBottomSheet from '../components/routine/ExerciseListBottomShe
 import RoutineBox from '../components/routine/RoutineBox';
 import ChatBot from '../assets/images/ChatBot.png';
 import ChatBotModal from '../components/routine/ChatBotModal';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import ConfirmModal from '../components/ConfirmModal';
 
 const baseURL = 'https://dev.bodycheck.store';
@@ -105,6 +105,19 @@ function Routine() {
     토: [exerciseData[3], exerciseData[7], exerciseData[8]],
     일: [exerciseData[0], exerciseData[9], exerciseData[11]],
   };
+
+  const handleOtherActions = useCallback(() => {
+    // 설정 모드 종료
+    if (isEditing) setIsEditing(false);
+  }, [isEditing]);
+
+  // 화면 포커스 시 오늘 날짜로 초기화 및 편집 모드 끄기
+  useFocusEffect(
+    useCallback(() => {
+      setSelectedDay(reverseDayMapping[currentDay]); // 오늘 요일로 설정
+      setIsEditing(false); // 편집 모드 해제
+    }, []),
+  );
 
   useEffect(() => {
     // 선택된 요일 변경 시 루틴 데이터 가져오기
@@ -314,6 +327,7 @@ function Routine() {
   };
 
   const checkPremiumStatus = async () => {
+    handleOtherActions(); // 운동 선택 시 설정 모드 해제
     try {
       const response = await instance.get('/members/my-page');
       if (response.data.isSuccess) {
@@ -350,7 +364,10 @@ function Routine() {
         isEditing={isEditing}
         onDelete={handleDeleteExercise}
       />
-      <ExerciseCard onSetRoutine={handleSetRoutine} />
+      <ExerciseCard
+        onSetRoutine={handleSetRoutine}
+        onCardPress={handleOtherActions}
+      />
       <ChatBotBtn onPress={checkPremiumStatus}>
         <ChatBotImg source={ChatBot} />
       </ChatBotBtn>
