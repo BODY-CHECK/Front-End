@@ -30,7 +30,6 @@ export const GIFContainer = styled.View`
   border: 1px solid;
 `;
 
-
 export const GraphContainer = styled.View`
   padding: 10px;
   background-color: white;
@@ -51,7 +50,7 @@ export const ContentText = styled.Text`
 export const ButtonContainer = styled.View`
   flex-direction: row;
   justify-content: center;
-  aligin-items: center;
+  align-items: center;
   background-color: transparent;
   margin-top: 10px;
 `;

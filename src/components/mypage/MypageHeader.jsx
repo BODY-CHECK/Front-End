@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import styled from 'styled-components/native';
 import crown from '../../assets/images/crown.png';
+import arrow from '../../assets/images/Arrow.png';
 
 const MypageHeader = ({nickname, premium}) => {
   const navigation = useNavigation();
@@ -13,7 +14,7 @@ const MypageHeader = ({nickname, premium}) => {
         </NicknameWrapper>
         <Title>님의 프로필!</Title>
       </TitleWrapper>
-      <NavBtn>&gt;</NavBtn>
+      <NavBtn source={arrow} />
     </Wrapper>
   );
 };
@@ -59,8 +60,7 @@ const TitleWrapper = styled.View`
   align-items: center;
 `;
 
-const NavBtn = styled.Text`
-  font-size: 20px;
-  color: black;
-  font-weight: bold;
+const NavBtn = styled.Image`
+  width: 12px;
+  height: 24px;
 `;

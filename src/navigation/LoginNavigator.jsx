@@ -80,7 +80,7 @@ function LoginNavigator() {
           <Stack.Screen
             name="ResetPassword"
             component={ResetPassword}
-            options={{title: '비밀번호 재설정'}}
+            options={{title: '비밀번호 재발급'}}
           />
           <Stack.Screen
             name="Health"

@@ -54,7 +54,7 @@ const LoginFooter = () => {
         </LinkItem>
         <Divider />
         <LinkItem onPress={() => navigation.navigate('ResetPassword')}>
-          <LinkText>비밀번호 재설정</LinkText>
+          <LinkText>비밀번호 재발급</LinkText>
         </LinkItem>
       </LinksContainer>
       <IconsContainer>
@@ -75,6 +75,8 @@ const FooterContainer = styled.View`
   width: 100%;
   max-width: 400px;
   align-items: center;
+  margin-bottom: 100px;
+  position: relative;
 `;
 
 const LinksContainer = styled.View`
@@ -103,14 +105,16 @@ const Divider = styled.View`
 `;
 
 const IconsContainer = styled.View`
+  position: absolute;
   display: flex;
   flex-direction: row;
   justify-content: center;
   width: 100%;
-  margin-top: 80px;
+  margin-top: 200px;
 `;
 
 const Icon = styled.Image`
   margin: 0 15px;
   cursor: pointer;
+  width: 320px;
 `;

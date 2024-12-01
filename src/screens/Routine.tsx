@@ -466,21 +466,24 @@ const ButtonContainer = styled.View`
 
 const ConfirmButton = styled.TouchableOpacity`
   background-color: #3373eb;
-  width: 40%;
-  height: 30px;
+  width: 45%;
+  height: 40px;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
-  padding: 5px 0;
+  padding: 10px;
+  margin: 0 10px;
 `;
 
 const CancelButton = styled.TouchableOpacity`
   background-color: #3c3b40;
-  width: 40%;
-  height: 30px;
+  width: 45%;
+  height: 40px;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
+  padding: 10px;
+  margin: 0 10px;
 `;
 
 const ButtonText = styled.Text`
