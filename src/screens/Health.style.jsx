@@ -4,6 +4,8 @@ export const Container = styled.View`
   flex: 1;
   align-items: center; 
   position: relative;
+  justify-content: flex-end;
+  padding-bottom: 20px;
 `;
 
 export const Button = styled.TouchableOpacity`

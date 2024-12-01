@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, Dimensions, Linking, AppState, LogBox } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Linking, AppState } from 'react-native';
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { Camera as VisionCamera, useCameraDevices, useFrameProcessor } from 'react-native-vision-camera';
 import Svg, { Circle, Line } from 'react-native-svg';
@@ -45,6 +45,7 @@ export default function Health() {
     const {setIsLoggedIn} = useAuth();
 
     const devices = useCameraDevices();
+    console.log(devices);
     const backCamera = devices?.find(device => device.position === 'back');
     const frontCamera = devices?.find(device => device.position === 'front');
     const currentCamera = useFrontCamera ? frontCamera : backCamera;
@@ -66,10 +67,6 @@ export default function Health() {
         return Object.values(booleans);
     };
     // 특정 Warning 메시지 무시
-    LogBox.ignoreLogs([
-        'Possible Unhandled Promise Rejection', // 경고 메시지 내용
-        'Cannot read property toLowerCase of undefined', // 추가로 숨길 메시지
-    ]);
 
     useEffect(() => {
         // 상태 표시줄 및 네비게이션 바 숨기기
