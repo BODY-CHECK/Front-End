@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, Dimensions, Linking, Alert, AppState } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Linking, AppState, LogBox } from 'react-native';
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { Camera as VisionCamera, useCameraDevices, useFrameProcessor } from 'react-native-vision-camera';
 import Svg, { Circle, Line } from 'react-native-svg';
-import { Button, ButtonText, CameraIcon, CameraImage, Container, NumContainer, NumText } from './Health.style';
+import { CameraIcon, CameraImage, Container, NumContainer, NumText } from './Health.style';
 import { detectPose } from './detectPose';
 import { Worklets } from 'react-native-worklets-core';
 import { calculateAngle, calculateSlopeAngle, detectOutlier, updateStateAndFeedback, updateStateAndFeedbackwithTime, updateStateofTutorial } from './calculate_feedback';
@@ -65,6 +65,11 @@ export default function Health() {
     const convertBooleansObjectToArray = (booleans) => {    // 객체의 값들만 추출하여 배열로 변환
         return Object.values(booleans);
     };
+    // 특정 Warning 메시지 무시
+    LogBox.ignoreLogs([
+        'Possible Unhandled Promise Rejection', // 경고 메시지 내용
+        'Cannot read property toLowerCase of undefined', // 추가로 숨길 메시지
+    ]);
 
     useEffect(() => {
         // 상태 표시줄 및 네비게이션 바 숨기기
@@ -130,8 +135,7 @@ export default function Health() {
           console.error('오디오 파일 설정 오류:', error),
         );
       }, []);
-  
-    console.log('운동 숫자:', exerciseType);
+
     // 각 운동에 따른 관절 위치 정의
     const jointSets = {
         0: { // 튜토리얼
@@ -324,6 +328,9 @@ export default function Health() {
                     resolve();
                     return;
                 }
+
+                const { isPlaying, playerKey = '' } = sound;
+
                 sound.play(success => {
                     if (success) {
                         //console.log('성공적으로 재생되었습니다.');
@@ -348,6 +355,9 @@ export default function Health() {
                         resolve();
                         return;
                     }
+
+                    const { isPlaying, playerKey = '' } = sound;
+
                     sound.play(success => {
                         if (success) {
                             //console.log('성공적으로 재생되었습니다.');
@@ -371,6 +381,9 @@ export default function Health() {
                     resolve();
                     return;
                 }
+
+                const { isPlaying, playerKey = '' } = sound;
+
                 sound.play(success => {
                     if (success) {
                         //console.log('성공적으로 재생되었습니다.');
@@ -394,6 +407,9 @@ export default function Health() {
                         resolve();
                         return;
                     }
+
+                    const { isPlaying, playerKey = '' } = sound;
+
                     sound.play(success => {
                         if (success) {
                             //console.log('성공적으로 재생되었습니다.');
@@ -444,6 +460,9 @@ export default function Health() {
                     resolve();
                     return;
                 }
+
+                const { isPlaying, playerKey = '' } = sound;
+
                 sound.play((success) => {
                     if (success) {
                         console.log('카메라 음성 파일 재생 성공');
@@ -468,6 +487,9 @@ export default function Health() {
                         resolve();
                         return;
                     }
+
+                    const { isPlaying, playerKey = '' } = sound;
+
                     sound.play((success) => {
                         if (success) {
                             console.log('카메라 음성 파일 재생 성공');
@@ -499,8 +521,8 @@ export default function Health() {
     useEffect(() => {
         // 컴포넌트가 마운트될 때 한 번만 음성 파일을 설정
         setupAudioFiles()
-        .then(() => Alert.alert('오디오 파일 준비 완료'))
         .catch(error => console.error('오디오 파일 설정 오류:', error));
+        playCameraVoice(0)
     }, [exerciseAudioData]);
     //export { setupExerciseAudioFiles, playAudio, playAudioWithDelay };
 
@@ -511,6 +533,13 @@ export default function Health() {
         return Math.floor(100 * falseCount / array.length);
     };
 
+    const getLastBooleanValues = () => {
+        const lastMove = booleansMoveArray[booleansMoveArray.length - 1] ?? null;
+        const lastStop1 = booleansStop1Array[booleansStop1Array.length - 1] ?? null;
+        const lastStop2 = booleansStop2Array[booleansStop2Array.length - 1] ?? null;
+
+        return [lastMove, lastStop1, lastStop2];
+    };
 
     // 불리언 배열 상태
     // 최종 n회 전체에 대한 각각의 true or false를 저장
@@ -545,7 +574,7 @@ export default function Health() {
     const notPitchTimeRef = useRef(null); // Pitch가 적정 각도 밖에서 유지된 시간 기록
     const isPitchStableRef = useRef(false); // Pitch 안정 상태 기록
     const isNotPitchStableRef = useRef(false); // Pitch 불안정 상태 기록
-    const hasPlayedFinalVoice = useRef(false); // playCameraVoice(3) 실행 여부 추적
+    const hasPlayedFinalVoice = useRef(false); // playCameraVoice(1) 실행 여부 추적
 
     // 각도를 라디안에서 도(degree)로 변환하는 함수
     const toDegrees = (radians) => {
@@ -558,8 +587,7 @@ export default function Health() {
 
         const subscription = accelerometer.subscribe(({ x, y, z }) => {
             if (hasPlayedFinalVoice.current) {
-                subscription.unsubscribe(); // playCameraVoice(3)이 실행된 후에는 전체 useEffect 종료
-                return;
+                return; // 이미 실행된 경우 다시 실행하지 않음
             }
 
             const rollAngle = toDegrees(Math.atan(y / Math.sqrt(x * x + z * z)));
@@ -569,23 +597,26 @@ export default function Health() {
                 setRoll(rollAngle.toFixed(2));
             }
 
-            // roll 각도가 특정 범위 내에 있는지 확인 (예: -30도에서 30도 사이)
+            // roll 각도가 특정 범위 내에 있는지 확인 (예: 60도에서 90도 사이)
             if (rollAngle >= 60 && rollAngle <= 90) {
                 if (!pitchTimeRef.current) {
                     pitchTimeRef.current = Date.now();
                 }
                 const elapsedTime = (Date.now() - pitchTimeRef.current) / 1000; // 초 단위
-                if (elapsedTime >= 3 && !isPitchStableRef.current) {
+                if (elapsedTime >= 6 && !isPitchStableRef.current) {
                     isPitchStableRef.current = true;
-                    console.log("Roll 안정 상태 유지됨, Pose Detection 대기 중...");
+                    //console.log("Roll 안정 상태 유지됨, Pose Detection 대기 중...");
                     playCameraVoice(1); // 첫 번째 카메라 음성 파일 재생
+                    hasPlayedFinalVoice.current = true; // playCameraVoice(1) 실행 여부를 true로 설정
+
                     // 10초 대기 후 Pose Detection 활성화
                     setTimeout(() => {
                         setIsPoseDetectionActive(true);
-                        console.log("Pose Detection 활성화됨.");
+                        //console.log("Pose Detection 활성화됨.");
                         playCameraVoice(3); // 최종 음성 파일 재생
-                        hasPlayedFinalVoice.current = true; // playCameraVoice(3) 실행 여부를 true로 설정
-                        subscription.unsubscribe(); // 이후 useEffect의 동작을 중단
+
+                        // 여기에서 구독 해제
+                        subscription.unsubscribe();
                     }, 10000);
                 }
                 notPitchTimeRef.current = null;
@@ -595,7 +626,7 @@ export default function Health() {
                     notPitchTimeRef.current = Date.now();
                 }
                 const elapsedTime_notPitch = (Date.now() - notPitchTimeRef.current) / 1000; // 초 단위
-                if (elapsedTime_notPitch >= 3 && !isNotPitchStableRef.current) {
+                if (elapsedTime_notPitch >= 6 && !isNotPitchStableRef.current) {
                     isNotPitchStableRef.current = true;
                     playCameraVoice(2); // 적정 각도가 아닌 상태에서 음성 파일 재생
                 }
@@ -772,29 +803,37 @@ export default function Health() {
                         playCountAudio(repCount-1);
                         const booleansArray = convertBooleansObjectToArray(booleans);
                         if (booleansArray.every((value, index) => value === [false, false, false][index])) {
+                            last_feedback = 0;
                             playAudioWithDelay(0);
                             // 모든 값이 [false, false, false]와 동일할 때
                         } else if (booleansArray.every((value, index) => value === [true, false, false][index])) {
                             // 모든 값이 [true, false, false]와 동일할 때
+                            last_feedback = 0;
                             playAudioWithDelay(1);
                         } else if (booleansArray.every((value, index) => value === [false, true, false][index])) {
                             // 모든 값이 [false, true, false]와 동일할 때
+                            last_feedback = 0;
                             playAudioWithDelay(2);
                         } else if (booleansArray.every((value, index) => value === [false, false, true][index])) {
                             // 모든 값이 [false, false, true]와 동일할 때
+                            last_feedback = 0;
                             playAudioWithDelay(3);
                         } else if (booleansArray.every((value, index) => value === [true, true, false][index])) {
                             // 모든 값이 [true, true, false]와 동일할 때
+                            last_feedback = 1;
                             playAudioWithDelay(4);
                         } else if (booleansArray.every((value, index) => value === [true, false, true][index])) {
                             // 모든 값이 [true, false, true]와 동일할 때
+                            last_feedback = 1;
                             playAudioWithDelay(5);
                         } else if (booleansArray.every((value, index) => value === [false, true, true][index])) {
                             // 모든 값이 [false, true, true]와 동일할 때
+                            last_feedback = 1;
                             playAudioWithDelay(6);
                         }
                         else {
                             // 모든 값이 [true, true, true]와 동일할 때
+                            last_feedback = 2;
                             playAudioWithDelay(7);
                         }
                         // 상태 초기화
@@ -810,7 +849,7 @@ export default function Health() {
 
     useEffect(() => {
         if (repCount >= targetRepCount && booleansMoveArray.length === targetRepCount && !isTargetReached) {
-            console.log('목표 횟수에 도달했습니다.');
+            //console.log('목표 횟수에 도달했습니다.');
 
             const resultArray = [
                 calculateFalsePercentage(booleansMoveArray),
@@ -818,7 +857,10 @@ export default function Health() {
                 calculateFalsePercentage(booleansStop2Array)
             ];
 
-            console.log('Result Array:', resultArray);
+            const lastValues = getLastBooleanValues();
+            lastValues_feedback = calculateFalsePercentage(lastValues);
+
+            //console.log('Result Array:', resultArray);
 
             // 페이지 이동 전에 isTargetReached 상태 업데이트
             setIsTargetReached(true);
@@ -827,16 +869,29 @@ export default function Health() {
                 setTimeout(() => {
                     setIsLoggedIn(true);
                 }, 3000);
-            } else {
+            } else if (lastValues_feedback === 0) {
+                setTimeout(() => {
+                    navigation.replace('HealthResult', { id: route.params?.id, resultArray, premium: route.params?.premium, isURL });
+                }, 9000);
+            } else if (lastValues_feedback === 33) {
+                setTimeout(() => {
+                    navigation.replace('HealthResult', { id: route.params?.id, resultArray, premium: route.params?.premium, isURL });
+                }, 6000);
+            } else if (lastValues_feedback === 66 || lastValues_feedback === 100) {
                 setTimeout(() => {
                     navigation.replace('HealthResult', { id: route.params?.id, resultArray, premium: route.params?.premium, isURL });
                 }, 3000);
+            }
+            else {
+                setTimeout(() => {
+                    navigation.replace('HealthResult', { id: route.params?.id, resultArray, premium: route.params?.premium, isURL });
+                }, 1000);
             }
         }
     }, [booleansMoveArray]);
 
     if (!hasPermission) {
-        return <View><Text>카메라 권한을 확인 중입니다...</Text></View>;
+        return <View><Text>카메라 권한을 허용한 뒤, 뒤로가기를 눌러주세요!</Text></View>;
     }
 
     if (!currentCamera) {
@@ -1156,8 +1211,8 @@ export default function Health() {
                 frameProcessor={frameProcessor}
             />
             {renderPoseDots(route.params.id)}
-            <NumContainer style={{ width: '13%', justifyContent: 'center', alignItems: 'center' }}>
-                <NumText style={{ fontSize: 24, paddingHorizontal: 20, textAlign: 'center' }}>
+            <NumContainer >
+                <NumText>
                     {repCount}
                 </NumText>
             </NumContainer>

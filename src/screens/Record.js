@@ -12,10 +12,11 @@ export const startRecording = async () => {
       if (response === 'started') {
         console.log('녹화가 시작되었습니다.');
       } else if (response === 'permission_error') {
-        console.warn('녹화 권한이 거부되었습니다.');
+        console.log('녹화 권한이 거부되었습니다.');
+        navigation.navigate('Health', { id, repCount, premium });
       }
     } catch (error) {
-      console.error('녹화 시작 오류:', error);
+      console.log('녹화 시작 오류:', error);
     }
   };
 

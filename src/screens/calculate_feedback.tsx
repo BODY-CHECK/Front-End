@@ -103,7 +103,7 @@ export const updateStateAndFeedback = (
     }
     // 시작 자세 기준
     if (currentState === null) {
-        console.log('Null state detected')
+        //console.log('Null state detected')
     }
     if (
         currentState === null &&
@@ -113,7 +113,7 @@ export const updateStateAndFeedback = (
         lieAngle > postureCriteria.lie[0] && lieAngle < postureCriteria.lie[1]
     ) {
         setState('initial');
-        console.log('Initial state detected', exerciseType);
+        //console.log('Initial state detected', exerciseType);
         return;
     }
 
@@ -158,22 +158,22 @@ export const updateStateAndFeedback = (
         if (moveAngle >= thresholds.moveEnd && moveAngle <= postureCriteria.move[1]) {
             setState('finished');
             setRepCount((count) => count + 1);
-            console.log('Finished state detected for', exerciseType);
+            //console.log('Finished state detected for', exerciseType);
         } else if (currentState === null || currentState === 'finished') {
             setState('initial');
-            console.log('Transitioned to initial state for', exerciseType);
+            //console.log('Transitioned to initial state for', exerciseType);
         }
     }
 
     if (Number(exerciseType) === 11) {
         if (moveAngle >= thresholds.moveStart && currentState === 'initial') {
             setState('exercising');
-            console.log('Exercising state detected for', exerciseType);
+            //console.log('Exercising state detected for', exerciseType);
         }
     }else if (Number(exerciseType) != 11) {
         if (moveAngle <= thresholds.moveStart && currentState === 'initial') {
             setState('exercising');
-            console.log('Exercising state detected for', exerciseType);
+            //console.log('Exercising state detected for', exerciseType);
         }
     }
 };
@@ -202,7 +202,7 @@ export const updateStateAndFeedbackwithTime = (
     }
 
     if (currentState === null) {
-        console.log('Null state detected');
+        //console.log('Null state detected');
     }
 
     if (
@@ -217,8 +217,8 @@ export const updateStateAndFeedbackwithTime = (
     }
 
     if (currentState === 'exercising') {
-        console.log("moveAngle in Exercising:", moveAngle)
-        console.log("stop1Angle in Exercising:", stop1Angle)
+        //console.log("moveAngle in Exercising:", moveAngle)
+        //console.log("stop1Angle in Exercising:", stop1Angle)
         if (Number(exerciseType) === 12){
             setBooleans((prevBooleans) => ({
                 ...prevBooleans,
@@ -235,7 +235,7 @@ export const updateStateAndFeedbackwithTime = (
         }
     }
     if (currentState === 'initial') {
-        console.log("moveAngle in Initial:", moveAngle)
+        //console.log("moveAngle in Initial:", moveAngle)
     }
     if (currentState === 'exercising') {
         if (Number(exerciseType) === 12) {
@@ -246,13 +246,13 @@ export const updateStateAndFeedbackwithTime = (
                         ...prevBooleans,
                         stop2: true,
                     }));
-                    console.log('exercise time is', elapsedTime);
-                    console.log('Speed feedback triggered: Exercise too fast');
+                    //console.log('exercise time is', elapsedTime);
+                    //console.log('Speed feedback triggered: Exercise too fast');
                 }
                 setState('finished');
                 setRepCount((count) => count + 1);
                 exercisingStartTime = null;
-                console.log('Finished state detected for', exerciseType);
+                //console.log('Finished state detected for', exerciseType);
             }
         }
         else {
@@ -266,13 +266,13 @@ export const updateStateAndFeedbackwithTime = (
                         ...prevBooleans,
                         stop2: true,
                     }));
-                    console.log('exercise time is', elapsedTime);
-                    console.log('Speed feedback triggered: Exercise too fast');
+                    //console.log('exercise time is', elapsedTime);
+                    //console.log('Speed feedback triggered: Exercise too fast');
                 }
                 setState('finished');
                 setRepCount((count) => count + 1);
                 exercisingStartTime = null;
-                console.log('Finished state detected for', exerciseType);
+                //console.log('Finished state detected for', exerciseType);
             }
         }
     } else if (currentState === 'initial') {
@@ -280,18 +280,18 @@ export const updateStateAndFeedbackwithTime = (
             if (moveAngle >= thresholds.moveStart) {
                 setState('exercising');
                 exercisingStartTime = Date.now();
-                console.log('Exercising state detected for', exerciseType);
+                //console.log('Exercising state detected for', exerciseType);
             }
         } else {
             if (moveAngle <= thresholds.moveStart) {
                 setState('exercising');
                 exercisingStartTime = Date.now();
-                console.log('Exercising state detected for', exerciseType);
+                //console.log('Exercising state detected for', exerciseType);
             }
         }
     } else if (currentState === null || currentState === 'finished') {
         setState('initial');
-        console.log('Transitioned to initial state for', exerciseType);
+        //console.log('Transitioned to initial state for', exerciseType);
     }
 };
 
@@ -299,7 +299,7 @@ export const updateStateofTutorial = (
     move1Angle, move2Angle, lieAngle,
     currentState, setState, setRepCount, booleans, setBooleans, exerciseType
 ) => {
-    const postureCriteria = initialPostureCriteria[exerciseType];
+    const postureCriteria = initialPostureCriteria[exerciseType ];
     const thresholds = exerciseThresholds[exerciseType];
     if (!postureCriteria || !thresholds) {
         console.error('운동 유형이 유효하지 않습니다:', exerciseType);
@@ -307,8 +307,8 @@ export const updateStateofTutorial = (
     }
     // 시작 자세 기준
     if (currentState === null) {
-        console.log('Null state detected')
-        console.log(move1Angle, move2Angle)
+        //console.log('Null state detected')
+        //console.log(move1Angle, move2Angle)
     }
     if (
         currentState === null &&
@@ -317,12 +317,13 @@ export const updateStateofTutorial = (
         lieAngle > postureCriteria.lie[0] && lieAngle < postureCriteria.lie[1]
     ) {
         setState('initial');
-        console.log('Initial state detected', exerciseType);
+        //console.log('Initial state detected', exerciseType);
         return;
     }
 
     // 상태 업데이트 및 각도 업데이트는 'exercising'일 때만
     if (currentState === 'exercising') {
+        //console.log(move1Angle, move2Angle)
         setBooleans((prevBooleans) => ({
             ...prevBooleans,
             move: move1Angle >= thresholds.moveClear && move2Angle >= thresholds.moveClear ? false : prevBooleans.move,
@@ -344,6 +345,8 @@ export const updateStateofTutorial = (
 
     if (move1Angle >= postureCriteria.move1[1] && currentState === 'initial') {
         setState('exercising');
-        console.log('Exercising state detected for', exerciseType);
+        //console.log('Exercising state detected for', exerciseType);
     }
+
+    //if (currentState === 'initial') {console.log(move1Angle, move2Angle)}
 };

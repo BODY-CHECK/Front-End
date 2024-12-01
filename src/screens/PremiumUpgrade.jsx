@@ -7,7 +7,7 @@ import logo from '../assets/images/logo.png';
 import saveVideo from '../assets/images/saveVideo.png';
 import instance from '../axiosInstance';
 import ConfirmModal from '../components/ConfirmModal';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -24,6 +24,7 @@ const PremiumUpgrade = () => {
       if (response.status === 200 && response.data.isSuccess) {
         const redirectUrl = response.data.result.next_redirect_mobile_url;
         Linking.openURL(redirectUrl);
+        navigation.pop(2);
         navigation.pop(2);
       } else {
         setConirmModalVisible(true);

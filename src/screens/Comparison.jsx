@@ -71,8 +71,6 @@ const styles = StyleSheet.create({
   },
   video: {
     width: '100%',
-    height: 300,
-    borderWidth: 1,
-    borderColor: 'black',
+    height: 300, 
   },
 });

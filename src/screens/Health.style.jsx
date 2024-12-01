@@ -2,8 +2,6 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  justify-content: flex-end;  // 하단에 고정
-  padding-bottom: 20px;
   align-items: center; 
   position: relative;
 `;
@@ -45,15 +43,15 @@ export const NumContainer = styled.View`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 80px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   top: 17px;
   background-color: #3373EB;
-  border-radius: 90px;
+  border-radius: 35px;
   position: absolute;
 `;
 
 export const NumText = styled.Text`
   color: white;
-  font-size: 36px;
+  font-size: 24px;
 `;

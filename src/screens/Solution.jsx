@@ -22,6 +22,7 @@ import {Modal, StyleSheet, Text} from 'react-native';
 import Video from 'react-native-video';
 import { ButtonText, CancelButton, ConfirmButton, ModalContainer, ModalText, ModalView, SubText, ModalButtonContainer, RealButton, RealButtonText } from './Solution.style';
 import Loading from './Loading';
+import idToLabels from '../components/Health/Labels';
 
 export default function Solution() {
   const route = useRoute();
@@ -31,6 +32,12 @@ export default function Solution() {
   const [error, setError] = useState(null);
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  const labels = getLabelsForId(exerciseId);
+
+  // ID에 따른 라벨 가져오기 함수
+  function getLabelsForId(exerciseId) {
+    return idToLabels[exerciseId] || ['라벨 없음', '라벨 없음', '라벨 없음'];
+  }
 
 
   useEffect(() => {
@@ -100,14 +107,14 @@ export default function Solution() {
               repeat={false} // 비디오 반복 재생
             />
           ) : (
-            <ContentText>프리미엄 회원이 되어보세요!</ContentText>
+            <ContentText>{`녹화된 영상이 없어요..\n프리미엄을 구독하거나 녹화 권한을 추가해주세요!`}</ContentText>
           )}
         </GIFContainer>
         <GraphContainer>
           <BarChart
             style={graphStyle}
             data={{
-              labels: ['팔 각도', '자세 정렬', '무릎 각도' ],
+              labels: labels,
               datasets: [
                 {
                   data: solutionData?.criteriaDetailList.map(
