@@ -25,7 +25,7 @@ import {
 } from './HealtResult.style';
 import {CommonActions, useNavigation, useRoute} from '@react-navigation/native';
 import {BarChart} from 'react-native-chart-kit';
-import {Alert, Modal, StyleSheet} from 'react-native';
+import {Modal, StyleSheet} from 'react-native';
 import exerciseData from '../components/Health/HealthInfoData';
 import {
   postAttendance,
@@ -43,6 +43,9 @@ export default function HealthResult() {
   const {id, resultArray, premium} = route.params;
   const exercise = exerciseData.find(ex => ex.id === id);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalAction, setModalAction] = useState(null); // 모달 동작 관리
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false); // ConfirmModal 상태
+  const [confirmModalMessage, setConfirmModalMessage] = useState(''); // ConfirmModal 메시지
   const navigation = useNavigation();
   const [apiResponse, setApiResponse] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -50,9 +53,6 @@ export default function HealthResult() {
   const [isRecording, setIsRecording] = useState(true); // 녹화 상태 관리
   const [isURL, setIsURL] = useState(null);
   const [saveloading, setSaveLoading] = useState(false);
-
-  const [confirmModalVisible, setConirmModalVisible] = useState(false); // 모달 상태
-  const [confirmModalMessage, setConfirmModalMessage] = useState(''); // 모달 메시지
 
   const exerciseId = id; // 현재 운동 ID
   const labels = getLabelsForId(exerciseId);
@@ -103,7 +103,6 @@ export default function HealthResult() {
     fetchApiResponse();
   }, [id]);
 
-  // 컴포넌트가 렌더링될 때 녹화 종료 함수 실행
   useEffect(() => {
     if (isRecording && premium) {
       stopRecording(setIsURL, setIsRecording);
@@ -123,32 +122,27 @@ export default function HealthResult() {
   const chartConfig = {
     backgroundGradientFrom: '#fff',
     backgroundGradientTo: '#fff',
-    color: (opacity = 1) => `rgba(51, 115, 235, ${opacity})`, // 막대의 색상을 파란색으로 설정
-    strokeWidth: 2, // 막대 외곽선 두께
-    barPercentage: 0.7, // 막대 두께 비율
-    useShadowColorFromDataset: false, // 그림자 색상 설정
-    fillShadowGradient: '#3373EB', // 막대의 상단 색상
-    fillShadowGradientOpacity: 1, // 막대 상단의 투명도
-    fillShadowGradientFrom: '#3373EB', // 막대의 시작 색상
-    fillShadowGradientFromOpacity: 1, // 막대의 시작 부분 투명도
-    fillShadowGradientTo: '#3373EB', // 막대 하단의 색상 (흰색으로 그라데이션)
-    fillShadowGradientToOpacity: 1, // 막대 하단 투명도
+    color: (opacity = 1) => `rgba(51, 115, 235, ${opacity})`,
+    strokeWidth: 2,
+    barPercentage: 0.7,
+    useShadowColorFromDataset: false,
+    fillShadowGradient: '#3373EB',
+    fillShadowGradientOpacity: 1,
+    fillShadowGradientFrom: '#3373EB',
+    fillShadowGradientFromOpacity: 1,
+    fillShadowGradientTo: '#3373EB',
+    fillShadowGradientToOpacity: 1,
     propsForHorizontalLabels: {
-      dx: -18, // x축 위치 조정
+      dx: -18,
       dy: 0,
     },
     propsForBackgroundLines: {
-      strokeDasharray: '', // 배경 선을 없앰
+      strokeDasharray: '',
     },
   };
 
   const graphStyle = {
     borderRadius: 16,
-  };
-
-  // 나가기 버튼을 눌렀을 때 모달 표시
-  const handleExit = () => {
-    setModalVisible(true);
   };
 
   const handleSave = async () => {
@@ -161,7 +155,6 @@ export default function HealthResult() {
       const content = apiResponse;
       const solutionVideo = isURL;
 
-      // postExerciseSolution 함수 호출
       const result = await postExerciseSolution(
         exerciseId,
         solutionVideo,
@@ -169,46 +162,60 @@ export default function HealthResult() {
         content,
       );
 
-      setModalVisible(false);
-      setConirmModalVisible(true);
+      setConfirmModalVisible(true);
       setConfirmModalMessage('피드백이 저장되었습니다.');
     } catch (error) {
     } finally {
-      setSaveLoading(false); // 로딩 종료
+      setSaveLoading(false);
     }
   };
 
-  // 모달에서 아니오를 눌렀을 때 처리
-  const handleCancel = () => {
+  const handleModalYes = () => {
     setModalVisible(false);
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{name: '홈'}],
-      }),
-    );
+
+    if (modalAction === 'exit') {
+      handleSave();
+    } else if (modalAction === 'retry') {
+      handleSave();
+    }
   };
 
-  // 모달에서 x를 눌렀을 때 처리
-  const handleX = () => {
+  const handleModalNo = () => {
     setModalVisible(false);
+
+    if (modalAction === 'exit') {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: '홈'}],
+        }),
+      );
+    }
+    else{
+      navigation.navigate('HealthInfo', {id, repCount: 12});
+    }
   };
 
   const handleConfirmClick = () => {
-    setConirmModalVisible(false);
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0, // 첫 번째 스크린을 보여줌
-        routes: [{name: '홈'}], // Home 화면으로 이동
-      }),
-    );
+    setConfirmModalVisible(false);
+
+    if (modalAction === 'retry') {
+      navigation.navigate('HealthInfo', {id, repCount: 12});
+    } else {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: '홈'}],
+        }),
+      );
+    }
   };
 
   if (saveloading) {
-    return <Loading text="솔루션 저장 중입니다..." />; // 로딩 화면 표시
+    return <Loading text="솔루션 저장 중입니다..." />;
   }
   if (loading) {
-    return <Loading text="솔루션 생성 중입니다..." />; // 로딩 화면 표시
+    return <Loading text="솔루션 생성 중입니다..." />;
   }
 
   return (
@@ -218,12 +225,12 @@ export default function HealthResult() {
           {premium ? (
             isURL ? (
               <Video
-                source={{ uri: isURL }} // 비디오 파일의 URL 또는 로컬 파일 경로
+                source={{uri: isURL}}
                 style={styles.video}
-                controls={true} // 기본 컨트롤러 표시 (재생, 일시정지, 탐색바 등)
-                resizeMode="contain" // 비디오 크기 조절 방식 ('cover', 'contain', 'stretch' 등)
-                paused={true} // true일 경우 비디오가 일시정지됨
-                repeat={false} // 비디오 반복 재생
+                controls={true}
+                resizeMode="contain"
+                paused={true}
+                repeat={false}
               />
             ) : (
               <ContentText>녹화 권한을 추가해주세요!</ContentText>
@@ -252,10 +259,17 @@ export default function HealthResult() {
       </ContentContainer>
       <ButtonContainer>
         <Button1
-          onPress={() => navigation.navigate('HealthInfo', {id, repCount: 12})}>
+          onPress={() => {
+            setModalAction('retry');
+            setModalVisible(true);
+          }}>
           <ButtonText1>다시하기</ButtonText1>
         </Button1>
-        <Button2 onPress={handleExit}>
+        <Button2
+          onPress={() => {
+            setModalAction('exit');
+            setModalVisible(true);
+          }}>
           <ButtonText2>나가기</ButtonText2>
         </Button2>
       </ButtonContainer>
@@ -265,7 +279,7 @@ export default function HealthResult() {
         onRequestClose={() => setModalVisible(false)}>
         <ModalContainer>
           <ModalContent>
-            <ModalExitButton onPress={handleX}>
+            <ModalExitButton onPress={() => setModalVisible(false)}>
               <ModalExitButtonText>X</ModalExitButtonText>
             </ModalExitButton>
             <ModalContentText1>저장하시겠습니까?</ModalContentText1>
@@ -274,10 +288,10 @@ export default function HealthResult() {
               저장하시겠습니까?
             </ModalContentText2>
             <ModalButtonContainer>
-              <ModalButton1 onPress={handleSave}>
+              <ModalButton1 onPress={handleModalYes}>
                 <ModalButtonText1>예</ModalButtonText1>
               </ModalButton1>
-              <ModalButton2 onPress={handleCancel}>
+              <ModalButton2 onPress={handleModalNo}>
                 <ModalButtonText2>아니오</ModalButtonText2>
               </ModalButton2>
             </ModalButtonContainer>
