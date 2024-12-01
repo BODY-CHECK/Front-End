@@ -7,6 +7,7 @@ import HealthResult from '../screens/HealthResult';
 import HeaderMain from '../components/HeaderMain';
 import exerciseData from '../components/Health/HealthInfoData';
 import Loading from '../screens/Loading';
+import WelcomePage from '../screens/WelcomePage';
 
 const Stack = createStackNavigator();
 const CustomHeader = () => <HeaderMain />;
@@ -54,6 +55,11 @@ export default function HealthStackNavigator() {
           headerTitleStyle: {fontWeight: 'bold'},
         }}
       />
+      <Stack.Screen
+            name="WelcomePage"
+            component={WelcomePage}
+            options={{headerShown: false}}
+          />
     </Stack.Navigator>
   );
 }
