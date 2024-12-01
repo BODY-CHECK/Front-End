@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, Dimensions, Linking, AppState } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Linking, AppState, LogBox } from 'react-native';
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { Camera as VisionCamera, useCameraDevices, useFrameProcessor } from 'react-native-vision-camera';
 import Svg, { Circle, Line } from 'react-native-svg';
@@ -65,6 +65,11 @@ export default function Health() {
     const convertBooleansObjectToArray = (booleans) => {    // 객체의 값들만 추출하여 배열로 변환
         return Object.values(booleans);
     };
+    // 특정 Warning 메시지 무시
+    LogBox.ignoreLogs([
+        'Possible Unhandled Promise Rejection', // 경고 메시지 내용
+        'Cannot read property toLowerCase of undefined', // 추가로 숨길 메시지
+    ]);
 
     useEffect(() => {
         // 상태 표시줄 및 네비게이션 바 숨기기
@@ -130,8 +135,7 @@ export default function Health() {
           console.error('오디오 파일 설정 오류:', error),
         );
       }, []);
-  
-    console.log('운동 숫자:', exerciseType);
+
     // 각 운동에 따른 관절 위치 정의
     const jointSets = {
         0: { // 튜토리얼
