@@ -145,10 +145,10 @@ export default function Health() {
             lie: ['rightShoulderPosition', 'rightHipPosition'],
         },
         1: { // 푸쉬업
-            move: ['rightWristPosition', 'rightElbowPosition', 'rightShoulderPosition'],    // 팔꿈치
-            stop1: ['rightShoulderPosition', 'rightHipPosition', 'rightKneePosition'],      // 엉덩이
-            stop2: ['rightHipPosition', 'rightKneePosition', 'rightAnklePosition'],         // 무릎
-            lie: ['rightShoulderPosition', 'rightHipPosition'],
+            move: ['leftWristPosition', 'leftElbowPosition', 'leftShoulderPosition'],    // 팔꿈치
+            stop1: ['leftShoulderPosition', 'leftHipPosition', 'leftKneePosition'],      // 엉덩이
+            stop2: ['leftHipPosition', 'leftKneePosition', 'leftAnklePosition'],         // 무릎
+            lie: ['leftShoulderPosition', 'leftHipPosition'],
         },
         2: { // 푸쉬업(무릎)
             move: ['rightWristPosition', 'rightElbowPosition', 'rightShoulderPosition'],    // 팔꿈치
@@ -533,6 +533,13 @@ export default function Health() {
         return Math.floor(100 * falseCount / array.length);
     };
 
+    const getLastBooleanValues = () => {
+        const lastMove = booleansMoveArray[booleansMoveArray.length - 1] ?? null;
+        const lastStop1 = booleansStop1Array[booleansStop1Array.length - 1] ?? null;
+        const lastStop2 = booleansStop2Array[booleansStop2Array.length - 1] ?? null;
+
+        return [lastMove, lastStop1, lastStop2];
+    };
 
     // 불리언 배열 상태
     // 최종 n회 전체에 대한 각각의 true or false를 저장
@@ -796,29 +803,37 @@ export default function Health() {
                         playCountAudio(repCount-1);
                         const booleansArray = convertBooleansObjectToArray(booleans);
                         if (booleansArray.every((value, index) => value === [false, false, false][index])) {
+                            last_feedback = 0;
                             playAudioWithDelay(0);
                             // 모든 값이 [false, false, false]와 동일할 때
                         } else if (booleansArray.every((value, index) => value === [true, false, false][index])) {
                             // 모든 값이 [true, false, false]와 동일할 때
+                            last_feedback = 0;
                             playAudioWithDelay(1);
                         } else if (booleansArray.every((value, index) => value === [false, true, false][index])) {
                             // 모든 값이 [false, true, false]와 동일할 때
+                            last_feedback = 0;
                             playAudioWithDelay(2);
                         } else if (booleansArray.every((value, index) => value === [false, false, true][index])) {
                             // 모든 값이 [false, false, true]와 동일할 때
+                            last_feedback = 0;
                             playAudioWithDelay(3);
                         } else if (booleansArray.every((value, index) => value === [true, true, false][index])) {
                             // 모든 값이 [true, true, false]와 동일할 때
+                            last_feedback = 1;
                             playAudioWithDelay(4);
                         } else if (booleansArray.every((value, index) => value === [true, false, true][index])) {
                             // 모든 값이 [true, false, true]와 동일할 때
+                            last_feedback = 1;
                             playAudioWithDelay(5);
                         } else if (booleansArray.every((value, index) => value === [false, true, true][index])) {
                             // 모든 값이 [false, true, true]와 동일할 때
+                            last_feedback = 1;
                             playAudioWithDelay(6);
                         }
                         else {
                             // 모든 값이 [true, true, true]와 동일할 때
+                            last_feedback = 2;
                             playAudioWithDelay(7);
                         }
                         // 상태 초기화
@@ -834,7 +849,7 @@ export default function Health() {
 
     useEffect(() => {
         if (repCount >= targetRepCount && booleansMoveArray.length === targetRepCount && !isTargetReached) {
-            console.log('목표 횟수에 도달했습니다.');
+            //console.log('목표 횟수에 도달했습니다.');
 
             const resultArray = [
                 calculateFalsePercentage(booleansMoveArray),
@@ -842,7 +857,10 @@ export default function Health() {
                 calculateFalsePercentage(booleansStop2Array)
             ];
 
-            console.log('Result Array:', resultArray);
+            const lastValues = getLastBooleanValues();
+            lastValues_feedback = calculateFalsePercentage(lastValues);
+
+            //console.log('Result Array:', resultArray);
 
             // 페이지 이동 전에 isTargetReached 상태 업데이트
             setIsTargetReached(true);
@@ -851,10 +869,23 @@ export default function Health() {
                 setTimeout(() => {
                     setIsLoggedIn(true);
                 }, 3000);
-            } else {
+            } else if (lastValues_feedback === 0) {
+                setTimeout(() => {
+                    navigation.replace('HealthResult', { id: route.params?.id, resultArray, premium: route.params?.premium, isURL });
+                }, 9000);
+            } else if (lastValues_feedback === 33) {
+                setTimeout(() => {
+                    navigation.replace('HealthResult', { id: route.params?.id, resultArray, premium: route.params?.premium, isURL });
+                }, 6000);
+            } else if (lastValues_feedback === 66 || lastValues_feedback === 100) {
                 setTimeout(() => {
                     navigation.replace('HealthResult', { id: route.params?.id, resultArray, premium: route.params?.premium, isURL });
                 }, 3000);
+            }
+            else {
+                setTimeout(() => {
+                    navigation.replace('HealthResult', { id: route.params?.id, resultArray, premium: route.params?.premium, isURL });
+                }, 1000);
             }
         }
     }, [booleansMoveArray]);

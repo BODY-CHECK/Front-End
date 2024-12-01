@@ -222,7 +222,7 @@ export default function HealthResult() {
                 style={styles.video}
                 controls={true} // 기본 컨트롤러 표시 (재생, 일시정지, 탐색바 등)
                 resizeMode="contain" // 비디오 크기 조절 방식 ('cover', 'contain', 'stretch' 등)
-                paused={false} // true일 경우 비디오가 일시정지됨
+                paused={true} // true일 경우 비디오가 일시정지됨
                 repeat={false} // 비디오 반복 재생
               />
             ) : (

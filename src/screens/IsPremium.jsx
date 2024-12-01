@@ -257,23 +257,28 @@ const ButtonGroup = styled.View`
 
 const ModalConfirmButton = styled.TouchableOpacity`
   background-color: #3373eb;
-  width: 40%;
+  width: 45%;
+  height: 40px;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
-  padding: 5px 0;
+  padding: 10px ;
+  margin: 0 10px 0 5px;
 `;
 
 const ModalCancelButton = styled.TouchableOpacity`
   background-color: #3c3b40;
-  width: 40%;
+  width: 45%;
+  height: 40px;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
+  padding: 10px ;
+  margin: 0 7px 0 5px;
 `;
 
 const ModalButtonText = styled.Text`
-  font-size: 10px;
+  font-size: 14px;
   font-weight: bold;
   color: white;
 `;

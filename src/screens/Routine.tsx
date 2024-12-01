@@ -453,7 +453,7 @@ const ModalText = styled.Text`
 `;
 
 const SubText = styled.Text`
-  font-size: 10px;
+  font-size: 14px;
   color: #7c86a2;
   margin-bottom: 35px;
 `;
@@ -472,7 +472,7 @@ const ConfirmButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   padding: 10px;
-  margin: 0 10px;
+  margin: 0 10px 0 5px;
 `;
 
 const CancelButton = styled.TouchableOpacity`
@@ -483,11 +483,11 @@ const CancelButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   padding: 10px;
-  margin: 0 10px;
+  margin: 0 6px 0 5px;
 `;
 
 const ButtonText = styled.Text`
-  font-size: 10px;
+  font-size: 14px;
   font-weight: bold;
   color: white;
 `;

@@ -7,6 +7,7 @@ import logo from '../assets/images/logo.png';
 import saveVideo from '../assets/images/saveVideo.png';
 import instance from '../axiosInstance';
 import ConfirmModal from '../components/ConfirmModal';
+import { useNavigation } from '@react-navigation/native';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -14,6 +15,7 @@ const PremiumUpgrade = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [confirmModalVisible, setConirmModalVisible] = useState(false); // 모달 상태
   const [confirmModalMessage, setConfirmModalMessage] = useState(''); // 모달 메시지
+  const navigation = useNavigation();
 
   // 구독하기 버튼 클릭 시 호출되는 함수
   const handleSubscribe = async () => {
@@ -22,6 +24,7 @@ const PremiumUpgrade = () => {
       if (response.status === 200 && response.data.isSuccess) {
         const redirectUrl = response.data.result.next_redirect_mobile_url;
         Linking.openURL(redirectUrl);
+        navigation.pop(2);
       } else {
         setConirmModalVisible(true);
         setConfirmModalMessage('결제 준비에 실패했습니다. 다시 시도해주세요.');
