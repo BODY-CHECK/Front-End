@@ -257,7 +257,7 @@ const LegendText = styled.Text`
 const InputContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
-
+  margin-top: 15px;
   margin-bottom: 10px;
 `;
 
