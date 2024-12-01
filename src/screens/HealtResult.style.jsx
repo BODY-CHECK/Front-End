@@ -57,7 +57,7 @@ export const ButtonContainer = styled.View`
 `;
 
 export const Button1 = styled.TouchableOpacity`
-  width: 45%;
+  width: 47%;
   height: 50px;
   padding: 15px;
   background-color: #3373eb;
@@ -68,7 +68,7 @@ export const Button1 = styled.TouchableOpacity`
 `;
 
 export const Button2 = styled.TouchableOpacity`
-  width: 45%;
+  width: 47%;
   height: 50px;
   padding: 15px;
   background-color: #3c3b40;
@@ -129,8 +129,8 @@ export const ModalButtonContainer = styled.View`
 
 export const ModalButton1 = styled.TouchableOpacity`
   width: 45%;
-  height: 50px;
-  padding: 15px;
+  height: 40px;
+  padding: 10px;
   background-color: #3373eb;
   border-radius: 10px;
   align-items: center;
@@ -140,8 +140,8 @@ export const ModalButton1 = styled.TouchableOpacity`
 
 export const ModalButton2 = styled.TouchableOpacity`
   width: 45%;
-  height: 50px;
-  padding: 15px;
+  height: 40px;
+  padding: 10px;
   background-color: #3c3b40;
   border-radius: 10px;
   align-items: center;
@@ -165,7 +165,7 @@ export const ModalExitButton = styled.TouchableOpacity`
   border-radius: 20px;
   padding: 10px;
   position: absolute;
-  top: 10px;
+  top: 0px;
   right: 10px;
 `;
 
