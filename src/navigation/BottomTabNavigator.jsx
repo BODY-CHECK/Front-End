@@ -33,6 +33,7 @@ function BottomTabNavigator() {
       'Loading',
       'Subscribe',
       'HomeHealthInfo',
+      'Comparison',
     ];
 
     if (routesToHideTabBar.includes(routeName)) {

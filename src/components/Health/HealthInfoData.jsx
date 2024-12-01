@@ -9,7 +9,7 @@ const exerciseData = [
     mainMuscle: '대흉근',
     secondaryMuscle: '상완삼두근, 삼각근',
     imageSource: require('../../assets/images/Health/push-up.png'),
-    gifSource: require('../../assets/images/Health/push-up.gif'),
+    gifSource: require('../../assets/images/Health/push-up1.gif'),
     exerciseOrder: [
       '1. 엎드린 자세에서 어깨너비 두 배 정도로 두 손을 바닥에 짚고, 발뒤꿈치를 든 상태에서 팔과 무릎을 곧게 편다.',
       '2. 가슴을 바닥 쪽으로 내미는 느낌으로 팔꿈치를 구부려 바닥에 닿기 전까지 몸을 내린다.',
@@ -26,7 +26,7 @@ const exerciseData = [
     mainMuscle: '대흉근',
     secondaryMuscle: '상완삼두근, 삼각근',
     imageSource: require('../../assets/images/Health/kneeing-push-up.png'),
-    gifSource: require('../../assets/images/Health/kneeing-push-up.gif'),
+    gifSource: require('../../assets/images/Health/kneeing-push-up1.gif'),
     exerciseOrder: [
       '1. 무릎을 대고 엎드린 자세에서 양손을 어깨너비 두 배로 벌리고 발을 꼬아준다.',
       '2. 팔꿈치가 90도가 되도록 몸을 내린다.',
@@ -45,7 +45,7 @@ const exerciseData = [
     mainMuscle: '광배근',
     secondaryMuscle: '상완이두근',
     imageSource: require('../../assets/images/Health/pull-up.png'),
-    gifSource: require('../../assets/images/Health/pull-up.gif'),
+    gifSource: require('../../assets/images/Health/pull-up1.gif'),
     exerciseOrder: [
       '1. 머신 앞에 서서 어깨너비보다 넓게 손잡이를 두 손으로 잡는다.',
       '2. 가슴 윗부분이 바에 닿을 정도로 상체를 끌어올린다.',
@@ -65,7 +65,7 @@ const exerciseData = [
     mainMuscle: '광배근',
     secondaryMuscle: '상완이두근',
     imageSource: require('../../assets/images/Health/banding-pull-up.png'),
-    gifSource: require('../../assets/images/Health/banding-pull-up.gif'),
+    gifSource: require('../../assets/images/Health/banding-pull-up1.gif'),
     exerciseOrder: [
       '1. 머신 앞에 서서 어깨너비보다 넓게 손잡이를 두 손으로 잡는다.',
       '2. 어시스트 밴드에 올라가서 매달린다.',
@@ -85,7 +85,7 @@ const exerciseData = [
     targetMuscle: '복부',
     mainMuscle: '복직근',
     imageSource: require('../../assets/images/Health/sit-ups.png'),
-    gifSource: require('../../assets/images/Health/sit-ups.gif'),
+    gifSource: require('../../assets/images/Health/sit-ups1.gif'),
     exerciseOrder: [
       '1. 바닥에 누워 무릎을 구부리고 발이 바닥과 떨어지지 않도록 한다.',
       '2. 양손을 귀에 대고 복부에 힘을 주면서 고개를 살짝 든다.',
@@ -102,7 +102,7 @@ const exerciseData = [
     targetMuscle: '복부',
     mainMuscle: '복직근 하부',
     imageSource: require('../../assets/images/Health/leg-raise.png'),
-    gifSource: require('../../assets/images/Health/leg-raise.gif'),
+    gifSource: require('../../assets/images/Health/leg-raise1.gif'),
     exerciseOrder: [
       '1. 벤치에 누워 벤치 윗부분을 두 손으로 잡는다.',
       '2. 다리를 들어올린 후 골반을 가슴 쪽으로 말아 올린다.',
@@ -119,7 +119,7 @@ const exerciseData = [
     mainMuscle: '복직근 하부',
     secondaryMuscle: '힙 굴곡근',
     imageSource: require('../../assets/images/Health/hanging-leg-raise.png'),
-    gifSource: require('../../assets/images/Health/hanging-leg-raise.gif'),
+    gifSource: require('../../assets/images/Health/hanging-leg-raise1.gif'),
     exerciseOrder: [
       '1. 철봉에 매달려 몸을 펴고 무릎을 약간 구부린다.',
       '2. 무릎을 가슴 쪽으로 끌어당긴다.',
@@ -139,7 +139,7 @@ const exerciseData = [
     mainMuscle: '대퇴사두근',
     secondaryMuscle: '대둔근, 슬굴곡근',
     imageSource: require('../../assets/images/Health/squat.png'),
-    gifSource: require('../../assets/images/Health/squat.gif'),
+    gifSource: require('../../assets/images/Health/squat1.gif'),
     exerciseOrder: [
       '1. 선 자세에서 양손을 앞으로 모은다.',
       '2. 어깨너비로 서서 허벅지와 수평이 될 때까지 앉는다.',
@@ -159,7 +159,7 @@ const exerciseData = [
     mainMuscle: '대퇴사두근',
     secondaryMuscle: '햄스트링, 엉덩이 근육',
     imageSource: require('../../assets/images/Health/one-leg-squat.png'),
-    gifSource: require('../../assets/images/Health/one-leg-squat.gif'),
+    gifSource: require('../../assets/images/Health/one-leg-squat1.gif'),
     exerciseOrder: [
       '1. 벤치나 의자 앞에 발을 골반 너비로 벌리고 선다.',
       '2. 왼발을 바닥에서 들어올리고 발끝을 위로 향하게 한다.',
@@ -180,7 +180,7 @@ const exerciseData = [
     mainMuscle: '대퇴사두근',
     secondaryMuscle: '대둔근, 슬굴곡근',
     imageSource: require('../../assets/images/Health/lunge.png'),
-    gifSource: require('../../assets/images/Health/lunge.gif'),
+    gifSource: require('../../assets/images/Health/lunge1.gif'),
     exerciseOrder: [
       '1. 두 발을 골반 너비로 벌리고 선다.',
       '2. 오른발을 앞으로 내밀고 왼발 뒤꿈치를 든다.',
@@ -201,7 +201,7 @@ const exerciseData = [
     mainMuscle: '비복근',
     secondaryMuscle: '가자미근',
     imageSource: require('../../assets/images/Health/calf-raise.png'),
-    gifSource: require('../../assets/images/Health/calf-raise.gif'),
+    gifSource: require('../../assets/images/Health/calf-raise1.gif'),
     exerciseOrder: [
       '1. 스텝박스 위에 발끝 1/3 정도 딛고 올라선다.',
       '2. 최대한 높이 발뒤꿈치를 들어올린다.',
@@ -218,7 +218,7 @@ const exerciseData = [
     mainMuscle: '엉덩이 근육',
     secondaryMuscle: '햄스트링, 대퇴사두근, 척추 기립근, 복근',
     imageSource: require('../../assets/images/Health/hip-thrust.png'),
-    gifSource: require('../../assets/images/Health/hip-thrust.gif'),
+    gifSource: require('../../assets/images/Health/hip-thrust1.gif'),
     exerciseOrder: [
       '1. 바닥에 앉아 등을 벤치나 스텝에 기대고 시작한다.',
       '2. 발은 바닥에 골반 너비로 벌리고 고정한다.',
