@@ -259,6 +259,8 @@ const ModalConfirmButton = styled.TouchableOpacity`
   background-color: #3373eb;
   width: 45%;
   height: 40px;
+  width: 45%;
+  height: 40px;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
@@ -268,6 +270,8 @@ const ModalConfirmButton = styled.TouchableOpacity`
 
 const ModalCancelButton = styled.TouchableOpacity`
   background-color: #3c3b40;
+  width: 45%;
+  height: 40px;
   width: 45%;
   height: 40px;
   border-radius: 10px;

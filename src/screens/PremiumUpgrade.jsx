@@ -25,6 +25,7 @@ const PremiumUpgrade = () => {
         const redirectUrl = response.data.result.next_redirect_mobile_url;
         Linking.openURL(redirectUrl);
         navigation.pop(2);
+        navigation.pop(2);
       } else {
         setConirmModalVisible(true);
         setConfirmModalMessage('결제 준비에 실패했습니다. 다시 시도해주세요.');

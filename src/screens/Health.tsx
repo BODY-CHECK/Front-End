@@ -145,10 +145,10 @@ export default function Health() {
             lie: ['rightShoulderPosition', 'rightHipPosition'],
         },
         1: { // 푸쉬업
-            move: ['leftWristPosition', 'leftElbowPosition', 'leftShoulderPosition'],    // 팔꿈치
-            stop1: ['leftShoulderPosition', 'leftHipPosition', 'leftKneePosition'],      // 엉덩이
-            stop2: ['leftHipPosition', 'leftKneePosition', 'leftAnklePosition'],         // 무릎
-            lie: ['leftShoulderPosition', 'leftHipPosition'],
+            move: ['rightWristPosition', 'rightElbowPosition', 'rightShoulderPosition'],    // 팔꿈치
+            stop1: ['rightShoulderPosition', 'rightHipPosition', 'rightKneePosition'],      // 엉덩이
+            stop2: ['rightHipPosition', 'rightKneePosition', 'rightAnklePosition'],         // 무릎
+            lie: ['rightShoulderPosition', 'rightHipPosition'],
         },
         2: { // 푸쉬업(무릎)
             move: ['rightWristPosition', 'rightElbowPosition', 'rightShoulderPosition'],    // 팔꿈치
