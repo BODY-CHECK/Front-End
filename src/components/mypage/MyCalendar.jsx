@@ -4,6 +4,7 @@ import {Calendar, LocaleConfig} from 'react-native-calendars';
 import instance from '../../axiosInstance';
 import Svg, {Circle} from 'react-native-svg';
 import styled from 'styled-components/native';
+import legend from '../../assets/images/legend.png';
 
 LocaleConfig.locales['ko'] = {
   monthNames: [
@@ -56,10 +57,10 @@ const MyCalendar = () => {
 
   // 등급별 색상 설정
   const gradeColors = {
-    1: '#FF0000', // 빨강
-    2: '#F1930A', // 주황
-    3: '#FFD700', // 노랑
-    4: '#4BAA3D', // 초록
+    1: '#BDCCEA', // 빨강
+    2: '#88A8E4', // 주황
+    3: '#6A9AF3', // 노랑
+    4: '#508BFB', // 초록
     5: '#3373eb', // 파랑
   };
 
@@ -118,34 +119,9 @@ const MyCalendar = () => {
       {/* 범례 */}
       <LegendContainer>
         <LegendItem>
-          <Svg height="10" width="10">
-            <Circle cx="5" cy="5" r="5" fill="#FF0000" />
-          </Svg>
-          <LegendText>0-20점</LegendText>
-        </LegendItem>
-        <LegendItem>
-          <Svg height="10" width="10">
-            <Circle cx="5" cy="5" r="5" fill="#F1930A" />
-          </Svg>
-          <LegendText>21-40점</LegendText>
-        </LegendItem>
-        <LegendItem>
-          <Svg height="10" width="10">
-            <Circle cx="5" cy="5" r="5" fill="#FFD700" />
-          </Svg>
-          <LegendText>41-60점</LegendText>
-        </LegendItem>
-        <LegendItem>
-          <Svg height="10" width="10">
-            <Circle cx="5" cy="5" r="5" fill="#4BAA3D" />
-          </Svg>
-          <LegendText>61-80점</LegendText>
-        </LegendItem>
-        <LegendItem>
-          <Svg height="10" width="10">
-            <Circle cx="5" cy="5" r="5" fill="#3373eb" />
-          </Svg>
-          <LegendText>81-100점</LegendText>
+          <LegendText>0</LegendText>
+          <LegendImg source={legend} />
+          <LegendText>100</LegendText>
         </LegendItem>
       </LegendContainer>
     </View>
@@ -176,8 +152,12 @@ const LegendItem = styled.View`
 
 const LegendText = styled.Text`
   margin-left: 3px;
-  margin-bottom: 3px;
-  margin-right: 8px;
+  margin-right: 3px;
   font-size: 12px;
   font-weight: bold;
+`;
+
+const LegendImg = styled.Image`
+  width: 75px;
+  height: 12px;
 `;

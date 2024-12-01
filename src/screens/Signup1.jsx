@@ -35,8 +35,7 @@ function Signup1() {
     if (password.length < 8 || password.length > 16) {
       setErrors(prev => ({...prev, password: '8~16자로 구성해주세요'}));
     } else if (
-      !/[A-Z]/.test(password) ||
-      !/[a-z]/.test(password) ||
+      !/[A-Za-z]/.test(password) || // 대문자 또는 소문자 중 하나 포함
       !/[0-9]/.test(password) ||
       !/[!@#$%^&*]/.test(password)
     ) {
