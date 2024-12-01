@@ -5,6 +5,7 @@ import instance from '../axiosInstance';
 import {Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import ConfirmModal from '../components/ConfirmModal';
+import ExerciseSelection from '../components/settings/ExerciseSelection';
 
 const baseURL = 'https://dev.bodycheck.store';
 
@@ -14,6 +15,7 @@ const ProfileEdit = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [confirmModalVisible, setConirmModalVisible] = useState(false); // 모달 상태
   const [confirmModalMessage, setConfirmModalMessage] = useState(''); // 모달 메시지
+  const [exerciseType, setExerciseType] = useState('UPPER_BODY'); // 선호 운동 부위 상태 추가
 
   const navigation = useNavigation();
 
@@ -49,6 +51,7 @@ const ProfileEdit = () => {
   // 수정하기 버튼 클릭 시 호출
   const handleEdit = async () => {
     console.log('닉네임 값:', nickname); // 닉네임 값 출력
+    console.log('선호 운동 부위 값:', exerciseType); // 선택한 선호 운동 부위 출력
 
     const error = await validateNickname(nickname);
     if (error) {
@@ -61,12 +64,12 @@ const ProfileEdit = () => {
         `${baseURL}/members/setting/profile`,
         {
           nickname: nickname,
+          exerciseType: exerciseType, // 선택한 선호 운동 부위 추가
         },
       );
       if (response.data.isSuccess) {
         setConirmModalVisible(true);
-        setConfirmModalMessage('닉네임이 성공적으로 수정되었습니다.');
-        navigation.navigate('Mypage');
+        setConfirmModalMessage('성공적으로 프로필이 수정되었습니다.');
       } else {
         setConirmModalVisible(true);
         setConfirmModalMessage(response.data.message);
@@ -89,6 +92,11 @@ const ProfileEdit = () => {
     }
   };
 
+  const handleConfirmClick = () => {
+    navigation.navigate('Mypage');
+    setConirmModalVisible(false);
+  };
+
   return (
     <Container>
       <ProfileInput
@@ -106,13 +114,14 @@ const ProfileEdit = () => {
         }}
         errorMessage={errorMessage}
       />
+      <ExerciseSelection value={exerciseType} onChange={setExerciseType} />
       <EditButton onPress={handleEdit}>
         <ButtonText>수정하기</ButtonText>
       </EditButton>
       <ConfirmModal
         visible={confirmModalVisible}
         message={confirmModalMessage}
-        onConfirm={() => setConirmModalVisible(false)}
+        onConfirm={handleConfirmClick}
       />
     </Container>
   );
