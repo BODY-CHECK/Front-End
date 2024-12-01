@@ -75,7 +75,7 @@ const FooterContainer = styled.View`
   width: 100%;
   max-width: 400px;
   align-items: center;
-  margin-bottom: 100px;
+  margin-bottom: 140px;
   position: relative;
 `;
 
@@ -116,5 +116,6 @@ const IconsContainer = styled.View`
 const Icon = styled.Image`
   margin: 0 15px;
   cursor: pointer;
-  width: 320px;
+  width: 340px;
+  border-radius: 5px;
 `;

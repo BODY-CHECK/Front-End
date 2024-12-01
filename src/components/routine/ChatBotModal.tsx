@@ -373,7 +373,7 @@ const ModalOverlay = styled.View`
 
 const ModalContainer = styled.View`
   width: ${width * 0.9}px;
-  height: ${height * 0.6}px;
+  height: ${height * 0.8}px;
   background-color: #eef1ff;
   border-radius: 20px;
   overflow: hidden;
