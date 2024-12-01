@@ -15,7 +15,7 @@ const ProfileEdit = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [confirmModalVisible, setConirmModalVisible] = useState(false); // 모달 상태
   const [confirmModalMessage, setConfirmModalMessage] = useState(''); // 모달 메시지
-  const [exerciseType, setExerciseType] = useState('UPPER_BODY'); // 선호 운동 부위 상태 추가
+  const [exerciseType, setExerciseType] = useState(''); // 선호 운동 부위 상태 추가
 
   const navigation = useNavigation();
 
@@ -26,6 +26,8 @@ const ProfileEdit = () => {
         const response = await instance.get(`${baseURL}/members/my-page`); // 해당 엔드포인트로 변경
         if (response.data.isSuccess) {
           setEmail(response.data.result.email);
+          setNickname(response.data.result.nickname || '사용자'); // 닉네임이 null이면 '사용자'로 설정
+          setExerciseType(response.data.result.exerciseType); // 기본값 설정
         } else {
           console.error('이메일을 가져오지 못했습니다.');
         }
@@ -38,6 +40,9 @@ const ProfileEdit = () => {
 
   // 닉네임 유효성 검사
   const validateNickname = async name => {
+    if (!name || name.trim() === '') {
+      return '닉네임을 입력해주세요'; // 닉네임이 null이거나 빈 값일 경우 에러 메시지
+    }
     if (name.length > 10) {
       return '닉네임은 10자 이내로 입력해주세요';
     }

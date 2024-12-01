@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import styled from 'styled-components/native';
 import {
   FlatList,
@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import exerciseData from '../Health/HealthInfoData';
 import instance from '../../axiosInstance';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
 const AIptBox = () => {
   const navigation = useNavigation();
@@ -40,9 +40,11 @@ const AIptBox = () => {
   };
 
   // 컴포넌트 마운트 시 API 호출
-  useEffect(() => {
-    fetchExercises();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchExercises();
+    }, []),
+  );
 
   const navigateToHealthInfo = exerciseId => {
     const exercise = exerciseData.find(ex => ex.id === exerciseId);

@@ -2,13 +2,14 @@ import React, {useState} from 'react';
 import styled from 'styled-components/native';
 import {Modal, Text} from 'react-native';
 
-const ExerciseCard = ({onSetRoutine}) => {
+const ExerciseCard = ({onSetRoutine, onCardPress}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCard, setSelectedCard] = useState(''); // 선택된 카드에 따라 텍스트를 다르게 보여줌
 
   const handleCardPress = cardType => {
-    setSelectedCard(cardType); // 클릭한 카드 타입을 저장
-    setModalVisible(true); // 모달을 보이도록 설정
+    if (onCardPress) onCardPress(); // 설정 모드 종료 함수 호출
+    setSelectedCard(cardType);
+    setModalVisible(true);
   };
 
   const confirmRoutineChange = () => {
@@ -90,6 +91,7 @@ const ModalContainer = styled.View`
 const ModalView = styled.View`
   width: 80%;
   height: 185px;
+  padding: 20px;
   background-color: white;
   border-radius: 5px;
   align-items: center;
@@ -104,7 +106,7 @@ const ModalText = styled.Text`
 `;
 
 const SubText = styled.Text`
-  font-size: 10px;
+  font-size: 12px;
   color: #7c86a2;
   margin-bottom: 35px;
 `;
@@ -124,7 +126,7 @@ const ConfirmButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   padding: 10px;
-  margin: 0 10px;
+  margin: 0 7px 0 5px;
 `;
 
 const CancelButton = styled.TouchableOpacity`
@@ -135,11 +137,11 @@ const CancelButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   padding: 10px;
-  margin: 0 10px;
+  margin: 0 5px 0 7px;
 `;
 
 const ButtonText = styled.Text`
-  font-size: 10px;
+  font-size: 14px;
   font-weight: bold;
   color: white;
 `;
