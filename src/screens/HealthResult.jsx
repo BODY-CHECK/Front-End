@@ -28,7 +28,6 @@ import {BarChart} from 'react-native-chart-kit';
 import {Alert, Modal, StyleSheet} from 'react-native';
 import exerciseData from '../components/Health/HealthInfoData';
 import {
-  getPremium,
   postAttendance,
   postExerciseCriteria,
   postExerciseSolution,
@@ -37,6 +36,7 @@ import Video from 'react-native-video';
 import Loading from './Loading';
 import {stopRecording} from './Record';
 import ConfirmModal from '../components/ConfirmModal';
+import idToLabels from '../components/Health/Labels';
 
 export default function HealthResult() {
   const route = useRoute();
@@ -54,6 +54,9 @@ export default function HealthResult() {
   const [confirmModalVisible, setConirmModalVisible] = useState(false); // 모달 상태
   const [confirmModalMessage, setConfirmModalMessage] = useState(''); // 모달 메시지
 
+  const exerciseId = id; // 현재 운동 ID
+  const labels = getLabelsForId(exerciseId);
+
   const CriteriaData = [
     {
       score: resultArray[0],
@@ -65,6 +68,11 @@ export default function HealthResult() {
       score: resultArray[2],
     },
   ];
+
+  // ID에 따른 라벨 가져오기 함수
+  function getLabelsForId(exerciseId) {
+    return idToLabels[exerciseId] || ['라벨 없음', '라벨 없음', '라벨 없음'];
+  }
 
   useEffect(() => {
     const AttendanceResponse = async () => {
@@ -104,7 +112,7 @@ export default function HealthResult() {
   }, []);
 
   const data = {
-    labels: ['팔 각도', '자세 정렬', '무릎 각도'],
+    labels: labels,
     datasets: [
       {
         data: resultArray || [0, 0, 0],

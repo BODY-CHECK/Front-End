@@ -22,6 +22,7 @@ import {Modal, StyleSheet, Text} from 'react-native';
 import Video from 'react-native-video';
 import { ButtonText, CancelButton, ConfirmButton, ModalContainer, ModalText, ModalView, SubText, ModalButtonContainer, RealButton, RealButtonText } from './Solution.style';
 import Loading from './Loading';
+import idToLabels from '../components/Health/Labels';
 
 export default function Solution() {
   const route = useRoute();
@@ -31,6 +32,12 @@ export default function Solution() {
   const [error, setError] = useState(null);
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  const labels = getLabelsForId(exerciseId);
+
+  // ID에 따른 라벨 가져오기 함수
+  function getLabelsForId(exerciseId) {
+    return idToLabels[exerciseId] || ['라벨 없음', '라벨 없음', '라벨 없음'];
+  }
 
 
   useEffect(() => {
@@ -107,7 +114,7 @@ export default function Solution() {
           <BarChart
             style={graphStyle}
             data={{
-              labels: ['팔 각도', '자세 정렬', '무릎 각도' ],
+              labels: labels,
               datasets: [
                 {
                   data: solutionData?.criteriaDetailList.map(
