@@ -456,6 +456,7 @@ const ModalContainer = styled.View`
 const ModalView = styled.View`
   width: 80%;
   height: 185px;
+  padding: 20px;
   background-color: white;
   border-radius: 5px;
   align-items: center;
@@ -489,7 +490,7 @@ const ConfirmButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   padding: 10px;
-  margin: 0 10px 0 5px;
+  margin: 0 7px 0 5px;
 `;
 
 const CancelButton = styled.TouchableOpacity`
@@ -500,7 +501,7 @@ const CancelButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   padding: 10px;
-  margin: 0 6px 0 5px;
+  margin: 0 5px 0 7px;
 `;
 
 const ButtonText = styled.Text`
