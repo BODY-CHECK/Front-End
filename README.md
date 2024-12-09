@@ -40,7 +40,7 @@
 ![Styled Components](https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)
 
 ### Used package
-npm install @react-native-async-storage/async-storage
+npm install @react-native-async-storage/async-storage\n
 npm i @gorhom/bottom-sheet
 npm i react-native-calendars
 npm i react-native-vision-camera@latest
