@@ -39,6 +39,26 @@
 ![Prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E)
 ![Styled Components](https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)
 
+### Used package
+npm install @react-native-async-storage/async-storage
+npm i @gorhom/bottom-sheet
+npm i react-native-calendars
+npm i react-native-vision-camera@latest
+npm i react-native-gifted-charts
+npm i @scottjgilroy/react-native-vision-camera-v4-pose-detection
+npm i react-native-worklets-core@latest
+npm i @shopify/react-native-skia
+npm i @react-native-cookies/cookies
+npm i react-native-webview
+npm i react-native-fs
+npm i react-native-sound
+npm i react-native-svg
+npm install react-native-record-screen
+npm install react-native-picker/picker
+npm install react-native-video
+npm install react-native-system-bars
+npm install react-native-sensors
+npm install react-native-image-picker
 
 ## 협업 전략
 ### Issue Template
